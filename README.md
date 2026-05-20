@@ -116,7 +116,7 @@ git push origin main
 ssh cBQSuYH4PSD_sitecasaq@57-111919.ssh.hosting-ik.com
 
 # 3. Puller et builder
-cd /sites-casaq
+cd ~/sites-casaq
 git pull origin main
 npm ci
 npm run build
