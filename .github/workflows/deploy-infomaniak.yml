@@ -11,13 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy through SSH
+      - name: Start deploy through SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: 57-111919.ssh.hosting-ik.com
           username: cBQSuYH4PSD_sitecasaq
           password: ${{ secrets.INFOMANIAK_SSH_PASSWORD }}
-          request_pty: true
-          command_timeout: 30m
+          command_timeout: 2m
           script: |
-            bash ~/deploy/deploy-sites-casaq.sh
+            mkdir -p ~/deploy/logs
+            nohup bash ~/deploy/deploy-sites-casaq.sh > ~/deploy/logs/latest.log 2>&1 < /dev/null &
+            echo "Deploy started on Infomaniak."
+            echo "Check logs with: tail -f ~/deploy/logs/latest.log"
