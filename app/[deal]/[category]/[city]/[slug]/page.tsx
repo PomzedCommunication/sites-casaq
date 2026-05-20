@@ -5,7 +5,7 @@ import { BienDetailTemplate } from '@/components/site/properties/BienDetailTempl
 import { extractBienIdFromSlug, getBienSeoPath } from '@/lib/property-url';
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-
+import { SiteNotConfigured } from '@/components/site/SiteNotConfigured';
 type PageProps = {
     params: Promise<{
         deal: string;
@@ -29,7 +29,12 @@ export async function generateMetadata({
 
     const domain = await getCurrentDomain(resolvedSearchParams);
     const site = await getSiteConfig(domain);
-
+    if (!site) {
+        return {
+            title: 'Site non configuré — CasaQ',
+            description: `Aucun site CasaQ actif pour ${domain}`,
+        };
+    }
     if (!id) {
         return {
             title: `${site.agence.nom} — Bien introuvable`,
@@ -83,6 +88,10 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
 
     const domain = await getCurrentDomain(resolvedSearchParams);
     const site = await getSiteConfig(domain);
+
+    if (!site) {
+        return <SiteNotConfigured domain={domain} />;
+    }
     const bien = await getSiteBien(domain, id);
 
     if (!bien) {

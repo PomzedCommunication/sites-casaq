@@ -4,7 +4,7 @@ import { PageRenderer } from '@/components/site/PageRenderer';
 import { getPageBiensLimit, getPageDeal, pageNeedsBiens } from '@/lib/site-page';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-
+import { SiteNotConfigured } from '@/components/site/SiteNotConfigured';
 type PageProps = {
     searchParams?: Promise<{
         site?: string;
@@ -27,7 +27,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     const params = await searchParams;
     const domain = await getCurrentDomain(params);
     const site = await getSiteConfig(domain);
-
+    if (!site) {
+        return {
+            title: 'Site non configuré — CasaQ',
+            description: `Aucun site CasaQ actif pour ${domain}`,
+        };
+    }
     const page = site.pages.find((item) => item.slug === 'accueil');
 
     return {
@@ -50,7 +55,9 @@ export default async function HomePage({ searchParams }: PageProps) {
     const params = await searchParams;
     const domain = await getCurrentDomain(params);
     const site = await getSiteConfig(domain);
-
+    if (!site) {
+        return <SiteNotConfigured domain={domain} />;
+    }
     const page = site.pages.find((item) => item.slug === 'accueil');
 
     if (!page) {

@@ -103,9 +103,9 @@ export type CasaqBien = {
 
 const API_URL = process.env.CASAQ_API_URL;
 
-export async function getSiteConfig(domain: string): Promise<CasaqSiteConfig> {
+export async function getSiteConfig(domain: string): Promise<CasaqSiteConfig | null> {
   if (!API_URL) {
-    throw new Error('CASQ_API_URL manquant dans .env.local');
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
   }
 
   const url = `${API_URL}/api/v1/site-config?domain=${encodeURIComponent(domain)}`;
@@ -118,12 +118,12 @@ export async function getSiteConfig(domain: string): Promise<CasaqSiteConfig> {
   });
 
   if (!res.ok) {
-    throw new Error(`Impossible de charger la config du site : ${domain}`);
+    return null;
   }
 
   const json = await res.json();
 
-  return json.data;
+  return json.data || null;
 }
 
 export type CasaqBiensMeta = {
