@@ -17,5 +17,7 @@ jobs:
           host: 57-111919.ssh.hosting-ik.com
           username: cBQSuYH4PSD_sitecasaq
           password: ${{ secrets.INFOMANIAK_SSH_PASSWORD }}
+          request_pty: true
+          command_timeout: 30m
           script: |
-            ~/deploy/deploy-sites-casaq.sh
+            bash ~/deploy/deploy-sites-casaq.sh
