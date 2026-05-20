@@ -4,17 +4,24 @@ import { PageRenderer } from '@/components/site/PageRenderer';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
+    params: Promise<{
+        slug: string[];
+    }>;
     searchParams?: Promise<{
         site?: string;
     }>;
 };
 
-export default async function HomePage({ searchParams }: PageProps) {
-    const params = await searchParams;
-    const domain = await getCurrentDomain(params);
+export default async function DynamicPage({ params, searchParams }: PageProps) {
+    const resolvedParams = await params;
+    const resolvedSearchParams = await searchParams;
+
+    const domain = await getCurrentDomain(resolvedSearchParams);
     const site = await getSiteConfig(domain);
 
-    const page = site.pages.find((item) => item.slug === 'accueil');
+    const slug = resolvedParams.slug.join('/');
+
+    const page = site.pages.find((item) => item.slug === slug);
 
     if (!page) {
         notFound();
@@ -25,7 +32,7 @@ export default async function HomePage({ searchParams }: PageProps) {
             site={site}
             page={page}
             currentDomain={domain}
-            previewDomain={params?.site}
+            previewDomain={resolvedSearchParams?.site}
         />
     );
 
