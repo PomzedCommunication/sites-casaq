@@ -12,13 +12,14 @@ import { getPageBiensLimit, getPageDeal, pageNeedsBiens } from '@/lib/site-page'
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import type { CasaqPage, CasaqSiteConfig } from '@/lib/casaq';
+import type { ListingFilters } from '@/lib/listing/listing-types';
 import { parseListingPath } from '@/lib/listing/listing-url';
 import { AgencyNewsSinglePage } from '@/components/site/templates/AgencyNewsSinglePage';
 import { AgencyNewsListingPage } from '@/components/site/templates/AgencyNewsListingPage';
 
 type PageProps = {
     params: Promise<{
-        slug?: string[];
+        slug?: string[]; 
     }>;
     searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
