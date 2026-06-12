@@ -25,11 +25,14 @@ export function FavoriteButton({ bienId, previewDomain }: Props) {
 
         setLoading(false);
 
-        if (result.connectRequired) {
+        // if (result.connectRequired) {
+        //     window.location.href = buildUrlWithPreviewDomain('/login', previewDomain);
+        //     return;
+        // }
+        if ('connectRequired' in result && result.connectRequired) {
             window.location.href = buildUrlWithPreviewDomain('/login', previewDomain);
             return;
         }
-
         if (!result.success) {
             setMessage(result.message || 'Action impossible.');
         }

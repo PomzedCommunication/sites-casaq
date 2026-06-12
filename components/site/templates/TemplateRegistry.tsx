@@ -3,6 +3,10 @@ import { LandingTemplate } from '@/components/site/templates/LandingTemplate';
 import { ContentTemplate } from '@/components/site/templates/ContentTemplate';
 import { ContactTemplate } from '@/components/site/templates/ContactTemplate';
 import { ListingTemplate } from '@/components/site/templates/ListingTemplate';
+import type {
+    ListingAvailableFilters,
+    ListingFilters,
+} from '@/lib/listing/listing-types';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -12,6 +16,8 @@ type Props = {
     currentPath: string;
     currentDomain: string;
     previewDomain?: string;
+    initialFilters?: ListingFilters;
+    availableFilters?: ListingAvailableFilters;
 };
 
 export function TemplateRegistry(props: Props) {
@@ -29,7 +35,13 @@ export function TemplateRegistry(props: Props) {
         case 'listing_general':
         case 'listing_sale':
         case 'listing_rent':
-            return <ListingTemplate {...props} />;
+            return (
+                <ListingTemplate
+                    {...props}
+                    initialFilters={props.initialFilters || {}}
+                    availableFilters={props.availableFilters}
+                />
+            );
 
         default:
             return <ContentTemplate {...props} />;

@@ -60,6 +60,17 @@ const emptyForm: SearchFormState = {
         exclude: [],
     },
 };
+
+function numberOrEmpty(value: string): number | '' {
+    const trimmed = value.trim();
+
+    if (trimmed === '') {
+        return '';
+    }
+
+    return Number(trimmed);
+}
+
 export function CriteresClient({ previewDomain }: Props) {
     const [searches, setSearches] = useState<ContactSearch[]>([]);
     const [form, setForm] = useState<SearchFormState>(emptyForm);
@@ -146,12 +157,12 @@ export function CriteresClient({ previewDomain }: Props) {
             criteria: {
                 categories: form.categories,
                 npas: form.npas,
-                price_min: form.price_min ? Number(form.price_min) : '',
-                price_max: form.price_max ? Number(form.price_max) : '',
-                rooms_min: form.rooms_min ? Number(form.rooms_min) : '',
-                rooms_max: form.rooms_max ? Number(form.rooms_max) : '',
-                surface_min: form.surface_min ? Number(form.surface_min) : '',
-                surface_max: form.surface_max ? Number(form.surface_max) : '',
+                price_min: numberOrEmpty(form.price_min),
+                price_max: numberOrEmpty(form.price_max),
+                rooms_min: numberOrEmpty(form.rooms_min),
+                rooms_max: numberOrEmpty(form.rooms_max),
+                surface_min: numberOrEmpty(form.surface_min),
+                surface_max: numberOrEmpty(form.surface_max),
                 keywords: form.keywords,
             },
             geo: form.geo,

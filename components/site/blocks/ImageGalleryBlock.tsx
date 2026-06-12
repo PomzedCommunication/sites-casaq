@@ -21,7 +21,7 @@ export function ImageGalleryBlock({ bloc }: Props) {
     const images = Array.isArray(data.images) ? data.images : [];
 
     return (
-        <section className={`section image-gallery image-gallery--${bloc.variant || 'grid'}`}>
+        <section className={`section image-gallery image-gallery--${bloc.data.variant || 'grid'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Galerie'}</h2>

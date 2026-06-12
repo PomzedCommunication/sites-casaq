@@ -10,7 +10,6 @@ type Props = {
 
 declare global {
     interface Window {
-        google?: any;
         __casaqGoogleMapsLoading?: boolean;
         __casaqGoogleMapsLoaded?: boolean;
         __casaqGoogleMapsCallbacks?: Array<() => void>;

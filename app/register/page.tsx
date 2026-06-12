@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, Suspense, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     buildUrlWithPreviewDomain,
@@ -10,7 +10,7 @@ import {
     saveContactToken,
 } from '@/lib/contact-auth-client';
 
-export default function RegisterPage() {
+function RegisterPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -165,5 +165,12 @@ export default function RegisterPage() {
                 </div>
             </section>
         </main>
+    );
+}
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={null}>
+            <RegisterPageContent />
+        </Suspense>
     );
 }

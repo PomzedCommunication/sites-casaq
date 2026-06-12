@@ -47,7 +47,7 @@ export function BlocksRenderer({
     return (
         <>
             {page.blocs.map((bloc, index) => {
-                const key = `${bloc.uid || bloc.type}-${index}`;
+                const key = `${bloc.type}-${index}`;
 
                 switch (bloc.type) {
                     case 'hero_search':
@@ -110,18 +110,30 @@ export function BlocksRenderer({
                                 previewDomain={previewDomain}
                             />
                         );
-                    case 'services_cards':
-                        return <ServicesCardsBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
 
+                    case 'services_cards':
+                        return (
+                            <ServicesCardsBlock
+                                key={key}
+                                site={site}
+                                bloc={bloc}
+                                previewDomain={previewDomain}
+                            />
+                        );
                     case 'services_sections':
                         return <ServicesSectionsBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
 
+                    // case 'stats':
+                    //     return <StatsBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
+                    // case 'stats':
+                    //     return <StatsBlock key={key} bloc={bloc} />;
+                    // case 'cta_banner':
+                    //     return <CtaBannerBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
                     case 'stats':
-                        return <StatsBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
+                        return <StatsBlock key={key} bloc={bloc} />;
 
                     case 'cta_banner':
-                        return <CtaBannerBlock key={key} bloc={bloc} previewDomain={previewDomain} />;
-
+                        return <CtaBannerBlock key={key} bloc={bloc} />;
                     case 'team_members':
                         return (
                             <TeamMembersBlock

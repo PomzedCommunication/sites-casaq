@@ -19,7 +19,7 @@ import { AgencyNewsListingPage } from '@/components/site/templates/AgencyNewsLis
 
 type PageProps = {
     params: Promise<{
-        slug?: string[]; 
+        slug?: string[];
     }>;
     searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };

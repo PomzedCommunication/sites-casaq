@@ -31,7 +31,7 @@ export async function TeamMembersBlock({ bloc, currentDomain }: Props) {
             : await getSiteTeamMembers(currentDomain, { limit });
 
     return (
-        <section className={`section team-members team-members--${bloc.variant || 'cards'}`}>
+        <section className={`section team-members team-members--${bloc.data.variant || 'cards'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Notre équipe'}</h2>

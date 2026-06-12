@@ -22,7 +22,7 @@ export function PillarsBlock({ bloc }: Props) {
     const items = Array.isArray(data.items) ? data.items : [];
 
     return (
-        <section className={`section pillars pillars--${bloc.variant || 'three_columns'}`}>
+        <section className={`section pillars pillars--${bloc.data.variant || 'three_columns'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Nos valeurs'}</h2>

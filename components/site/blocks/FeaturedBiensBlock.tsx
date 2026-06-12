@@ -36,7 +36,7 @@ export async function FeaturedBiensBlock({
                                          }: Props) {
     const data       = blockData<Data>(bloc);
     const cta        = getLinkProps(data.cta);
-    const variant    = bloc.variant || 'grid';
+    const variant    = bloc.data.variant || 'grid';
     const isCarousel = variant === 'carousel';
 
     const selectedBiens = await getFeaturedBiens({

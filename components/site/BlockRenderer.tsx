@@ -13,7 +13,7 @@ export function BlockRenderer({ bloc, site }: Props) {
 
     if (bloc.type === 'hero') {
         return (
-            <section style={{ padding: '80px 48px', background: primary, color: 'white' }}>
+            <section style={{ padding: '80px 48px',  color: 'white' }}>
                 <h1 style={{ fontSize: 52, margin: 0 }}>
                     {String(data.titre || `Bienvenue chez ${site.agence.nom}`)}
                 </h1>
@@ -30,7 +30,6 @@ export function BlockRenderer({ bloc, site }: Props) {
                             marginTop: 28,
                             padding: '14px 22px',
                             background: 'white',
-                            color: primary,
                             borderRadius: 999,
                             fontWeight: 700,
                             textDecoration: 'none',

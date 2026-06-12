@@ -41,7 +41,7 @@ export async function PropertyCategoriesBlock({
 
     return (
         <section
-            className={`section pd-l-r property-categories property-categories--${bloc.variant || 'cards'}`}
+            className={`section pd-l-r property-categories property-categories--${bloc.data.variant || 'cards'}`}
         >
             <div className="container">
                 <div className="section-heading section-heading--with-action">

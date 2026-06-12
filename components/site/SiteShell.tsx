@@ -7,7 +7,6 @@ type Props = {
 };
 
 export function SiteShell({ site, pageSlug }: Props) {
-    const secondary = site.config.couleur_secondaire || '#1e293b';
 
     const page =
         site.pages.find((item) => item.slug === pageSlug) ||
@@ -19,7 +18,6 @@ export function SiteShell({ site, pageSlug }: Props) {
                 minHeight: '100vh',
                 fontFamily: site.config.font || 'Inter, sans-serif',
                 background: '#f8fafc',
-                color: secondary,
             }}
         >
             <header
@@ -32,7 +30,7 @@ export function SiteShell({ site, pageSlug }: Props) {
                     background: 'white',
                 }}
             >
-                <a href="/" style={{ fontSize: 22, fontWeight: 800, color: secondary, textDecoration: 'none' }}>
+                <a href="/" style={{ fontSize: 22, fontWeight: 800, textDecoration: 'none' }}>
                     {site.agence.nom}
                 </a>
 
@@ -42,7 +40,6 @@ export function SiteShell({ site, pageSlug }: Props) {
                             key={item.url}
                             href={item.url}
                             style={{
-                                color: secondary,
                                 textDecoration: 'none',
                             }}
                         >

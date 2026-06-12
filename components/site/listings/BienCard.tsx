@@ -201,9 +201,16 @@ function getLocation(bien: CasaqBien): string {
 }
 
 function getAvailability(bien: CasaqBien): string | null {
-    const disponibilite = bien.caracteristiques?.disponibilite as
-        | { label?: string | null; date?: string | null }
+    const caracteristiques = bien.caracteristiques as
+        | {
+        disponibilite?: {
+            label?: string | null;
+            date?: string | null;
+        } | null;
+    }
         | undefined;
+
+    const disponibilite = caracteristiques?.disponibilite;
 
     if (!disponibilite) {
         return null;

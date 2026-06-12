@@ -37,7 +37,7 @@ export async function TestimonialsBlock({ bloc, currentDomain }: Props) {
             });
 
     return (
-        <section className={`section testimonials testimonials--${bloc.variant || 'cards'}`}>
+        <section className={`section testimonials testimonials--${bloc.data.variant || 'cards'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Témoignages'}</h2>

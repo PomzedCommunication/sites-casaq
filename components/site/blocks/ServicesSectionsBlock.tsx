@@ -28,7 +28,7 @@ export function ServicesSectionsBlock({ bloc, previewDomain }: Props) {
     const items = Array.isArray(data.items) ? data.items : [];
 
     return (
-        <section className={`section services-sections services-sections--${bloc.variant || 'alternating'}`}>
+        <section className={`section services-sections services-sections--${bloc.data.variant || 'alternating'}`}>
             <div className="container">
                 {items.length ? (
                     items.map((item, index) => {

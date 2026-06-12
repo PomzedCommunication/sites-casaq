@@ -32,7 +32,7 @@ export function SocialPostsBlock({ bloc, previewDomain }: Props) {
     const items = Array.isArray(data.items) ? data.items : [];
 
     return (
-        <section className={`section social-posts social-posts--${bloc.variant || 'cards'}`}>
+        <section className={`section social-posts social-posts--${bloc.data.variant || 'cards'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Nos réseaux sociaux'}</h2>

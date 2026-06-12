@@ -30,11 +30,11 @@ export function ImageTextBlock({ bloc, previewDomain }: Props) {
     const image = siteAssetUrl(data.image);
     const cta = getLinkProps(data.cta);
 
-    const imageLeft = bloc.variant === 'image_left';
+    const imageLeft = bloc.data.variant === 'image_left';
     const textHtml = data.texte ? { __html: data.texte } : null;
 
     return (
-        <section className={`section image-text image-text--${bloc.variant || 'image_right'}`}>
+        <section className={`section image-text image-text--${bloc.data.variant || 'image_right'}`}>
             <div className="container">
                 <div className={`image-text__grid ${imageLeft ? 'image-text__grid--image-left' : ''}`}>
                     {image ? (

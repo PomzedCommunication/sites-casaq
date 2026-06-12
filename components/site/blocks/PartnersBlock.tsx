@@ -31,7 +31,7 @@ export async function PartnersBlock({ bloc, currentDomain }: Props) {
             : await getSitePartners(currentDomain, { limit });
 
     return (
-        <section className={`section partners partners--${bloc.variant || 'cards'}`}>
+        <section className={`section partners partners--${bloc.data.variant || 'cards'}`}>
             <div className="container">
                 <div className="section-heading">
                     <h2>{data.titre || 'Nos partenaires'}</h2>

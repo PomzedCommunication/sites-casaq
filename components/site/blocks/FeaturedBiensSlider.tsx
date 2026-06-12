@@ -163,8 +163,12 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
                                 </Link>
 
                                 <div className="featured-bien-card__favorite">
+                                    {/*<FavoriteButton*/}
+                                    {/*    bienId={bien.id}*/}
+                                    {/*    previewDomain={previewDomain}*/}
+                                    {/*/>*/}
                                     <FavoriteButton
-                                        bienId={bien.id}
+                                        bienId={Number(bien.id)}
                                         previewDomain={previewDomain}
                                     />
                                 </div>
