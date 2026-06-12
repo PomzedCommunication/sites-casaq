@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
+
 import type { Swiper as SwiperType } from 'swiper';
 import type { NavigationOptions } from 'swiper/types';
 import { withPreviewUrl } from '@/lib/site-blocks';

@@ -47,8 +47,7 @@ export async function AgencyNewsBlock({
                                       }: Props) {
     const data = blockData<Data>(bloc);
     const cta = getLinkProps(data.cta);
-
-    const variant = bloc.data.variant || 'grid';
+    const variant = bloc.data.variant || 'carousel';
     const isCarousel = variant === 'carousel';
 
     const mode = data.mode || 'latest';
