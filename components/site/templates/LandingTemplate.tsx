@@ -6,16 +6,25 @@ type Props = {
     page: CasaqPage;
     biens: CasaqBien[];
     meta: CasaqBiensMeta;
+    currentDomain: string;
     previewDomain?: string;
 };
 
-export function LandingTemplate({ site, page, biens, meta, previewDomain }: Props) {
+export function LandingTemplate({
+                                    site,
+                                    page,
+                                    biens,
+                                    meta,
+                                    currentDomain,
+                                    previewDomain,
+                                }: Props) {
     return (
         <BlocksRenderer
             site={site}
             page={page}
             biens={biens}
             meta={meta}
+            currentDomain={currentDomain}
             previewDomain={previewDomain}
         />
     );

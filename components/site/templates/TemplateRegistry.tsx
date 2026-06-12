@@ -10,6 +10,7 @@ type Props = {
     biens: CasaqBien[];
     meta: CasaqBiensMeta;
     currentPath: string;
+    currentDomain: string;
     previewDomain?: string;
 };
 
@@ -19,6 +20,7 @@ export function TemplateRegistry(props: Props) {
             return <LandingTemplate {...props} />;
 
         case 'content':
+        case 'news_listing':
             return <ContentTemplate {...props} />;
 
         case 'contact':

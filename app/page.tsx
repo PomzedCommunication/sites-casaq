@@ -1,10 +1,12 @@
-import { getSiteBiens, getSiteConfig } from '@/lib/casaq';
+import {getSiteBiensFiltered, getSiteConfig, getSiteBiensAvailableFilters,} from '@/lib/casaq';
 import { getCurrentDomain } from '@/lib/domain';
 import { PageRenderer } from '@/components/site/PageRenderer';
 import { getPageBiensLimit, getPageDeal, pageNeedsBiens } from '@/lib/site-page';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { SiteNotConfigured } from '@/components/site/SiteNotConfigured';
+import type { ListingFilters } from '@/lib/listing/listing-types';
+
 type PageProps = {
     searchParams?: Promise<{
         site?: string;
@@ -66,14 +68,24 @@ export default async function HomePage({ searchParams }: PageProps) {
 
     const pageNumber = Number(params?.page || 1);
 
-    const biensResponse = pageNeedsBiens(page)
-        ? await getSiteBiens(domain, {
-            page: pageNumber,
+    const initialFilters: ListingFilters = {
+        deal: getPageDeal(page),
+        sort: 'recent',
+        view: 'grid',
+        page: pageNumber,
+    };
+
+    const isListingPage = pageNeedsBiens(page);
+
+    const biensResponse = isListingPage
+        ? await getSiteBiensFiltered(domain, initialFilters, {
             perPage: getPageBiensLimit(page),
-            deal: getPageDeal(page),
         })
         : emptyBiensResponse;
 
+    const availableFilters = isListingPage
+        ? await getSiteBiensAvailableFilters(domain, initialFilters)
+        : undefined;
     return (
         <PageRenderer
             site={site}
@@ -83,6 +95,8 @@ export default async function HomePage({ searchParams }: PageProps) {
             currentDomain={domain}
             currentPath="/"
             previewDomain={params?.site}
+            initialFilters={initialFilters}
+            availableFilters={availableFilters}
         />
     );
 }

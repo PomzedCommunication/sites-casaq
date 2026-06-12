@@ -1,0 +1,372 @@
+
+
+/*******
+TITLE
+ */
+h1, .h1{
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 107%;
+  margin: 0 0 20px 0;
+}
+h2, .h2{
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 120%;
+  margin: 0 0 20px 0;
+
+}
+h3, .h3{
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 120%;
+  margin: 0 0 20px 0;
+
+}
+p{
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 120%;
+}
+p:last-child{
+  margin-bottom: 0;
+}
+*{
+  color: var(--site-text);
+}
+.white *,
+.white{
+  color: white;
+}
+
+.pd-l-r{
+  padding-left: var(--md-side);
+  padding-right: var(--md-side);
+}
+/****
+Header menu
+ */
+
+.site-hero--search{
+  height: calc(100vh - 110px);
+  position: relative;
+  margin-top: 110px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--md-side);
+}
+.site-hero--search .site-hero__content{
+  position: relative;
+  z-index: 10;
+  max-width: 750px;
+}
+.site-hero--search h1{
+  text-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+/***
+bloc services
+ */
+.services-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--interne-md);
+  padding: var(--interne-md) var(--sm-side);
+}
+
+.services-cards__card-link,
+.services-cards__grid > div {
+  padding: var(--interne-bg);
+  background-color: var(--site-agency);
+  border-radius: 12px;
+  position: relative;
+  transition: 0.5s ease-in-out all;
+}
+.services-cards__card-link:hover{
+  opacity: 0.6;
+}
+.services-cards__card-link .link-svg{
+  position: absolute;
+  top: var(--interne-md);
+  right: var(--interne-md);
+}
+.services-cards__grid > div .link-svg{
+  display: none;
+}
+.services-cards__card {
+  height: 100%;
+}
+.services-cards__icon img{
+  width: 40px;
+  height: 40px;
+  margin-bottom: 20px;
+}
+.services-cards__grid h3{
+  max-width: 220px;
+  margin-bottom: 0;
+}
+
+/***
+bloc Biens
+ */
+.section{
+  margin-top: var(--mdspace);
+}
+.featured-biens{
+  padding: 0 var(--md-side);
+}
+.featured-biens__swiper {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-biens__swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+.featured-biens__swiper .swiper-slide {
+  height: auto;
+}
+
+.featured-biens__swiper .featured-bien-card {
+  height: 100%;
+}
+
+
+.featured-bien-card{
+  border-radius: 12px;
+  padding: var(--interne-bg);
+}
+.featured-bien-card__image-wrap{
+  aspect-ratio: 3.8/4;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+.featured-bien-card__features{
+  display: flex;
+}
+
+.featured-bien-card__bottom{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.slider-arrows {
+  display: flex;
+  margin: var(--interne-bg) auto 0 auto;
+  width: fit-content;
+}
+.slider-arrows__btn{
+  background-color: transparent;
+  border: 1px solid var(--site-text);
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.5s ease-in-out all;
+}
+.slider-arrows__btn.slider-arrows__btn--next{
+  background-color: var(--site-agency);
+  border: 1px solid var(--site-agency);
+
+}
+.slider-arrows__btn:hover{
+  opacity: 0.6;
+}
+/******
+  PROPERTY block
+   */
+.swiper-button-prev,
+.swiper-button-next{
+  display: none!important;
+}
+.property-categories__card{
+  background-color: var(--site-agency);
+  display: block;
+  padding: var(--interne-bg);
+  border-radius: 12px;
+  position: relative;
+}
+.property-categories__card>span{
+  font-size: 70px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.link-more{
+  position: absolute;
+  top: var(--interne-md);
+  right: var(--interne-md);
+}
+
+/***
+STATS
+ */
+strong{
+  font-weight: 700;
+
+}
+.stats-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 60px;
+}
+.stat-card{
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 110%;
+  text-align: center;
+  padding-top: 100px;
+}
+.stat-card:nth-of-type(3n - 1){
+  padding-top: 0;
+}
+.stat-card strong{
+  color: var(--site-agency);
+}
+
+/***
+cta-banner
+ */
+.cta-banner{
+  background-color: var(--site-agency);
+  padding-top: var(--mdspace);
+  padding-bottom: var(--mdspace);
+}
+.cta-banner__inner .section-heading{
+  margin: 0;
+  align-items: center;
+}
+
+/*****
+ACTUS
+ */
+.agency-news__card{
+  background-color: white;
+  padding: var(--interne-bg);
+  border-radius: 12px;
+  min-height: 540px;
+}
+.agency-news__image-wrap{
+  position: relative;
+  aspect-ratio: 3.8 / 4;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+.agency-news__image-wrap img{
+  object-fit: cover;
+}
+.agency-news__badge{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background-color: var(--site-grey);
+}
+
+
+/*****
+Foooter
+ */
+.site-footer{
+  background-color: white;
+  border-top: 2px solid var(--site-agency);
+  padding: var(--interne-bg) var(--md-side);
+  margin-top: var(--mdspace);
+}
+.site-footer__top{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.site-footer__contact *{
+  display: block;
+}
+.site-footer__contact a{
+  margin-top: 10px;
+}
+.site-footer__links a{
+  display: block;
+}
+
+/***
+PAGE LISTE biens
+ */
+.page-liste-bien{
+  margin-top: calc(110px + 40px);
+}
+
+.listing-search {
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.bar-filters{
+  display: flex;
+  width: 100%;
+  background-color: white;
+  align-items: center;
+  padding: 25px;
+  border-radius: 25px;
+  justify-content: space-between;
+  margin-right: 20px;
+}
+.bar-filters select,
+.bar-filters input,
+.bar-filters button {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  padding: 0;
+}
+.listing-search__count{
+  width: 200px;
+}
+.listing-custom-select__menu button{
+  display: block;
+}
+
+.bien-card{
+  display: flex;
+  margin-bottom: 40px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+.bien-card__photo {
+  position: relative;
+  width: 19vw;
+  height: 13vw;
+  flex-shrink: 0;
+  margin-right: 30px;
+
+  overflow: hidden;
+  border-radius: 25px;
+  background-color: var(--site-grey);
+}
+.bien-card__photo-link{
+  display: block;
+  width: 19vw;
+  height: 13vw;
+  position: relative;
+}
+.bien-card__body {
+  width: calc(100% - 19vw);
+  position: relative;
+}
+.bien-card__infos span{
+  display: block;
+  border-bottom: 1px solid rgba(203, 203, 193, .6);
+  padding: 4px 0 1px;
+  width: 100%;
+}

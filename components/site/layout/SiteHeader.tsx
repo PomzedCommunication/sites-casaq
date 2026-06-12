@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CasaqSiteConfig } from '@/lib/casaq';
+import { ContactAccountNav } from '@/components/site/ContactAccountNav';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -25,18 +26,26 @@ export function SiteHeader({ site, previewDomain }: Props) {
             </Link>
 
             <nav className="site-header__nav">
-                {site.menu.map((item) => (
-                    <Link
-                        key={`${item.label}-${item.url}`}
-                        href={buildUrl(item.url, previewDomain)}
-                        className="site-header__link"
-                    >
-                        {item.label}
-                    </Link>
-                ))}
+                <div className="sup-head">
+                    <ContactAccountNav previewDomain={previewDomain}/>
+
+                </div>
+                <div className="sub-head">
+
+                    {site.menu.map((item) => (
+                        <Link
+                            key={`${item.label}-${item.url}`}
+                            href={buildUrl(item.url, previewDomain)}
+                            className="site-header__link"
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
+                </div>
+
             </nav>
         </header>
-    );
+);
 }
 
 function buildUrl(url: string, previewDomain?: string): string {

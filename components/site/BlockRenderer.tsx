@@ -10,7 +10,6 @@ type Props = {
 
 export function BlockRenderer({ bloc, site }: Props) {
     const data = bloc.data || {};
-    const primary = site.config.couleur_primaire || '#2563eb';
 
     if (bloc.type === 'hero') {
         return (

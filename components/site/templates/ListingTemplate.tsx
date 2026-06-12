@@ -1,6 +1,18 @@
-import type { CasaqBiensMeta, CasaqBien, CasaqPage, CasaqSiteConfig } from '@/lib/casaq';
-import { BiensGrid } from '@/components/site/listings/BiensGrid';
-import { Pagination } from '@/components/site/listings/Pagination';
+// src/components/site/templates/ListingTemplate.tsx
+
+import type {
+    CasaqBiensMeta,
+    CasaqBien,
+    CasaqPage,
+    CasaqSiteConfig,
+} from '@/lib/casaq';
+import { ListingProvider } from '@/components/site/listings/ListingProvider';
+import { ListingSearchBar } from '@/components/site/listings/ListingSearchBar';
+import { ListingSplitMap } from '@/components/site/listings/ListingSplitMap';
+import type {
+    ListingAvailableFilters,
+    ListingFilters,
+} from '@/lib/listing/listing-types';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -9,6 +21,8 @@ type Props = {
     meta: CasaqBiensMeta;
     currentPath: string;
     previewDomain?: string;
+    initialFilters: ListingFilters;
+    availableFilters?: ListingAvailableFilters;
 };
 
 export function ListingTemplate({
@@ -17,7 +31,42 @@ export function ListingTemplate({
                                     meta,
                                     currentPath,
                                     previewDomain,
+                                    initialFilters,
+                                    availableFilters,
                                 }: Props) {
+    const forcedDeal =
+        page.template === 'listing_sale'
+            ? 'SALE'
+            : page.template === 'listing_rent'
+                ? 'RENT'
+                : undefined;
+
+    const safeInitialFilters: ListingFilters = {
+        sort: 'recent',
+        view: 'grid',
+        page: 1,
+        ...(initialFilters || {}),
+        deal: forcedDeal || initialFilters?.deal,
+    };
+
+    const providerKey = JSON.stringify({
+        deal: safeInitialFilters.deal,
+        categoryParent: safeInitialFilters.categoryParent,
+        city: safeInitialFilters.city,
+        lat: safeInitialFilters.lat,
+        lng: safeInitialFilters.lng,
+        rayon: safeInitialFilters.rayon,
+        prixMin: safeInitialFilters.prixMin,
+        prixMax: safeInitialFilters.prixMax,
+        piecesMin: safeInitialFilters.piecesMin,
+        piecesMax: safeInitialFilters.piecesMax,
+        surfaceMin: safeInitialFilters.surfaceMin,
+        surfaceMax: safeInitialFilters.surfaceMax,
+        prestige: safeInitialFilters.prestige,
+        sort: safeInitialFilters.sort,
+        page: safeInitialFilters.page,
+    });
+
     const title =
         page.template === 'listing_sale'
             ? 'Biens à vendre'
@@ -26,21 +75,24 @@ export function ListingTemplate({
                 : page.titre || 'Nos biens';
 
     return (
-        <>
-            <section className="page-hero">
-                <p className="page-hero__eyebrow">Immobilier</p>
-                <h1 className="page-hero__title">{title}</h1>
-            </section>
-
-            <section className="section">
-                <BiensGrid biens={biens} previewDomain={previewDomain} />
-
-                <Pagination
-                    meta={meta}
+        <ListingProvider
+            key={providerKey}
+            initialBiens={biens}
+            initialMeta={meta}
+            initialFilters={safeInitialFilters}
+            availableFilters={availableFilters}
+            previewDomain={previewDomain}
+        >
+            <section className="page-liste-bien pd-l-r">
+                <ListingSearchBar
+                    variant="large"
+                    hideDealSelect={Boolean(forcedDeal)}
+                />
+                <ListingSplitMap
                     currentPath={currentPath}
                     previewDomain={previewDomain}
                 />
             </section>
-        </>
+        </ListingProvider>
     );
 }

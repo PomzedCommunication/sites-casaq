@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'app.casaq.ch',
+                hostname: 'dev.casaq.ch',
                 pathname: '/uploads/**',
             },
         ],

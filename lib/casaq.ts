@@ -1,3 +1,6 @@
+import type { ListingFilters } from '@/lib/listing/listing-types';
+import { filtersToApiParams } from '@/lib/listing/listing-url';
+
 export type CasaqPageTemplate =
     | 'default'
     | 'landing'
@@ -5,7 +8,9 @@ export type CasaqPageTemplate =
     | 'contact'
     | 'listing_general'
     | 'listing_sale'
-    | 'listing_rent';
+    | 'listing_rent'
+    | 'news_listing'
+    | 'news_detail';
 
 export type CasaqSiteConfig = {
   id: number;
@@ -17,11 +22,15 @@ export type CasaqSiteConfig = {
     nom: string;
   };
   config: {
-    couleur_primaire?: string;
-    couleur_secondaire?: string;
+    couleur_fond?: string;
+    couleur_gris?: string;
+    couleur_texte?: string;
+    couleur_agence?: string;
+
     font?: string;
     logo?: string | null;
     favicon?: string | null;
+    api_key_biens?: string;
   };
   infos: {
     slogan?: string | null;
@@ -34,6 +43,40 @@ export type CasaqSiteConfig = {
     url: string;
     ordre?: number;
   }>;
+  footer?: {
+    newsletter?: {
+      enabled?: boolean;
+      title?: string;
+      placeholder?: string;
+    };
+    quick_links?: {
+      title?: string;
+    };
+    hours?: {
+      title?: string;
+      items?: Array<{
+        label?: string;
+        value?: string;
+        day?: string;
+        morning?: string;
+        afternoon?: string;
+        note?: string;
+      }>;
+    };
+    contact?: {
+      title?: string;
+    };
+    legal_links?: Array<{
+      label?: string;
+      url?: string;
+    }>;
+    socials?: {
+      facebook?: string;
+      linkedin?: string;
+      twitter?: string;
+      instagram?: string;
+    };
+  };
   seo: {
     meta_description?: string | null;
     google_analytics?: string | null;
@@ -57,7 +100,7 @@ export type CasaqBloc = {
   type: string;
   ordre: number;
   actif: boolean;
-  data: Record<string, string | number | boolean | null>;
+  data: Record<string, unknown>;
 };
 
 export type CasaqBien = {
@@ -74,6 +117,10 @@ export type CasaqBien = {
     npa?: string | null;
     ville?: string | null;
     pays?: string | null;
+    lat?: number | null;
+    lng?: number | null;
+    public_mode?: string | null;
+    rayon_publication?: number | null;
   };
   caracteristiques?: {
     pieces?: string | number | null;
@@ -143,6 +190,7 @@ type GetSiteBiensParams = {
   page?: number;
   perPage?: number;
   deal?: 'SALE' | 'RENT';
+  extraParams?: URLSearchParams;
 };
 
 export async function getSiteBiens(
@@ -156,7 +204,7 @@ export async function getSiteBiens(
   const page = params.page || 1;
   const perPage = params.perPage || 12;
 
-  const search = new URLSearchParams();
+  const search = new URLSearchParams(params.extraParams || undefined);
 
   search.set('domain', domain);
   search.set('page', String(page));
@@ -165,6 +213,8 @@ export async function getSiteBiens(
 
   if (params.deal) {
     search.set('deal', params.deal);
+  } else {
+    search.delete('deal');
   }
 
   const url = `${API_URL}/api/v1/biens?${search.toString()}`;
@@ -282,4 +332,708 @@ export async function createSiteDemande(
     success: true,
     message: json?.message || 'Demande envoyée.',
   };
+}
+export type ContactAccount = {
+  id: number;
+  civilite?: string | null;
+  firstname?: string | null;
+  lastname?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  mobile?: string | null;
+  company?: string | null;
+  address?: string | null;
+  address2?: string | null;
+  npa?: string | null;
+  city?: string | null;
+  country?: string | null;
+};
+
+export type ContactAuthSession = {
+  token: string;
+  expires_at: string;
+  contact: ContactAccount;
+};
+
+export async function registerContactAccount(
+    domain: string,
+    payload: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      phone?: string;
+      password: string;
+      password_confirmation: string;
+      gdpr_accepted: boolean;
+    },
+): Promise<{
+  success: boolean;
+  message?: string;
+  data?: ContactAuthSession;
+}> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const res = await fetch(`${API_URL}/api/v1/contact-auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      domain,
+      ...payload,
+    }),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  return {
+    success: res.ok,
+    message: json?.message,
+    data: json?.data,
+  };
+}
+
+export async function loginContactAccount(
+    domain: string,
+    payload: {
+      email: string;
+      password: string;
+    },
+): Promise<{
+  success: boolean;
+  message?: string;
+  data?: ContactAuthSession;
+}> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const res = await fetch(`${API_URL}/api/v1/contact-auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      domain,
+      ...payload,
+    }),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  return {
+    success: res.ok,
+    message: json?.message,
+    data: json?.data,
+  };
+}
+
+export async function getContactAccount(
+    domain: string,
+    token: string,
+): Promise<{
+  success: boolean;
+  contact?: ContactAccount;
+}> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const search = new URLSearchParams();
+  search.set('domain', domain);
+
+  const res = await fetch(`${API_URL}/api/v1/contact/me?${search.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+  });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+    };
+  }
+
+  return {
+    success: true,
+    contact: json?.data?.contact,
+  };
+}
+
+
+
+export async function getSiteBiensFiltered(
+    domain: string,
+    filters: ListingFilters,
+    options?: {
+      perPage?: number;
+    }
+) {
+  const params = filtersToApiParams(filters);
+
+  params.set('page', String(filters.page || 1));
+  params.set('per_page', String(options?.perPage || 12));
+
+  return getSiteBiens(domain, {
+    page: filters.page || 1,
+    perPage: options?.perPage || 12,
+    deal: filters.deal,
+    extraParams: params,
+  });
+}
+
+export async function getSiteBiensAvailableFilters(
+    domain: string,
+    filters: ListingFilters
+) {
+  const params = filtersToApiParams(filters);
+
+  params.set('domain', domain);
+
+  const url = `${process.env.CASAQ_API_URL}/api/v1/biens/filters?${params.toString()}`;
+
+  const response = await fetch(url, {
+    next: {
+      revalidate: 60,
+      tags: [`site-biens-filters:${domain}`],
+    },
+  });
+
+  if (!response.ok) {
+    return undefined;
+  }
+
+  const json = await response.json();
+
+  return json.data || undefined;
+}
+
+
+export async function getSiteBiensByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqBien[]> {
+  const cleanIds = ids
+      .map((id) => String(id).trim())
+      .filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/biens/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+    },
+  });
+
+  if (!response.ok) {
+    console.error('Erreur getSiteBiensByIds', await response.text());
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export type CasaqPropertyCategory = {
+  id: number;
+  label: string;
+  slug: string;
+  count: number;
+};
+
+export async function getSitePropertyCategoriesByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqPropertyCategory[]> {
+  const cleanIds = ids
+      .map((id) => String(id).trim())
+      .filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/biens/categories/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-property-categories:${domain}:${cleanIds.join(',')}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+
+
+export async function getSitePosts(
+    domain: string,
+    options?: {
+      limit?: number;
+      category?: string;
+    },
+): Promise<CasaqPost[]> {
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/posts', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('limit', String(options?.limit || 6));
+
+  if (options?.category) {
+    url.searchParams.set('category', options.category);
+  }
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-posts:${domain}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export async function getSitePostsByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqPost[]> {
+  const cleanIds = ids
+      .map((id) => String(id).trim())
+      .filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/posts/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-posts-by-ids:${domain}:${cleanIds.join(',')}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+export type CasaqPost = {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  cover_image?: string | null;
+  category?: string | null;
+  published_at?: string | null;
+  url: string;
+  content?: string | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+};
+
+export async function getSitePost(
+    domain: string,
+    slug: string,
+): Promise<CasaqPost | null> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const search = new URLSearchParams();
+  search.set('domain', domain);
+
+  const url = `${API_URL}/api/v1/posts/${encodeURIComponent(slug)}?${search.toString()}`;
+
+  const res = await fetch(url, {
+    next: {
+      revalidate: 60,
+      tags: [`site-post:${domain}:${slug}`],
+    },
+  });
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const json = await res.json();
+
+  return json.data || null;
+}
+
+
+export type CasaqPostsMeta = {
+  total: number;
+  page: number;
+  per_page: number;
+  total_pages: number;
+  has_more: boolean;
+};
+
+export type CasaqPostsResponse = {
+  data: CasaqPost[];
+  meta: CasaqPostsMeta;
+};
+
+export async function getSitePostsListing(
+    domain: string,
+    params: {
+      page?: number;
+      perPage?: number;
+      category?: string;
+    } = {},
+): Promise<CasaqPostsResponse> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const page = params.page || 1;
+  const perPage = params.perPage || 9;
+
+  const search = new URLSearchParams();
+
+  search.set('domain', domain);
+  search.set('page', String(page));
+  search.set('limit', String(perPage));
+
+  if (params.category) {
+    search.set('category', params.category);
+  }
+
+  const url = `${API_URL}/api/v1/posts?${search.toString()}`;
+
+  const res = await fetch(url, {
+    next: {
+      revalidate: 60,
+      tags: [`site-posts-listing:${domain}`],
+    },
+  });
+
+  if (!res.ok) {
+    return {
+      data: [],
+      meta: {
+        total: 0,
+        page,
+        per_page: perPage,
+        total_pages: 0,
+        has_more: false,
+      },
+    };
+  }
+
+  const json = await res.json();
+
+  return {
+    data: Array.isArray(json.data) ? json.data : [],
+    meta: json.meta || {
+      total: 0,
+      page,
+      per_page: perPage,
+      total_pages: 0,
+      has_more: false,
+    },
+  };
+}
+
+
+
+export type CasaqTeamMember = {
+  id: number;
+  name: string;
+  job_title?: string | null;
+  bio?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  photo?: string | null;
+  category?: string | null;
+};
+
+export async function getSiteTeamMembers(
+    domain: string,
+    options?: {
+      limit?: number;
+    },
+): Promise<CasaqTeamMember[]> {
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/team-members', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('limit', String(options?.limit || 24));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-team-members:${domain}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export async function getSiteTeamMembersByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqTeamMember[]> {
+  const cleanIds = ids.map((id) => String(id).trim()).filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/team-members/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-team-members-by-ids:${domain}:${cleanIds.join(',')}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export type CasaqTestimonial = {
+  id: number;
+  author_name: string;
+  author_role?: string | null;
+  content?: string | null;
+  rating?: number | null;
+  photo?: string | null;
+  category?: string | null;
+  category_id?: number | null;
+};
+
+export async function getSiteTestimonials(
+    domain: string,
+    options?: {
+      limit?: number;
+      categoryId?: string | number | null;
+    },
+): Promise<CasaqTestimonial[]> {
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/testimonials', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('limit', String(options?.limit || 24));
+
+  if (options?.categoryId) {
+    url.searchParams.set('category_id', String(options.categoryId));
+  }
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-testimonials:${domain}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export async function getSiteTestimonialsByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqTestimonial[]> {
+  const cleanIds = ids.map((id) => String(id).trim()).filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/testimonials/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-testimonials-by-ids:${domain}:${cleanIds.join(',')}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export type CasaqPartner = {
+  id: number;
+  name: string;
+  slug?: string | null;
+  trade?: string | null;
+  description?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  logo_image?: string | null;
+  category?: string | null;
+};
+
+export async function getSitePartners(
+    domain: string,
+    options?: {
+      limit?: number;
+    },
+): Promise<CasaqPartner[]> {
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/partners', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('limit', String(options?.limit || 24));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-partners:${domain}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+export async function getSitePartnersByIds(
+    domain: string,
+    ids: Array<string | number>,
+): Promise<CasaqPartner[]> {
+  const cleanIds = ids.map((id) => String(id).trim()).filter(Boolean);
+
+  if (!cleanIds.length) {
+    return [];
+  }
+
+  const baseUrl =
+      process.env.CASAQ_API_URL ||
+      process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+      'https://dev.casaq.ch';
+
+  const url = new URL('/api/v1/partners/by-ids', baseUrl);
+
+  url.searchParams.set('domain', domain);
+  url.searchParams.set('ids', cleanIds.join(','));
+
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 60,
+      tags: [`site-partners-by-ids:${domain}:${cleanIds.join(',')}`],
+    },
+  });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
 }
