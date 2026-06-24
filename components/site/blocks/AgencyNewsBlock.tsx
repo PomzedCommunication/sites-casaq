@@ -9,6 +9,7 @@ type Props = {
     bloc: CasaqBloc;
     currentDomain: string;
     previewDomain?: string;
+    excludePostId?: string | number;
 };
 
 type Data = {
@@ -44,6 +45,7 @@ export async function AgencyNewsBlock({
                                           bloc,
                                           currentDomain,
                                           previewDomain,
+                                          excludePostId,
                                       }: Props) {
     const data = blockData<Data>(bloc);
     const cta = getLinkProps(data.cta);
@@ -58,12 +60,16 @@ export async function AgencyNewsBlock({
     const posts = await getAgencyPosts({
         domain: currentDomain,
         mode,
-        limit,
+        limit: excludePostId ? limit + 1 : limit,
         postIds,
         category: data.category,
     });
 
-    const serializedPosts = posts.map(serializePost);
+    const filteredPosts = excludePostId
+        ? posts.filter((post) => String(post.id) !== String(excludePostId)).slice(0, limit)
+        : posts.slice(0, limit);
+
+    const serializedPosts = filteredPosts.map(serializePost);
 
     return (
         <section className={`section agency-news agency-news--${variant}`}>

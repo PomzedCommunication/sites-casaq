@@ -72,27 +72,27 @@ export function CorrespondancesClient({ previewDomain }: Props) {
                 </div>
             ) : (
                 <>
-                    <div className="account-stats-grid">
-                        <div className="account-stat-card">
-                            <strong>{meta.biens}</strong>
-                            <span>Biens matchés</span>
-                        </div>
+                    {/*<div className="account-stats-grid">*/}
+                    {/*    <div className="account-stat-card">*/}
+                    {/*        <strong>{meta.biens}</strong>*/}
+                    {/*        <span>Biens matchés</span>*/}
+                    {/*    </div>*/}
 
-                        <div className="account-stat-card">
-                            <strong>{meta.matches}</strong>
-                            <span>Correspondances</span>
-                        </div>
+                    {/*    <div className="account-stat-card">*/}
+                    {/*        <strong>{meta.matches}</strong>*/}
+                    {/*        <span>Correspondances</span>*/}
+                    {/*    </div>*/}
 
-                        <div className="account-stat-card">
-                            <strong>{meta.new}</strong>
-                            <span>Nouveaux biens</span>
-                        </div>
+                    {/*    <div className="account-stat-card">*/}
+                    {/*        <strong>{meta.new}</strong>*/}
+                    {/*        <span>Nouveaux biens</span>*/}
+                    {/*    </div>*/}
 
-                        <div className="account-stat-card">
-                            <strong>{meta.price_changed}</strong>
-                            <span>Prix modifiés</span>
-                        </div>
-                    </div>
+                    {/*    <div className="account-stat-card">*/}
+                    {/*        <strong>{meta.price_changed}</strong>*/}
+                    {/*        <span>Prix modifiés</span>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
 
                     {items.length === 0 ? (
                         <div className="account-panel">
@@ -117,7 +117,7 @@ export function CorrespondancesClient({ previewDomain }: Props) {
 
                                 return (
                                     <article key={bienId} className="account-correspondance-card">
-                                        <div className="account-correspondance-badges">
+                                        <div className="account-correspondance-badges site-btn btn-sm">
                                             <span>{item.best_score}%</span>
 
                                             {item.new ? <span>Nouveau</span> : null}
@@ -129,44 +129,44 @@ export function CorrespondancesClient({ previewDomain }: Props) {
                                             previewDomain={previewDomain || undefined}
                                         />
 
-                                        <div className="account-correspondance-footer">
-                                            <div>
-                                                <strong>{item.matches.length}</strong>{' '}
-                                                recherche{item.matches.length > 1 ? 's' : ''} correspondante
-                                            </div>
+                                        {/*<div className="account-correspondance-footer">*/}
+                                        {/*    <div>*/}
+                                        {/*        <strong>{item.matches.length}</strong>{' '}*/}
+                                        {/*        recherche{item.matches.length > 1 ? 's' : ''} correspondante*/}
+                                        {/*    </div>*/}
 
-                                            <button type="button" onClick={() => toggleOpen(bienId)}>
-                                                {isOpen ? 'Masquer le détail' : 'Voir le détail'}
-                                            </button>
-                                        </div>
+                                        {/*    <button type="button" onClick={() => toggleOpen(bienId)}>*/}
+                                        {/*        {isOpen ? 'Masquer le détail' : 'Voir le détail'}*/}
+                                        {/*    </button>*/}
+                                        {/*</div>*/}
 
-                                        {isOpen ? (
-                                            <div className="account-correspondance-detail">
-                                                {item.matches.map((match) => (
-                                                    <div key={match.id} className="account-correspondance-match">
-                                                        <div>
-                                                            <div className="account-correspondance-match-title">
-                                                                {match.search.name}
-                                                            </div>
+                                        {/*{isOpen ? (*/}
+                                        {/*    <div className="account-correspondance-detail">*/}
+                                        {/*        {item.matches.map((match) => (*/}
+                                        {/*            <div key={match.id} className="account-correspondance-match">*/}
+                                        {/*                <div>*/}
+                                        {/*                    <div className="account-correspondance-match-title">*/}
+                                        {/*                        {match.search.name}*/}
+                                        {/*                    </div>*/}
 
-                                                            {match.search.summary ? (
-                                                                <p>{match.search.summary}</p>
-                                                            ) : null}
+                                        {/*                    {match.search.summary ? (*/}
+                                        {/*                        <p>{match.search.summary}</p>*/}
+                                        {/*                    ) : null}*/}
 
-                                                            {match.reasons.length > 0 ? (
-                                                                <div className="account-correspondance-reasons">
-                                                                    {match.reasons.slice(0, 6).map((reason) => (
-                                                                        <span key={reason}>{reason}</span>
-                                                                    ))}
-                                                                </div>
-                                                            ) : null}
-                                                        </div>
+                                        {/*                    {match.reasons.length > 0 ? (*/}
+                                        {/*                        <div className="account-correspondance-reasons">*/}
+                                        {/*                            {match.reasons.slice(0, 6).map((reason) => (*/}
+                                        {/*                                <span key={reason}>{reason}</span>*/}
+                                        {/*                            ))}*/}
+                                        {/*                        </div>*/}
+                                        {/*                    ) : null}*/}
+                                        {/*                </div>*/}
 
-                                                        <strong>{match.score}%</strong>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : null}
+                                        {/*                <strong>{match.score}%</strong>*/}
+                                        {/*            </div>*/}
+                                        {/*        ))}*/}
+                                        {/*    </div>*/}
+                                        {/*) : null}*/}
                                     </article>
                                 );
                             })}

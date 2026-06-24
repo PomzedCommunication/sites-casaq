@@ -4,6 +4,11 @@ import {
     getSiteTestimonialsByIds,
 } from '@/lib/casaq';
 import { blockData, siteAssetUrl } from '@/lib/site-blocks';
+import { parseSiteHtml } from '@/lib/site-html';
+import {
+    TestimonialsSlider,
+    type SerializedTestimonial,
+} from '@/components/site/blocks/TestimonialsSlider';
 
 type Props = {
     bloc: CasaqBloc;
@@ -36,55 +41,36 @@ export async function TestimonialsBlock({ bloc, currentDomain }: Props) {
                 categoryId: mode === 'category' ? data.category_id : null,
             });
 
+    const serializedTestimonials: SerializedTestimonial[] = testimonials.map((testimonial) => ({
+        id: testimonial.id,
+        content: testimonial.content || '',
+        author_name: testimonial.author_name || '',
+        author_role: testimonial.author_role || '',
+        photo: siteAssetUrl(testimonial.photo) || null,
+        rating: Number(testimonial.rating || 0),
+    }));
+
     return (
-        <section className={`section testimonials testimonials--${bloc.data.variant || 'cards'}`}>
+        <section className={`section testimonials pd-l-r testimonials--${bloc.data.variant || 'cards'}`}>
             <div className="container">
-                <div className="section-heading">
-                    <h2>{data.titre || 'Témoignages'}</h2>
-                    {data.texte ? <p>{data.texte}</p> : null}
-                </div>
+                {data.titre ? (
+                        <div className="section-heading">
+                    <div>
+                        <h2>{data.titre }</h2>
 
-                {testimonials.length ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-                        {testimonials.map((testimonial) => {
-                            const photo = siteAssetUrl(testimonial.photo);
-                            const rating = Math.max(0, Math.min(5, Number(testimonial.rating || 0)));
-
-                            return (
-                                <article
-                                    key={testimonial.id}
-                                    style={{ background: '#fff', padding: 24, borderRadius: 12 }}
-                                >
-                                    {rating ? <p>{'★'.repeat(rating)}</p> : null}
-
-                                    {testimonial.content ? (
-                                        <p>{testimonial.content}</p>
-                                    ) : null}
-
-                                    {photo ? (
-                                        <img
-                                            src={photo}
-                                            alt={testimonial.author_name || ''}
-                                            style={{
-                                                width: 40,
-                                                height: 40,
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    ) : null}
-
-                                    <strong>{testimonial.author_name || 'Auteur'}</strong>
-
-                                    {testimonial.author_role ? (
-                                        <p>{testimonial.author_role}</p>
-                                    ) : null}
-                                </article>
-                            );
-                        })}
+                        {data.texte ? (
+                            <div className="txt">
+                                {parseSiteHtml(data.texte)}
+                            </div>
+                        ) : null}
                     </div>
+                </div>
+                ) : null}
+
+                {serializedTestimonials.length ? (
+                    <TestimonialsSlider testimonials={serializedTestimonials} />
                 ) : (
-                    <div style={{ padding: 16, background: '#fff', borderRadius: 8 }}>
+                    <div className="testimonials__empty">
                         Aucun témoignage disponible.
                     </div>
                 )}

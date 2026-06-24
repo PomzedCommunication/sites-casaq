@@ -42,34 +42,54 @@ export type CasaqSiteConfig = {
     label: string;
     url: string;
     ordre?: number;
+    children?: Array<{
+      label: string;
+      url: string;
+      ordre?: number;
+    }>;
   }>;
   footer?: {
+    logo?: string | null;
+    description?: string | null;
+
     newsletter?: {
       enabled?: boolean;
       title?: string;
       placeholder?: string;
     };
+
     quick_links?: {
       title?: string;
     };
+
     hours?: {
       title?: string;
       items?: Array<{
         label?: string;
-        value?: string;
         day?: string;
-        morning?: string;
-        afternoon?: string;
+        weekday?: number;
+        closed?: boolean;
+        slots?: Array<{
+          start?: string; // "08:00"
+          end?: string;   // "12:00"
+        }>;
+        value?: string; // fallback ancien format
         note?: string;
       }>;
     };
+    holiday_closures?: Array<{
+      date?: string;
+      label?: string;
+    }>;
     contact?: {
       title?: string;
     };
+
     legal_links?: Array<{
       label?: string;
       url?: string;
     }>;
+
     socials?: {
       facebook?: string;
       linkedin?: string;
@@ -134,6 +154,25 @@ export type CasaqBien = {
     devise?: string | null;
     sur_demande?: boolean;
   };
+  contact_visite?: {
+    type?: string | null;
+    prenom?: string | null;
+    nom?: string | null;
+    nom_complet?: string | null;
+    email?: string | null;
+    telephone?: string | null;
+    mobile?: string | null;
+    image?: string | null;
+  } | null;
+  documents?: Array<{
+    id?: number;
+    label?: string | null;
+    url?: string | null;
+    extension?: string | null;
+    mime_type?: string | null;
+    size?: string | null;
+    position?: number | null;
+  }>;
   images?: Array<{
     url?: string | null;
     variants?: {
@@ -284,7 +323,7 @@ export async function getSiteBien(
 
 
 export type CreateDemandePayload = {
-  bien_id: number;
+  bien_id?: number | null;
   civilite?: '1' | '2' | '3' | '4';
   firstname: string;
   lastname: string;
@@ -682,6 +721,7 @@ export type CasaqPost = {
   published_at?: string | null;
   url: string;
   content?: string | null;
+  blocks?: CasaqBloc[];
   seo?: {
     title?: string | null;
     description?: string | null;
@@ -737,6 +777,7 @@ export async function getSitePostsListing(
       page?: number;
       perPage?: number;
       category?: string;
+      search?: string;
     } = {},
 ): Promise<CasaqPostsResponse> {
   if (!API_URL) {
@@ -755,7 +796,9 @@ export async function getSitePostsListing(
   if (params.category) {
     search.set('category', params.category);
   }
-
+  if (params.search) {
+    search.set('search', params.search);
+  }
   const url = `${API_URL}/api/v1/posts?${search.toString()}`;
 
   const res = await fetch(url, {
@@ -962,18 +1005,21 @@ export type CasaqPartner = {
   name: string;
   slug?: string | null;
   trade?: string | null;
+  city?: string | null;
   description?: string | null;
   email?: string | null;
   phone?: string | null;
   website?: string | null;
   logo_image?: string | null;
   category?: string | null;
+  category_id?: number | null;
 };
 
 export async function getSitePartners(
     domain: string,
     options?: {
       limit?: number;
+      categoryId?: string | number | null;
     },
 ): Promise<CasaqPartner[]> {
   const baseUrl =
@@ -986,10 +1032,14 @@ export async function getSitePartners(
   url.searchParams.set('domain', domain);
   url.searchParams.set('limit', String(options?.limit || 24));
 
+  if (options?.categoryId) {
+    url.searchParams.set('category_id', String(options.categoryId));
+  }
+
   const response = await fetch(url.toString(), {
     next: {
       revalidate: 60,
-      tags: [`site-partners:${domain}`],
+      tags: [`site-partners:${domain}:${options?.categoryId || 'all'}`],
     },
   });
 
@@ -1001,7 +1051,6 @@ export async function getSitePartners(
 
   return Array.isArray(json.data) ? json.data : [];
 }
-
 export async function getSitePartnersByIds(
     domain: string,
     ids: Array<string | number>,
@@ -1034,6 +1083,39 @@ export async function getSitePartnersByIds(
   }
 
   const json = await response.json();
+
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+
+export async function getSiteSimilarBiens(
+    domain: string,
+    id: string | number,
+    limit = 4,
+): Promise<CasaqBien[]> {
+  if (!API_URL) {
+    throw new Error('CASAQ_API_URL manquant dans .env.local');
+  }
+
+  const search = new URLSearchParams();
+
+  search.set('domain', domain);
+  search.set('limit', String(limit));
+
+  const url = `${API_URL}/api/v1/biens/${id}/similaires?${search.toString()}`;
+
+  const res = await fetch(url, {
+    next: {
+      revalidate: 60,
+      tags: [`site-bien-similaires:${domain}:${id}`],
+    },
+  });
+
+  if (!res.ok) {
+    return [];
+  }
+
+  const json = await res.json();
 
   return Array.isArray(json.data) ? json.data : [];
 }

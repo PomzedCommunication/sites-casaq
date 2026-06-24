@@ -1,8 +1,17 @@
-// components/site/AgencyNewsListingPage.tsx
-
 import Link from 'next/link';
-import type { CasaqPage, CasaqPost, CasaqPostsMeta, CasaqSiteConfig } from '@/lib/casaq';
+import Image from 'next/image';
+import type {
+    CasaqBiensMeta,
+    CasaqBien,
+    CasaqPage,
+    CasaqPost,
+    CasaqPostsMeta,
+    CasaqSiteConfig,
+} from '@/lib/casaq';
 import { withPreviewUrl } from '@/lib/site-blocks';
+import { BlocksRenderer } from '@/components/site/blocks/BlocksRenderer';
+import { AgencyNewsFilters } from '@/components/site/templates/AgencyNewsFilters';
+import {parseSiteHtml} from "@/lib/site-html";
 
 type Props = {
     site: CasaqSiteConfig;
@@ -10,8 +19,21 @@ type Props = {
     posts: CasaqPost[];
     meta: CasaqPostsMeta;
     currentPath: string;
+    currentDomain: string;
+    search?: string;
     category?: string;
+    categories?: string[];
     previewDomain?: string;
+};
+
+const emptyBiens: CasaqBien[] = [];
+
+const emptyBiensMeta: CasaqBiensMeta = {
+    total: 0,
+    page: 1,
+    per_page: 12,
+    total_pages: 0,
+    has_more: false,
 };
 
 function buildPageHref(
@@ -19,6 +41,7 @@ function buildPageHref(
     page: number,
     category?: string,
     previewDomain?: string,
+    search?: string,
 ) {
     const params = new URLSearchParams();
 
@@ -30,34 +53,56 @@ function buildPageHref(
         params.set('category', category);
     }
 
+    if (search) {
+        params.set('search', search);
+    }
+
     const query = params.toString();
     const href = query ? `${currentPath}?${query}` : currentPath;
 
     return withPreviewUrl(href, previewDomain);
 }
 
+function formatDate(value?: string | null) {
+    if (!value) {
+        return null;
+    }
+
+    return new Date(value).toLocaleDateString('fr-CH');
+}
+
 export function AgencyNewsListingPage({
+                                          site,
                                           page,
                                           posts,
                                           meta,
                                           currentPath,
+                                          currentDomain,
+                                          search,
                                           category,
+                                          categories = [],
                                           previewDomain,
                                       }: Props) {
     return (
         <main className="site-main">
-            <section className="section agency-news-listing">
-                <div className="container">
-                    <div className="section-heading">
-                        <h1>{page.titre || 'Actualités'}</h1>
-                        {page.meta_description ? <p>{page.meta_description}</p> : null}
-                    </div>
+            <BlocksRenderer
+                site={site}
+                page={page}
+                biens={emptyBiens}
+                meta={emptyBiensMeta}
+                currentDomain={currentDomain}
+                previewDomain={previewDomain}
+            />
 
-                    {category ? (
-                        <div className="agency-news-listing__filter">
-                            Catégorie : <strong>{category}</strong>
-                        </div>
-                    ) : null}
+            <section className="section agency-news-listing pd-l-r">
+                <div className="container">
+                    <AgencyNewsFilters
+                        currentPath={currentPath}
+                        search={search}
+                        category={category}
+                        categories={categories}
+                        previewDomain={previewDomain}
+                    />
 
                     {posts.length ? (
                         <div className="agency-news-listing__grid">
@@ -67,34 +112,46 @@ export function AgencyNewsListingPage({
                                     previewDomain
                                 );
 
-                                return (
-                                    <article key={post.id} className="agency-news-listing__card">
-                                        <Link href={postHref}>
-                                            {post.cover_image ? (
-                                                <img
-                                                    src={post.cover_image}
-                                                    alt={post.title}
-                                                    className="agency-news-listing__image"
-                                                />
-                                            ) : null}
+                                const publishedLabel = formatDate(post.published_at);
 
-                                            <div className="agency-news-listing__content">
+                                return (
+                                    <article key={post.id} className="agency-news__card">
+                                        <Link href={postHref} className="agency-news__link">
+                                            <div className="agency-news__image-wrap">
+                                                {post.cover_image ? (
+                                                    <Image
+                                                        src={post.cover_image}
+                                                        alt={post.title}
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                                        className="agency-news__image"
+                                                    />
+                                                ) : (
+                                                    <div className="agency-news__placeholder">
+                                                    </div>
+                                                )}
+
                                                 {post.category ? (
-                                                    <span className="agency-news-listing__category">
+                                                    <span className="agency-news__badge site-btn btn-sm white">
                                                         {post.category}
                                                     </span>
                                                 ) : null}
+                                            </div>
 
-                                                <h2>{post.title}</h2>
+                                            <div className="agency-news__content">
+                                                <div className="agency-news__meta">
+                                                    {post.published_at && publishedLabel ? (
+                                                        <time dateTime={post.published_at}>
+                                                            {publishedLabel}
+                                                        </time>
+                                                    ) : null}
+                                                </div>
 
+                                                <h3>{post.title}</h3>
                                                 {post.excerpt ? (
-                                                    <p>{post.excerpt}</p>
-                                                ) : null}
-
-                                                {post.published_at ? (
-                                                    <time dateTime={post.published_at}>
-                                                        {new Date(post.published_at).toLocaleDateString('fr-CH')}
-                                                    </time>
+                                                    <div className="txt">
+                                                        {parseSiteHtml(post.excerpt)}
+                                                    </div>
                                                 ) : null}
                                             </div>
                                         </Link>
@@ -103,7 +160,7 @@ export function AgencyNewsListingPage({
                             })}
                         </div>
                     ) : (
-                        <div style={{ padding: 16, background: '#fff', borderRadius: 8 }}>
+                        <div className="agency-news-listing__empty">
                             Aucune actualité disponible.
                         </div>
                     )}
@@ -116,7 +173,8 @@ export function AgencyNewsListingPage({
                                         currentPath,
                                         meta.page - 1,
                                         category,
-                                        previewDomain
+                                        previewDomain,
+                                        search
                                     )}
                                 >
                                     Précédent
@@ -133,7 +191,8 @@ export function AgencyNewsListingPage({
                                         currentPath,
                                         meta.page + 1,
                                         category,
-                                        previewDomain
+                                        previewDomain,
+                                        search
                                     )}
                                 >
                                     Suivant

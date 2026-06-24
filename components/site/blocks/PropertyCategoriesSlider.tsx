@@ -16,6 +16,7 @@ import 'swiper/css/pagination';
 
 type Category = {
     id: string | number;
+    slug?: string;
     label?: string;
     count?: string | number;
 };
@@ -36,18 +37,27 @@ export function PropertyCategoriesSlider({
 
     const bindNavigation = (swiper: SwiperType) => {
         setTimeout(() => {
-            if (!prevRef.current || !nextRef.current) {
+            if (
+                !swiper ||
+                swiper.destroyed ||
+                !swiper.params ||
+                !prevRef.current ||
+                !nextRef.current
+            ) {
                 return;
             }
 
-            const navigation = swiper.params.navigation as NavigationOptions;
+            swiper.params.navigation = {
+                ...(typeof swiper.params.navigation === 'object'
+                    ? swiper.params.navigation
+                    : {}),
+                prevEl: prevRef.current,
+                nextEl: nextRef.current,
+            };
 
-            navigation.prevEl = prevRef.current;
-            navigation.nextEl = nextRef.current;
-
-            swiper.navigation.destroy();
-            swiper.navigation.init();
-            swiper.navigation.update();
+            swiper.navigation?.destroy();
+            swiper.navigation?.init();
+            swiper.navigation?.update();
         });
     };
 
@@ -68,14 +78,14 @@ export function PropertyCategoriesSlider({
                 onSwiper={bindNavigation}
                 breakpoints={{
                     0: {
-                        slidesPerView: 1.1,
+                        slidesPerView: 1,
                         spaceBetween: 16,
                     },
-                    640: {
+                    980: {
                         slidesPerView: 2,
                         spaceBetween: 20,
                     },
-                    1024: {
+                    1250: {
                         slidesPerView: 3,
                         spaceBetween: 24,
                     },
@@ -89,7 +99,9 @@ export function PropertyCategoriesSlider({
                         <SwiperSlide key={category.id}>
                             <Link
                                 href={withPreviewUrl(
-                                    `/biens?category=${category.id}`,
+                                    `/biens?category_parent=${encodeURIComponent(
+                                        category.slug || String(category.id)
+                                    )}`,
                                     previewDomain
                                 )}
                                 className="property-categories__card white"

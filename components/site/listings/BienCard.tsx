@@ -36,7 +36,7 @@ export function BienCard({ bien, previewDomain }: Props) {
                     <>
                         <Swiper
                             modules={[Navigation, Pagination]}
-                            pagination={{ clickable: true }}
+                            pagination={{clickable: true}}
                             loop
                             spaceBetween={1}
                             onSwiper={(swiper) => {
@@ -69,7 +69,14 @@ export function BienCard({ bien, previewDomain }: Props) {
                                 swiperRef.current?.slidePrev();
                             }}
                             aria-label="Photo précédente"
-                        />
+                        >
+                            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="21" cy="21" r="21" transform="matrix(-1 0 0 1 42 0)" fill="currentColor"/>
+                                <path d="M23 14L16 21L23 28" stroke="white" strokeWidth="2" strokeLinecap="round"
+                                      strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
                         <button
                             type="button"
@@ -80,7 +87,14 @@ export function BienCard({ bien, previewDomain }: Props) {
                                 swiperRef.current?.slideNext();
                             }}
                             aria-label="Photo suivante"
-                        />
+                        >
+                            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="21" cy="21" r="21" fill="currentColor"/>
+                                <path d="M18 14L25 21L18 28" stroke="white" strokeWidth="2" strokeLinecap="round"
+                                      strokeLinejoin="round"/>
+                            </svg>
+                        </button>
                     </>
                 ) : photos.length === 1 ? (
                     <Link href={href} className="bien-card__photo-link">
@@ -116,19 +130,6 @@ export function BienCard({ bien, previewDomain }: Props) {
                 {isNewBien(bien) ? (
                     <span className="bien-card__badge">
                         Nouveau
-                        <svg
-                            width="11"
-                            height="10"
-                            viewBox="0 0 11 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true"
-                        >
-                            <path
-                                d="M4.66846 0.345492C4.81813 -0.115163 5.46984 -0.115164 5.61951 0.345491L6.49107 3.02786C6.558 3.23387 6.74998 3.37335 6.9666 3.37335H9.78701C10.2714 3.37335 10.4728 3.99316 10.0809 4.27786L7.79914 5.93566C7.6239 6.06298 7.55057 6.28867 7.6175 6.49468L8.48906 9.17705C8.63874 9.6377 8.1115 10.0208 7.71964 9.73607L5.43788 8.07827C5.26263 7.95095 5.02533 7.95095 4.85009 8.07827L2.56833 9.73607C2.17647 10.0208 1.64923 9.63771 1.79891 9.17705L2.67046 6.49468C2.7374 6.28867 2.66407 6.06298 2.48883 5.93566L0.207066 4.27786C-0.184791 3.99316 0.0165963 3.37335 0.500958 3.37335H3.32137C3.53798 3.37335 3.72996 3.23387 3.7969 3.02786L4.66846 0.345492Z"
-                                fill="currentColor"
-                            />
-                        </svg>
                     </span>
                 ) : null}
 
@@ -171,20 +172,60 @@ export function BienCard({ bien, previewDomain }: Props) {
     );
 }
 
+// function getBienPhotos(bien: CasaqBien): Array<{ src: string; alt?: string | null }> {
+//     return (bien.images || [])
+//         .map((image) => ({
+//             src:
+//                 image.variants?.large ||
+//                 image.variants?.medium ||
+//                 image.variants?.xl ||
+//                 image.url ||
+//                 '',
+//             alt: image.alt || bien.titre,
+//         }))
+//         .filter((image) => Boolean(image.src));
+// }
 function getBienPhotos(bien: CasaqBien): Array<{ src: string; alt?: string | null }> {
-    return (bien.images || [])
-        .map((image) => ({
-            src:
-                image.variants?.large ||
-                image.variants?.medium ||
-                image.variants?.xl ||
-                image.url ||
-                '',
-            alt: image.alt || bien.titre,
-        }))
+    const rawBien = bien as CasaqBien & {
+        photos?: unknown[];
+        medias?: unknown[];
+        media?: unknown[];
+        pictures?: unknown[];
+    };
+
+    const images =
+        bien.images ||
+        rawBien.photos ||
+        rawBien.medias ||
+        rawBien.media ||
+        rawBien.pictures ||
+        [];
+
+    return images
+        .map((image: any) => {
+            if (typeof image === 'string') {
+                return {
+                    src: image,
+                    alt: bien.titre,
+                };
+            }
+
+            return {
+                src:
+                    image.variants?.large ||
+                    image.variants?.medium ||
+                    image.variants?.xl ||
+                    image.large ||
+                    image.medium ||
+                    image.xl ||
+                    image.url ||
+                    image.src ||
+                    '',
+                alt: image.alt || bien.titre,
+            };
+        })
         .filter((image) => Boolean(image.src));
 }
-
 function getCardTitle(bien: CasaqBien): string {
     const parts = [
         bien.categorie,

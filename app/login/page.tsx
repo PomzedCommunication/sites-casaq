@@ -1,116 +1,54 @@
-'use client';
+import type { Metadata } from 'next';
+import { getCurrentDomain } from '@/lib/domain';
+import { getSiteConfig } from '@/lib/casaq';
+import { SiteLayout } from '@/components/site/layout/SiteLayout';
+import { SiteNotConfigured } from '@/components/site/SiteNotConfigured';
+import { LoginFormClient } from '@/components/site/account/LoginFormClient';
 
-import Link from 'next/link';
-import { FormEvent, Suspense, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import {
-    buildUrlWithPreviewDomain,
-    getCurrentDomainFromBrowser,
-    loginContactAccountClient,
-    saveContactToken,
-} from '@/lib/contact-auth-client';
+type PageProps = {
+    searchParams?: Promise<{
+        site?: string;
+    }>;
+};
 
-function LoginPageContent() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
+export async function generateMetadata({
+                                           searchParams,
+                                       }: PageProps): Promise<Metadata> {
+    const resolvedSearchParams = await searchParams;
+    const domain = await getCurrentDomain(resolvedSearchParams);
+    const site = await getSiteConfig(domain);
 
-    const previewDomain = searchParams.get('site');
+    return {
+        title: site ? `Connexion — ${site.agence.nom}` : 'Connexion',
+        description: 'Connectez-vous à votre espace personnel.',
+        icons: site?.config.favicon
+            ? {
+                icon: site.config.favicon,
+                shortcut: site.config.favicon,
+                apple: site.config.favicon,
+            }
+            : undefined,
+    };
+}
 
-    const registerUrl = useMemo(
-        () => buildUrlWithPreviewDomain('/register', previewDomain),
-        [previewDomain],
-    );
+export default async function LoginPage({ searchParams }: PageProps) {
+    const resolvedSearchParams = await searchParams;
+    const domain = await getCurrentDomain(resolvedSearchParams);
+    const site = await getSiteConfig(domain);
 
-    const forgotPasswordUrl = useMemo(
-        () => buildUrlWithPreviewDomain('/forgot-password', previewDomain),
-        [previewDomain],
-    );
-
-    const accountUrl = useMemo(
-        () => buildUrlWithPreviewDomain('/mon-compte', previewDomain),
-        [previewDomain],
-    );
-
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
-
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        setLoading(true);
-        setMessage(null);
-
-        const domain = getCurrentDomainFromBrowser();
-
-        const result = await loginContactAccountClient({
-            domain,
-            email,
-            password,
-        });
-
-        setLoading(false);
-
-        if (!result.success || !result.data?.token) {
-            setMessage(result.message || 'Connexion impossible.');
-            return;
-        }
-
-        saveContactToken(result.data.token);
-        router.push(accountUrl);
+    if (!site) {
+        return <SiteNotConfigured domain={domain} />;
     }
 
     return (
-        <main className="account-auth">
-            <section className="account-auth__card">
-                <h1>Connexion</h1>
-                <p>Connectez-vous à votre espace personnel.</p>
-
-                <form onSubmit={handleSubmit} className="account-form">
-                    <label className="account-field">
-                        Adresse e-mail
-                        <input
-                            type="email"
-                            autoComplete="email"
-                            required
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-                        />
-                    </label>
-
-                    <label className="account-field">
-                        Mot de passe
-                        <input
-                            type="password"
-                            autoComplete="current-password"
-                            required
-                            value={password}
-                            onChange={(event) => setPassword(event.target.value)}
-                        />
-                    </label>
-
-                    {message ? <p className="account-message account-message--error">{message}</p> : null}
-
-                    <button type="submit" className="account-button" disabled={loading}>
-                        {loading ? 'Connexion...' : 'Se connecter'}
-                    </button>
-                </form>
-
-                <div className="account-auth__links">
-                    <Link href={registerUrl}>Créer un compte</Link>
-                    <Link href={forgotPasswordUrl}>Mot de passe oublié ?</Link>
-                </div>
-            </section>
-        </main>
-    );
-}
-
-export default function LoginPage() {
-    return (
-        <Suspense fallback={null}>
-            <LoginPageContent />
-        </Suspense>
+        <SiteLayout
+            site={site}
+            currentDomain={domain}
+            previewDomain={resolvedSearchParams?.site}
+        >
+            <main className="account-auth">
+                <LoginFormClient previewDomain={resolvedSearchParams?.site} />
+            </main>
+        </SiteLayout>
     );
 }

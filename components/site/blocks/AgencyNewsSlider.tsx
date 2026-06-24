@@ -14,6 +14,7 @@ import type { SerializedPost } from './AgencyNewsBlock';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import {parseSiteHtml} from "@/lib/site-html";
 
 type Props = {
     posts: SerializedPost[];
@@ -24,22 +25,35 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
     const prevRef = useRef<HTMLButtonElement | null>(null);
     const nextRef = useRef<HTMLButtonElement | null>(null);
 
-    const canLoop = posts.length > 3;
+    const canSlide = posts.length > 3;
 
     const bindNavigation = (swiper: SwiperType) => {
         setTimeout(() => {
-            if (!prevRef.current || !nextRef.current) {
+            if (!canSlide) {
                 return;
             }
 
-            const navigation = swiper.params.navigation as NavigationOptions;
+            if (
+                !swiper ||
+                swiper.destroyed ||
+                !swiper.params ||
+                !prevRef.current ||
+                !nextRef.current
+            ) {
+                return;
+            }
 
-            navigation.prevEl = prevRef.current;
-            navigation.nextEl = nextRef.current;
+            swiper.params.navigation = {
+                ...(typeof swiper.params.navigation === 'object'
+                    ? swiper.params.navigation
+                    : {}),
+                prevEl: prevRef.current,
+                nextEl: nextRef.current,
+            };
 
-            swiper.navigation.destroy();
-            swiper.navigation.init();
-            swiper.navigation.update();
+            swiper.navigation?.destroy();
+            swiper.navigation?.init();
+            swiper.navigation?.update();
         });
     };
 
@@ -49,21 +63,21 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
                 modules={[Navigation, A11y]}
                 slidesPerView={3}
                 spaceBetween={24}
-                navigation
-                grabCursor
+                navigation={canSlide}
+                grabCursor={canSlide}
                 watchOverflow
-                loop={canLoop}
-                onSwiper={bindNavigation}
+                loop={canSlide}
+                onSwiper={canSlide ? bindNavigation : undefined}
                 breakpoints={{
                     0: {
                         slidesPerView: 1,
                         spaceBetween: 16,
                     },
-                    768: {
+                    980: {
                         slidesPerView: 2,
                         spaceBetween: 24,
                     },
-                    1024: {
+                    1250: {
                         slidesPerView: 3,
                         spaceBetween: 24,
                     },
@@ -87,9 +101,7 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
                                             className="agency-news__image"
                                         />
                                     ) : (
-                                        <div className="agency-news__placeholder">
-                                            Aucun visuel
-                                        </div>
+                                        <div className="agency-news__placeholder" />
                                     )}
 
                                     {post.category ? (
@@ -97,12 +109,10 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
                                             {post.category}
                                         </span>
                                     ) : null}
-
                                 </div>
 
                                 <div className="agency-news__content">
                                     <div className="agency-news__meta">
-
                                         {post.publishedAt && post.publishedLabel ? (
                                             <time dateTime={post.publishedAt}>
                                                 {post.publishedLabel}
@@ -112,7 +122,11 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
 
                                     <h3>{post.title}</h3>
 
-                                    {post.excerpt ? <p>{post.excerpt}</p> : null}
+                                    {post.excerpt ? (
+                                        <div className="txt">
+                                            {parseSiteHtml(post.excerpt)}
+                                        </div>
+                                    ) : null}
                                 </div>
                             </Link>
                         </article>
@@ -120,16 +134,18 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
                 ))}
             </Swiper>
 
-            <div className="agency-news__controls">
-                <SliderArrows
-                    prevRef={prevRef}
-                    nextRef={nextRef}
-                    prevClassName="agency-news__prev"
-                    nextClassName="agency-news__next"
-                    prevLabel="Actualité précédente"
-                    nextLabel="Actualité suivante"
-                />
-            </div>
+            {canSlide ? (
+                <div className="agency-news__controls">
+                    <SliderArrows
+                        prevRef={prevRef}
+                        nextRef={nextRef}
+                        prevClassName="agency-news__prev"
+                        nextClassName="agency-news__next"
+                        prevLabel="Actualité précédente"
+                        nextLabel="Actualité suivante"
+                    />
+                </div>
+            ) : null}
         </div>
     );
 }

@@ -16,7 +16,7 @@ import type { ListingFilters } from '@/lib/listing/listing-types';
 import { parseListingPath } from '@/lib/listing/listing-url';
 import { AgencyNewsSinglePage } from '@/components/site/templates/AgencyNewsSinglePage';
 import { AgencyNewsListingPage } from '@/components/site/templates/AgencyNewsListingPage';
-
+import { SiteLayout } from '@/components/site/layout/SiteLayout';
 type PageProps = {
     params: Promise<{
         slug?: string[];
@@ -172,6 +172,11 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
 
     const domain = await getCurrentDomain(resolvedSearchParams);
     const site = await getSiteConfig(domain);
+    const previewDomain =
+        typeof resolvedSearchParams?.site === 'string'
+            ? resolvedSearchParams.site
+            : undefined;
+
 
     if (!site) {
         notFound();
@@ -193,10 +198,19 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
         }
 
         return (
-            <AgencyNewsSinglePage
+            <SiteLayout
                 site={site}
-                post={post}
-            />
+                currentDomain={domain}
+                previewDomain={previewDomain}
+            >
+                <AgencyNewsSinglePage
+                    site={site}
+                    page={page}
+                    post={post}
+                    currentDomain={domain}
+                    previewDomain={previewDomain}
+                />
+            </SiteLayout>
         );
     }
     if (isNewsListingPage(page, slugParts)) {
@@ -207,25 +221,52 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
                 ? resolvedSearchParams.category
                 : undefined;
 
+        const search =
+            typeof resolvedSearchParams?.search === 'string'
+                ? resolvedSearchParams.search
+                : undefined;
+
         const postsResponse = await getSitePostsListing(domain, {
             page: pageNumber,
             perPage: 9,
             category,
+            search,
         });
 
+        const categoriesResponse = await getSitePostsListing(domain, {
+            page: 1,
+            perPage: 50,
+        });
+
+        const categories = Array.from(
+            new Set(
+                categoriesResponse.data
+                    .map((post) => post.category)
+                    .filter((item): item is string => Boolean(item))
+            )
+        );
+
         return (
-            <AgencyNewsListingPage
+            <SiteLayout
                 site={site}
-                page={page}
-                posts={postsResponse.data}
-                meta={postsResponse.meta}
-                currentPath={`/${slug || 'actualites'}`}
-                category={category}
-                previewDomain={domain}
-            />
+                currentDomain={domain}
+                previewDomain={previewDomain}
+            >
+                <AgencyNewsListingPage
+                    site={site}
+                    page={page}
+                    posts={postsResponse.data}
+                    meta={postsResponse.meta}
+                    currentPath={`/${slug || 'actualites'}`}
+                    currentDomain={domain}
+                    search={search}
+                    category={category}
+                    categories={categories}
+                    previewDomain={previewDomain}
+                />
+            </SiteLayout>
         );
     }
-
     const pageNumber = Number(resolvedSearchParams?.page || 1);
 
     const listingSlugParts =

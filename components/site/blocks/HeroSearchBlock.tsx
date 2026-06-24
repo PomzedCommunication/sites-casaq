@@ -1,13 +1,12 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import type { CasaqBloc, CasaqSiteConfig } from '@/lib/casaq';
 import { cleanSiteText } from '@/lib/text';
 import {
     blockData,
     getLinkProps,
     siteAssetUrl,
-    withPreviewUrl,
 } from '@/lib/site-blocks';
+import { ListingSearchBar } from '@/components/site/listings/ListingSearchBar';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -27,7 +26,7 @@ type Data = {
     };
 };
 
-export function HeroSearchBlock({ site, bloc, previewDomain }: Props) {
+export function HeroSearchBlock({ site, bloc }: Props) {
     const data = blockData<Data>(bloc);
     const image = siteAssetUrl(data.image);
     const cta = getLinkProps(data.cta);
@@ -48,34 +47,19 @@ export function HeroSearchBlock({ site, bloc, previewDomain }: Props) {
                 </>
             ) : null}
 
-                <div className="site-hero__content white">
-                    <h1>{data.titre || site.agence.nom}</h1>
+            <div className="site-hero__content ">
+                <h1 className="white">{data.titre || site.agence.nom}</h1>
 
-                    {data.sous_titre ? (
-                        <p>{cleanSiteText(data.sous_titre)}</p>
-                    ) : null}
-                    {/*{data.search_enabled !== false ? (*/}
-                    {/*    <form*/}
-                    {/*        className="site-search"*/}
-                    {/*        action={withPreviewUrl('/biens', previewDomain)}*/}
-                    {/*    >*/}
-                    {/*        <input name="q" placeholder="Rechercher un bien..." />*/}
-                    {/*        <button type="submit">Rechercher</button>*/}
-                    {/*    </form>*/}
-                    {/*) : null}*/}
+                {data.sous_titre ? (
+                    <p className="white">{cleanSiteText(data.sous_titre)}</p>
+                ) : null}
 
-                    {/*{cta ? (*/}
-                    {/*    <Link*/}
-                    {/*        href={withPreviewUrl(cta.href, previewDomain)}*/}
-                    {/*        target={cta.target}*/}
-                    {/*        rel={cta.rel}*/}
-                    {/*        className="site-btn site-btn--primary"*/}
-                    {/*    >*/}
-                    {/*        {cta.label || 'Voir les biens'}*/}
-                    {/*    </Link>*/}
-                    {/*) : null}*/}
-                </div>
-
+                {data.search_enabled !== false ? (
+                    <div className="site-hero__search">
+                        <ListingSearchBar variant="large" />
+                    </div>
+                ) : null}
+            </div>
         </section>
     );
 }

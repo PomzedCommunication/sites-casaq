@@ -1,4 +1,4 @@
-import { getSiteBien, getSiteConfig } from '@/lib/casaq';
+import { getSiteBien, getSiteConfig, getSiteSimilarBiens } from '@/lib/casaq';
 import { getCurrentDomain } from '@/lib/domain';
 import { SiteLayout } from '@/components/site/layout/SiteLayout';
 import { BienDetailTemplate } from '@/components/site/properties/BienDetailTemplate';
@@ -6,6 +6,8 @@ import { extractBienIdFromSlug, getBienSeoPath } from '@/lib/property-url';
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { SiteNotConfigured } from '@/components/site/SiteNotConfigured';
+import { FavoritesProvider } from '@/components/site/favorites/FavoritesProvider';
+
 type PageProps = {
     params: Promise<{
         deal: string;
@@ -42,7 +44,6 @@ export async function generateMetadata({
     }
 
     const bien = await getSiteBien(domain, id);
-
     if (!bien) {
         return {
             title: `${site.agence.nom} — Bien introuvable`,
@@ -97,6 +98,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     if (!bien) {
         notFound();
     }
+    const similarBiens = await getSiteSimilarBiens(domain, bien.id, 4);
 
     const canonicalPath = getBienSeoPath(bien);
     const currentPath = `/${resolvedParams.deal}/${resolvedParams.category}/${resolvedParams.city}/${resolvedParams.slug}`;
@@ -115,7 +117,14 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
             currentDomain={domain}
             previewDomain={resolvedSearchParams?.site}
         >
-            <BienDetailTemplate site={site} bien={bien} domain={domain} />
+            <FavoritesProvider>
+                <BienDetailTemplate
+                    site={site}
+                    bien={bien}
+                    domain={domain}
+                    similarBiens={similarBiens}
+                />
+            </FavoritesProvider>
         </SiteLayout>
     );
 }

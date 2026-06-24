@@ -229,7 +229,7 @@ export function SearchGeoMap({ value, onChange }: Props) {
 
                         <span>km</span>
 
-                        <button type="button" onClick={() => addPlace('include')}>
+                        <button type="button" className='site-btn btn-sm' onClick={() => addPlace('include')}>
                             Ajouter
                         </button>
                     </div>
@@ -268,7 +268,7 @@ export function SearchGeoMap({ value, onChange }: Props) {
 
                         <span>km</span>
 
-                        <button type="button" onClick={() => addPlace('exclude')}>
+                        <button type="button" className='site-btn btn-sm' onClick={() => addPlace('exclude')}>
                             Ajouter
                         </button>
                     </div>

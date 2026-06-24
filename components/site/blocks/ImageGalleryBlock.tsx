@@ -1,5 +1,7 @@
 import type { CasaqBloc } from '@/lib/casaq';
 import { blockData, siteAssetUrl } from '@/lib/site-blocks';
+import {parseSiteHtml} from "@/lib/site-html";
+import Link from "next/link";
 
 type Props = {
     bloc: CasaqBloc;
@@ -21,14 +23,23 @@ export function ImageGalleryBlock({ bloc }: Props) {
     const images = Array.isArray(data.images) ? data.images : [];
 
     return (
-        <section className={`section image-gallery image-gallery--${bloc.data.variant || 'grid'}`}>
+        <section className={`section image-gallery pd-l-r image-gallery--${bloc.data.variant || 'grid'}`}>
             <div className="container">
-                <div className="section-heading">
-                    <h2>{data.titre || 'Galerie'}</h2>
-                    {data.texte ? <p>{data.texte}</p> : null}
+                <div className="section-heading section-heading--with-action">
+                    <div>
+                        <h2>{data.titre || 'Coups de cœur'}</h2>
+
+                        {data.texte ? (
+                            <div className="txt">
+                                {parseSiteHtml(data.texte)}
+                            </div>
+                        ) : null}
+                    </div>
+
+
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <div className="grid-galery">
                     {images.map((item, index) => {
                         const image = siteAssetUrl(item.image);
 
@@ -37,7 +48,6 @@ export function ImageGalleryBlock({ bloc }: Props) {
                                 key={index}
                                 src={image}
                                 alt={item.alt || ''}
-                                style={{ width: '100%', borderRadius: 12 }}
                             />
                         ) : null;
                     })}

@@ -204,147 +204,277 @@ export function ListingSearchBar({
             surfaceMax: undefined,
         });
     }
-
     return (
-        <div className={`listing-search listing-search--${variant}`}>
-            <div className='bar-filters'>
-            {!hideDealSelect ? (
-                <ListingCustomSelect
-                    value={draftFilters.deal ?? ''}
-                    placeholder="Transaction"
-                    options={[
-                        { value: '', label: 'Tous' },
-                        { value: 'SALE', label: 'À vendre' },
-                        { value: 'RENT', label: 'À louer' },
-                    ]}
-                    onChange={handleDealChange}
-                />
-            ) : null}
-            <div className="listing-search__location">
-                {isLoaded ? (
-                    <LocationAutocomplete
-                        value={draftFilters.locationLabel}
-                        onSelect={(location) =>
+        <>
+            <div className={`listing-search listing-search--${variant} listing-search--desktop`}>
+                <div className="bar-filters">
+                    {!hideDealSelect ? (
+                        <ListingCustomSelect
+                            value={draftFilters.deal ?? ''}
+                            placeholder="Transaction"
+                            options={[
+                                { value: '', label: 'Tous' },
+                                { value: 'SALE', label: 'À vendre' },
+                                { value: 'RENT', label: 'À louer' },
+                            ]}
+                            onChange={handleDealChange}
+                        />
+                    ) : null}
+
+                    <div className="listing-search__location">
+                        {isLoaded ? (
+                            <LocationAutocomplete
+                                value={draftFilters.locationLabel}
+                                onSelect={(location) =>
+                                    updateDraft({
+                                        locationLabel: location.label,
+                                        city: location.city,
+                                        lat: location.lat,
+                                        lng: location.lng,
+                                        rayon: draftFilters.rayon || 10,
+                                    })
+                                }
+                            />
+                        ) : (
+                            <input placeholder="Localité" disabled />
+                        )}
+
+                        {draftFilters.locationLabel ? (
+                            <button
+                                type="button"
+                                onClick={clearLocation}
+                                className="listing-search__clear-location"
+                            >
+                                ×
+                            </button>
+                        ) : null}
+                    </div>
+
+                    <ListingFilterPopover
+                        label=""
+                        value={distanceSummary}
+                        disabled={!draftFilters.lat || !draftFilters.lng}
+                    >
+                        <ListingDistanceSlider
+                            value={draftFilters.rayon ?? 10}
+                            disabled={!draftFilters.lat || !draftFilters.lng}
+                            onChange={(rayon) => updateDraft({ rayon })}
+                        />
+                    </ListingFilterPopover>
+
+                    <div className="sep-filter"></div>
+
+                    <ListingFilterPopover label="Pièces" value={piecesSummary}>
+                        <ListingRangeFields
+                            minValue={draftFilters.piecesMin}
+                            maxValue={draftFilters.piecesMax}
+                            minPlaceholder="Min"
+                            maxPlaceholder="Max"
+                            step={0.5}
+                            min={0}
+                            max={20}
+                            suffix="Nombre de pièces"
+                            onChange={({ min, max }) =>
+                                updateDraft({
+                                    piecesMin: min,
+                                    piecesMax: max,
+                                })
+                            }
+                        />
+                    </ListingFilterPopover>
+
+                    <div className="sep-filter hide-home"></div>
+
+                    <ListingFilterPopover label="Prix" value={priceSummary}>
+                        <ListingRangeFields
+                            minValue={draftFilters.prixMin}
+                            maxValue={draftFilters.prixMax}
+                            minPlaceholder={priceMin ? formatPrice(priceMin) : 'Min'}
+                            maxPlaceholder={priceMax ? formatPrice(priceMax) : 'Max'}
+                            step={priceStep}
+                            min={0}
+                            max={priceMax}
+                            suffix={priceSuffix}
+                            onChange={({ min, max }) =>
+                                updateDraft({
+                                    prixMin: min,
+                                    prixMax: max,
+                                })
+                            }
+                        />
+                    </ListingFilterPopover>
+
+                    <div className="sep-filter hide-home"></div>
+
+                    <ListingCustomSelect
+                        value={draftFilters.categoryParent ?? ''}
+                        placeholder="Type"
+                        options={[
+                            { value: '', label: 'Tous les types' },
+                            ...categoryOptions,
+                        ]}
+                        onChange={(value) =>
                             updateDraft({
-                                locationLabel: location.label,
-                                city: location.city,
-                                lat: location.lat,
-                                lng: location.lng,
-                                rayon: draftFilters.rayon || 10,
+                                categoryParent: value || undefined,
+                                prixMin: undefined,
+                                prixMax: undefined,
+                                piecesMin: undefined,
+                                piecesMax: undefined,
+                                surfaceMin: undefined,
+                                surfaceMax: undefined,
                             })
                         }
                     />
-                ) : (
-                    <input placeholder="Localité" disabled />
-                )}
+                </div>
 
-                {draftFilters.locationLabel ? (
-                    <button
-                        type="button"
-                        onClick={clearLocation}
-                        className="listing-search__clear-location"
-                    >
-                        ×
-                    </button>
-                ) : null}
+                <button
+                    type="button"
+                    className="site-btn listing-search__count"
+                    onClick={applyFilters}
+                    disabled={isPending}
+                >
+                    {isPending || isCounting
+                        ? 'Calcul…'
+                        : `Filtrer (${previewTotal} objet${previewTotal > 1 ? 's' : ''})`}
+                </button>
             </div>
 
-            <ListingFilterPopover
-                label="Distance"
-                value={distanceSummary}
-                disabled={!draftFilters.lat || !draftFilters.lng}
-            >
-                <ListingDistanceSlider
-                    value={draftFilters.rayon ?? 10}
-                    disabled={!draftFilters.lat || !draftFilters.lng}
-                    onChange={(rayon) => updateDraft({ rayon })}
-                />
-            </ListingFilterPopover>
+            <div className="listing-search-mobile bar-filters ">
+                <div className="listing-search-mobile__card">
+                    {!hideDealSelect ? (
+                        <div className="listing-search-mobile__select">
+                            <ListingCustomSelect
+                                value={draftFilters.deal ?? ''}
+                                placeholder="Transaction"
+                                options={[
+                                    { value: '', label: 'Tous' },
+                                    { value: 'SALE', label: 'À vendre' },
+                                    { value: 'RENT', label: 'À louer' },
+                                ]}
+                                onChange={handleDealChange}
+                            />
+                        </div>
+                    ) : null}
 
-            <ListingFilterPopover label="Pièces" value={piecesSummary}>
-                <ListingRangeFields
-                    minValue={draftFilters.piecesMin}
-                    maxValue={draftFilters.piecesMax}
-                    minPlaceholder="Min"
-                    maxPlaceholder="Max"
-                    step={0.5}
-                    min={0}
-                    max={20}
-                    suffix="Nombre de pièces"
-                    onChange={({ min, max }) =>
-                        updateDraft({
-                            piecesMin: min,
-                            piecesMax: max,
-                        })
-                    }
-                />
-            </ListingFilterPopover>
+                    <div className="listing-search-mobile__location">
+                        {isLoaded ? (
+                            <LocationAutocomplete
+                                value={draftFilters.locationLabel}
+                                onSelect={(location) =>
+                                    updateDraft({
+                                        locationLabel: location.label,
+                                        city: location.city,
+                                        lat: location.lat,
+                                        lng: location.lng,
+                                        rayon: draftFilters.rayon || 10,
+                                    })
+                                }
+                            />
+                        ) : (
+                            <input placeholder="Localité" disabled />
+                        )}
 
-            <ListingFilterPopover label="Prix" value={priceSummary}>
-                <ListingRangeFields
-                    minValue={draftFilters.prixMin}
-                    maxValue={draftFilters.prixMax}
-                    minPlaceholder={
-                        priceMin ? formatPrice(priceMin) : 'Min'
-                    }
-                    maxPlaceholder={
-                        priceMax ? formatPrice(priceMax) : 'Max'
-                    }
-                    step={priceStep}
-                    min={0}
-                    max={priceMax}
-                    suffix={priceSuffix}
-                    onChange={({ min, max }) =>
-                        updateDraft({
-                            prixMin: min,
-                            prixMax: max,
-                        })
-                    }
-                />
-            </ListingFilterPopover>
+                        {draftFilters.locationLabel ? (
+                            <button
+                                type="button"
+                                onClick={clearLocation}
+                                className="listing-search__clear-location"
+                            >
+                                ×
+                            </button>
+                        ) : null}
+                    </div>
 
-            <ListingCustomSelect
-                value={draftFilters.categoryParent ?? ''}
-                placeholder="Type"
-                options={[
-                    { value: '', label: 'Tous les types' },
-                    ...categoryOptions,
-                ]}
-                onChange={(value) =>
-                    updateDraft({
-                        categoryParent: value || undefined,
-                        prixMin: undefined,
-                        prixMax: undefined,
-                        piecesMin: undefined,
-                        piecesMax: undefined,
-                        surfaceMin: undefined,
-                        surfaceMax: undefined,
-                    })
-                }
-            />
-        </div>
-            {/*<button type="button" className="listing-search__more">*/}
-            {/*    Plus de filtres*/}
-            {/*</button>*/}
+                    <div className="listing-search-mobile__field">
+                    {/*<span className="listing-search-mobile__label">*/}
+                    {/*    {draftFilters.rayon ?? 0} km*/}
+                    {/*</span>*/}
 
-            <button
-                type="button"
-                className="site-btn listing-search__count"
-                onClick={applyFilters}
-                disabled={isPending}
-            >
-                {isPending || isCounting
-                    ? 'Calcul…'
-                    : `Filtrer (${previewTotal} objet${previewTotal > 1 ? 's' : ''})`}
-            </button>
+                        <ListingDistanceSlider
+                            value={draftFilters.rayon ?? 10}
+                            disabled={!draftFilters.lat || !draftFilters.lng}
+                            onChange={(rayon) => updateDraft({ rayon })}
+                        />
+                    </div>
 
-            {/*<button*/}
-            {/*    type="button"*/}
-            {/*    className="listing-search__reset"*/}
-            {/*    onClick={resetFilters}*/}
-            {/*>*/}
-            {/*    Réinitialiser*/}
-            {/*</button>*/}
-        </div>
+                    <div className="listing-search-mobile__select">
+                        <ListingCustomSelect
+                            value={draftFilters.categoryParent ?? ''}
+                            placeholder="Type"
+                            options={[
+                                { value: '', label: 'Tous les types' },
+                                ...categoryOptions,
+                            ]}
+                            onChange={(value) =>
+                                updateDraft({
+                                    categoryParent: value || undefined,
+                                    prixMin: undefined,
+                                    prixMax: undefined,
+                                    piecesMin: undefined,
+                                    piecesMax: undefined,
+                                    surfaceMin: undefined,
+                                    surfaceMax: undefined,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="listing-search-mobile__field">
+                        <span className="listing-search-mobile__label">Pièces</span>
+
+                        <ListingRangeFields
+                            minValue={draftFilters.piecesMin}
+                            maxValue={draftFilters.piecesMax}
+                            minPlaceholder="1,0"
+                            maxPlaceholder="15"
+                            step={0.5}
+                            min={0}
+                            max={15}
+                            suffix="Nombre de pièces"
+                            onChange={({ min, max }) =>
+                                updateDraft({
+                                    piecesMin: min,
+                                    piecesMax: max,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="listing-search-mobile__field">
+                        <span className="listing-search-mobile__label">Tous prix</span>
+
+                        <ListingRangeFields
+                            minValue={draftFilters.prixMin}
+                            maxValue={draftFilters.prixMax}
+                            minPlaceholder="0"
+                            maxPlaceholder={String(priceMax)}
+                            step={priceStep}
+                            min={0}
+                            max={priceMax}
+                            suffix={priceSuffix}
+                            onChange={({ min, max }) =>
+                                updateDraft({
+                                    prixMin: min,
+                                    prixMax: max,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="listing-search-mobile__actions">
+                        <button
+                            type="button"
+                            className="listing-search-mobile__submit site-btn"
+                            onClick={applyFilters}
+                            disabled={isPending}
+                        >
+                            {isPending || isCounting ? 'Calcul…' : 'Rechercher'}
+                        </button>
+
+
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

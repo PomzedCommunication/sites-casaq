@@ -9,7 +9,7 @@ import {
 } from '@/lib/contact-auth-client';
 import { BienCard } from '@/components/site/listings/BienCard';
 import { AccountShell } from '@/components/site/account/AccountShell';
-
+import type { CasaqBien } from '@/lib/casaq';
 type Props = {
     previewDomain?: string | null;
 };
@@ -37,7 +37,7 @@ export function FavorisClient({ previewDomain }: Props) {
 
     const biens = favorites
         .map((favorite) => favorite.bien)
-        .filter(Boolean);
+        .filter((bien): bien is CasaqBien => Boolean(bien));
 
     return (
         <AccountShell previewDomain={previewDomain} active="favoris">

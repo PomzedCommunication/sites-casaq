@@ -115,7 +115,7 @@ export function InformationsClient({ previewDomain }: Props) {
                 <section className="account-panel account-profile-section">
                     <div className="account-section-title">
                         <p className="account-kicker">Coordonnées</p>
-                        <h2>Vos informations</h2>
+                        <h3>Vos informations</h3>
                     </div>
 
                     <div className="account-form__grid">
@@ -221,7 +221,7 @@ export function InformationsClient({ previewDomain }: Props) {
                 <section className="account-panel account-profile-section">
                     <div className="account-section-title">
                         <p className="account-kicker">Sécurité</p>
-                        <h2>Mot de passe</h2>
+                        <h3>Mot de passe</h3>
                     </div>
 
                     <p className="account-help">

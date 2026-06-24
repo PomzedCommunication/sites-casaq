@@ -172,16 +172,17 @@ function NotificationToggle({
 }) {
     return (
         <label className="account-toggle-row">
-      <span>
-        <strong>{title}</strong>
-        <small>{description}</small>
-      </span>
+
 
             <input
                 type="checkbox"
                 checked={checked}
                 onChange={(event) => onChange(event.target.checked)}
             />
+            <span>
+        <strong>{title}</strong>
+        <small>{description}</small>
+      </span>
         </label>
     );
 }

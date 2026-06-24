@@ -127,10 +127,14 @@ export async function registerContactAccountClient(payload: {
       message: json?.message || (res.ok ? 'Compte créé.' : 'Impossible de créer le compte.'),
       data: json?.data,
     };
-  } catch {
+  } catch (error) {
+    console.error('Erreur registerContactAccountClient', error);
+
     return {
       success: false,
-      message: 'Impossible de contacter le serveur. Vérifiez la configuration CORS de l’API.',
+      message: error instanceof Error
+          ? error.message
+          : 'Impossible de contacter le serveur.',
     };
   }
 }
@@ -803,6 +807,84 @@ export async function getContactCorrespondancesClient(domain: string): Promise<{
       items: [],
       meta: emptyMeta,
       message: 'Impossible de charger les correspondances.',
+    };
+  }
+}
+export async function forgotPasswordClient(payload: {
+  domain: string;
+  email: string;
+  reset_url: string;
+}): Promise<{
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const res = await fetch(`${getApiUrl()}/api/v1/contact-auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json().catch(() => null);
+
+    return {
+      success: res.ok,
+      message: json?.message || (
+          res.ok
+              ? 'Si un compte existe avec cette adresse, un email a été envoyé.'
+              : 'Impossible d’envoyer l’email.'
+      ),
+    };
+  } catch (error) {
+    console.error('Erreur forgotPasswordClient', error);
+
+    return {
+      success: false,
+      message: error instanceof Error
+          ? error.message
+          : 'Impossible de contacter le serveur.',
+    };
+  }
+}
+
+export async function resetPasswordClient(payload: {
+  domain: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
+}): Promise<{
+  success: boolean;
+  message?: string;
+}> {
+  try {
+    const res = await fetch(`${getApiUrl()}/api/v1/contact-auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json().catch(() => null);
+
+    return {
+      success: res.ok,
+      message: json?.message || (
+          res.ok
+              ? 'Mot de passe réinitialisé.'
+              : 'Impossible de réinitialiser le mot de passe.'
+      ),
+    };
+  } catch (error) {
+    console.error('Erreur resetPasswordClient', error);
+
+    return {
+      success: false,
+      message: error instanceof Error
+          ? error.message
+          : 'Impossible de contacter le serveur.',
     };
   }
 }

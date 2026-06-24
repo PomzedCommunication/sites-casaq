@@ -36,7 +36,7 @@ export async function FeaturedBiensBlock({
                                          }: Props) {
     const data       = blockData<Data>(bloc);
     const cta        = getLinkProps(data.cta);
-    const variant    = bloc.data.variant || 'grid';
+    const variant    = bloc.data.variant || 'carousel';
     const isCarousel = variant === 'carousel';
 
     const selectedBiens = await getFeaturedBiens({
@@ -196,11 +196,14 @@ export function FeaturedBienCard({
                             className="featured-bien-card__image"
                         />
                     ) : (
-                        <div className="featured-bien-card__placeholder">Aucun visuel</div>
+                        <div className="featured-bien-card__placeholder"></div>
                     )}
                     {s.category ? (
                         <span className="featured-bien-card__badge white">{s.category}</span>
                     ) : null}
+                    <div className="featured-bien-card__favorite">
+                        <FavoriteButton bienId={bien.id} previewDomain={previewDomain}/>
+                    </div>
                 </div>
 
                 <div className="featured-bien-card__body">
@@ -233,9 +236,7 @@ export function FeaturedBienCard({
                 </div>
             </Link>
 
-            <div className="featured-bien-card__favorite">
-                <FavoriteButton bienId={bien.id} previewDomain={previewDomain} />
-            </div>
+
         </article>
     );
 }

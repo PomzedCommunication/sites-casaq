@@ -50,7 +50,7 @@ export function CtaBannerBlock({ bloc }: Props) {
                                 href={link.href}
                                 target={link.target}
                                 rel={link.rel}
-                                className="site-btn btn-white site-btn--secondary"
+                                className="site-btn btn-white "
                             >
                                 {link.label || 'En savoir plus'}
                             </Link>

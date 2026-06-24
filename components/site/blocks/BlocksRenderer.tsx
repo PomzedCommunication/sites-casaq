@@ -4,6 +4,7 @@ import type {
     CasaqPage,
     CasaqSiteConfig,
     CasaqPost,
+    CasaqBloc,
 } from '@/lib/casaq';
 import { PartnersBlock } from '@/components/site/blocks/PartnersBlock';
 import { HeroSearchBlock } from '@/components/site/blocks/HeroSearchBlock';
@@ -25,6 +26,10 @@ import { SocialPostsBlock } from '@/components/site/blocks/SocialPostsBlock';
 import { AgencyNewsBlock } from '@/components/site/blocks/AgencyNewsBlock';
 import { PlaceholderBlock } from '@/components/site/blocks/PlaceholderBlock';
 import { ImageTextBlock } from '@/components/site/blocks/ImageTextBlock';
+import { TimelineHistoryBlock } from '@/components/site/blocks/TimelineHistoryBlock';
+import { ImageSimpleBlock } from '@/components/site/blocks/ImageSimpleBlock';
+import { DocumentsDownloadBlock } from '@/components/site/blocks/DocumentsDownloadBlock';
+import { LinksCardsBlock } from '@/components/site/blocks/LinksCardsBlock';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -34,6 +39,7 @@ type Props = {
     currentDomain: string;
     previewDomain?: string;
     currentPost?: CasaqPost | null;
+    blocs?: CasaqBloc[];
 };
 export function BlocksRenderer({
                                    site,
@@ -43,11 +49,16 @@ export function BlocksRenderer({
                                    currentDomain,
                                    previewDomain,
                                    currentPost,
+                                   blocs,
                                }: Props) {
+    const blocsToRender = blocs || page.blocs || [];
     return (
         <>
-            {page.blocs.map((bloc, index) => {
-                const key = `${bloc.type}-${index}`;
+            {blocsToRender
+                .filter((bloc) => bloc.actif !== false)
+                .sort((a, b) => (a.ordre || 0) - (b.ordre || 0))
+                .map((bloc, index) => {
+                    const key = `${bloc.type}-${index}`;
 
                 switch (bloc.type) {
                     case 'hero_search':
@@ -144,10 +155,16 @@ export function BlocksRenderer({
                         );
                     case 'image_gallery':
                         return <ImageGalleryBlock key={key} bloc={bloc} />;
-
+                    case 'image_simple':
+                        return <ImageSimpleBlock key={key} bloc={bloc} />;
                     case 'pillars':
-                        return <PillarsBlock key={key} bloc={bloc} />;
-
+                        return (
+                            <PillarsBlock
+                                key={key}
+                                bloc={bloc}
+                                previewDomain={previewDomain}
+                            />
+                        );
                     case 'testimonials':
                         return (
                             <TestimonialsBlock
@@ -156,6 +173,8 @@ export function BlocksRenderer({
                                 currentDomain={currentDomain}
                             />
                         );
+                    case 'timeline_history':
+                        return <TimelineHistoryBlock key={key} bloc={bloc} />;
                     case 'partners':
                         return (
                             <PartnersBlock
@@ -177,6 +196,25 @@ export function BlocksRenderer({
                                 previewDomain={previewDomain}
                             />
                         );
+                    case 'documents_download':
+                        return (
+                            <DocumentsDownloadBlock
+                                key={key}
+                                bloc={bloc}
+                                previewDomain={previewDomain}
+                            />
+                        );
+
+                    case 'links_cards':
+                    case 'liens':
+                        return (
+                            <LinksCardsBlock
+                                key={key}
+                                bloc={bloc}
+                                previewDomain={previewDomain}
+                            />
+                        );
+
                     default:
                         return <PlaceholderBlock key={key} bloc={bloc} />;
                 }

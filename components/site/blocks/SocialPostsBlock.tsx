@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { CasaqBloc } from '@/lib/casaq';
 import { blockData, getLinkProps, siteAssetUrl, withPreviewUrl } from '@/lib/site-blocks';
+import {parseSiteHtml} from "@/lib/site-html";
 
 type Props = {
     bloc: CasaqBloc;
@@ -32,45 +33,21 @@ export function SocialPostsBlock({ bloc, previewDomain }: Props) {
     const items = Array.isArray(data.items) ? data.items : [];
 
     return (
-        <section className={`section social-posts social-posts--${bloc.data.variant || 'cards'}`}>
+        <section className={`section pd-l-r social-posts social-posts--${bloc.data.variant || 'cards'}`}>
             <div className="container">
-                <div className="section-heading">
-                    <h2>{data.titre || 'Nos réseaux sociaux'}</h2>
-                    {data.texte ? <p>{data.texte}</p> : null}
+                <div className="section-heading section-heading--with-action">
+                    <div>
+                        <h2>{data.titre || 'Nos actualités'}</h2>
+
+                        {data.texte ? (
+                            <div className="txt">
+                                {parseSiteHtml(data.texte)}
+                            </div>
+                        ) : null}
+                    </div>
+
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-                    {items.map((item, index) => {
-                        const image = siteAssetUrl(item.image);
-                        const link = getLinkProps(item.link);
-
-                        const card = (
-                            <article style={{ background: '#fff', padding: 16, borderRadius: 12 }}>
-                                {image ? (
-                                    <img src={image} alt={item.titre || ''} style={{ width: '100%', borderRadius: 8 }} />
-                                ) : null}
-
-                                <p>{item.plateforme || 'Réseau social'}</p>
-                                <h3>{item.titre || 'Publication'}</h3>
-                                {item.date ? <p>{item.date}</p> : null}
-                                <p>{item.likes || 0} likes · {item.comments || 0} commentaires</p>
-                            </article>
-                        );
-
-                        return link ? (
-                            <Link
-                                key={index}
-                                href={withPreviewUrl(link.href, previewDomain)}
-                                target={link.target}
-                                rel={link.rel}
-                            >
-                                {card}
-                            </Link>
-                        ) : (
-                            <div key={index}>{card}</div>
-                        );
-                    })}
-                </div>
             </div>
         </section>
     );

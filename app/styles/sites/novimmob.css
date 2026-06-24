@@ -1,5 +1,182 @@
 *{
     font-family: "Urbanist", sans-serif;
     font-weight: 400;
+}
+.site-hero--search {
+    position: relative;
+    overflow: hidden;
+}
 
+/* Image hero derrière */
+.site-hero--search .site-hero__image {
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Overlay derrière le contenu mais devant l’image */
+.site-hero--search .site-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+/* Contenu au-dessus de la vague */
+.site-hero--search .site-hero__content {
+    position: relative;
+    z-index: 20;
+}
+
+/* Barre de recherche au-dessus aussi */
+.site-hero--search .site-hero__search {
+    position: relative;
+    z-index: 21;
+}
+
+/* Vague complète gris + orange */
+.site-hero--search::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 15vw;
+    z-index: 8;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='1512' height='347' viewBox='0 0 1512 347' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1513 18.7683C1050.85 -19.5118 650.865 203.832 508.638 320.289C343.331 182.376 100.668 136.099 0 130.2V347.164H1513V18.7683Z' fill='%23E4E4E4'/%3E%3Cpath d='M808.531 109.393C882.621 78.7981 1188.91 -45.9253 1513 17.9608C1252.71 12.803 992.232 94.7406 837.701 158.627C743.185 197.764 623.11 256.595 496.712 334.403L464.396 312.538C464.442 312.503 464.488 312.468 464.534 312.433C360.433 248.233 183.597 158.308 0 129.675C232.529 124.897 446.511 256.169 497.978 287.997C640.137 186.44 761.295 128.946 808.531 109.393Z' fill='%23FF5000'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+}
+
+
+.cta-banner {
+    position: relative;
+    overflow: hidden;
+}
+
+/* contenu au-dessus */
+.cta-banner .container,
+.cta-banner__inner {
+    position: relative;
+    z-index: 2;
+}
+
+/* vague grise en bas de la bannière */
+.cta-banner::after {
+    content: "";
+    position: absolute;
+    /*left: 0;*/
+    right: 0;
+    bottom: -60px;
+    width: 80%;
+    height: 190px;
+    z-index: 1;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='1264' height='215' viewBox='0 0 1264 215' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M681.004 70.3327C743.407 50.6621 1001.38 -29.5269 1274.36 11.5475C1055.12 8.2314 835.73 60.9126 705.573 101.987C625.964 127.149 524.829 164.973 418.367 214.999L391.147 200.94C391.187 200.917 391.227 200.894 391.267 200.872C303.586 159.595 154.64 101.778 0 83.3688C195.863 80.2967 376.103 164.704 419.44 185.162C539.175 119.87 641.219 82.9036 681.004 70.3327Z' fill='%23E4E4E4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+}
+
+
+.site-footer {
+    position: relative;
+    overflow: hidden;
+}
+
+/* contenu au-dessus de la vague */
+.site-footer > div,
+.site-footer__inner,
+.site-footer__top,
+.site-footer__bottom{
+    position: relative;
+    z-index: 2;
+}
+
+/* vague grise footer */
+.site-footer::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -75px;
+    width: 60%;
+    height: 300px;
+    z-index: 1;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='1004' height='215' viewBox='0 0 1004 215' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M536.291 70.3327C585.433 50.6622 788.591 -29.5269 1003.56 11.5475C830.908 8.23141 658.138 60.9116 555.64 101.986C492.948 127.148 413.303 164.972 329.465 214.998L308.029 200.94C308.061 200.917 308.092 200.894 308.124 200.871C239.075 159.594 121.78 101.777 0 83.3678C154.243 80.2957 296.183 164.705 330.31 185.162C424.601 119.87 504.96 82.9037 536.291 70.3327Z' fill='%23E4E4E4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 100% auto;
+    opacity: 0.6;
+}
+
+
+
+.site-hero--simple {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(84deg, rgba(255, 141, 40, 0.20) 37.02%, rgba(255, 141, 40, 0.04) 78.2%), linear-gradient(238deg, rgba(255, 141, 40, 0.61) 8.76%, rgba(255, 141, 40, 0.00) 50.09%);
+
+}
+
+/* Image derrière */
+.site-hero--simple .site-hero__image {
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Overlay */
+.site-hero--simple .site-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+/* Contenu au-dessus */
+.site-hero--simple .site-hero__content {
+    position: relative;
+    z-index: 20;
+}
+
+/* Vague full viewport */
+.site-hero--simple::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    width: 100%;
+    /*height: 190px;*/
+    height: 13vw;
+    z-index: 8;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='1512' height='190' viewBox='0 0 1512 190' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1513 10.263C1050.85 -10.6704 650.865 111.465 508.638 175.15C343.331 99.732 100.668 74.4255 0 71.1994V189.846H1513V10.263Z' fill='%23E4E4E4'/%3E%3Cpath d='M808.531 59.8218C882.62 43.0908 1188.91 -25.1143 1513 9.82183C1252.71 7.00131 992.232 51.8085 837.701 86.7447C743.185 108.147 623.11 140.318 496.712 182.868L464.396 170.911C464.441 170.892 464.487 170.873 464.533 170.854C360.432 135.746 183.596 86.5698 0 70.9117C232.536 68.2988 446.523 140.089 497.982 157.492C640.14 101.956 761.296 70.5142 808.531 59.8218Z' fill='%23FF5000'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+}
+
+.property-detail__hero-overlay,
+.site-hero__overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(84deg, rgba(255, 141, 40, 0.00) 37.02%, rgba(255, 141, 40, 0.00) 78.2%), linear-gradient(238deg, rgba(255, 141, 40, 0.61) 8.76%, rgba(255, 141, 40, 0.00) 50.09%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%);
+
+}
+
+
+@media (max-width: 980px) {
+    .cta-banner::after{
+        bottom: 0;
+        background-position: bottom;
+    }
 }

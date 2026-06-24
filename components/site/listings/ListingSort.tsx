@@ -7,6 +7,8 @@ export function ListingSort() {
     const { filters, setSort, isPending } = useListing();
 
     return (
+        <>
+            <span>Trié par</span>
         <select
             value={filters.sort || 'recent'}
             onChange={(event) => setSort(event.target.value as ListingSortValue)}
@@ -18,5 +20,7 @@ export function ListingSort() {
             <option value="surface_desc">Surface décroissante</option>
             <option value="pieces_desc">Pièces décroissantes</option>
         </select>
+
+        </>
     );
 }

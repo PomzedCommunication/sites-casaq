@@ -49,7 +49,7 @@ export function StatsBlock({ bloc }: Props) {
                             href={link.href}
                             target={link.target}
                             rel={link.rel}
-                            className="site-btn site-btn--secondary"
+                            className="site-btn site-btn--primary"
                         >
                             {link.label || 'En savoir plus'}
                         </Link>

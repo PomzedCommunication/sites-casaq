@@ -40,9 +40,6 @@ export function SearchCategorySelector({ groups, value, onChange }: Props) {
 
     return (
         <div className="search-category-selector">
-            <p className="search-category-help">
-                Laisser vide = tous les types de biens.
-            </p>
 
             <div className="search-category-grid">
                 {groups.map((group) => {
@@ -63,7 +60,7 @@ export function SearchCategorySelector({ groups, value, onChange }: Props) {
                                     ) : null}
                                 </div>
 
-                                <button type="button" onClick={() => toggleGroup(group)}>
+                                <button type="button" className="site-btn btn-sm" onClick={() => toggleGroup(group)}>
                                     {selectedCount === group.children.length ? 'Aucun' : 'Tout'}
                                 </button>
                             </div>
@@ -78,8 +75,8 @@ export function SearchCategorySelector({ groups, value, onChange }: Props) {
                                             type="button"
                                             className={
                                                 selected
-                                                    ? 'search-category-option search-category-option--selected'
-                                                    : 'search-category-option'
+                                                    ? 'site-btn btn-sm search-category-option search-category-option--selected'
+                                                    : 'site-btn btn-sm search-category-option'
                                             }
                                             onClick={() => toggleCategory(child.id)}
                                         >

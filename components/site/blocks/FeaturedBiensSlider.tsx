@@ -26,10 +26,34 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
 
     const canLoop = biens.length > 3;
 
+    // const bindNavigation = (swiper: SwiperType) => {
+    //     setTimeout(() => {
+    //         if (!prevRef.current || !nextRef.current) {
+    //             return;
+    //         }
+    //
+    //         const navigation = swiper.params.navigation as NavigationOptions;
+    //
+    //         navigation.prevEl = prevRef.current;
+    //         navigation.nextEl = nextRef.current;
+    //
+    //         swiper.navigation.destroy();
+    //         swiper.navigation.init();
+    //         swiper.navigation.update();
+    //     });
+    // };
     const bindNavigation = (swiper: SwiperType) => {
         setTimeout(() => {
+            if (!swiper || !swiper.params || !swiper.navigation) {
+                return;
+            }
+
             if (!prevRef.current || !nextRef.current) {
                 return;
+            }
+
+            if (!swiper.params.navigation || typeof swiper.params.navigation === 'boolean') {
+                swiper.params.navigation = {};
             }
 
             const navigation = swiper.params.navigation as NavigationOptions;
@@ -42,7 +66,6 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
             swiper.navigation.update();
         });
     };
-
     return (
         <div className="featured-biens__slider">
             <Swiper
@@ -59,11 +82,11 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
                         slidesPerView: 1,
                         spaceBetween: 16,
                     },
-                    768: {
+                    980: {
                         slidesPerView: 2,
                         spaceBetween: 24,
                     },
-                    1024: {
+                    1250: {
                         slidesPerView: 3,
                         spaceBetween: 24,
                     },
@@ -88,7 +111,6 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
                                             />
                                         ) : (
                                             <div className="featured-bien-card__placeholder">
-                                                Aucun visuel
                                             </div>
                                         )}
 
@@ -97,6 +119,16 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
                                                 {bien.category}
                                             </span>
                                         ) : null}
+                                        <div className="featured-bien-card__favorite">
+                                            {/*<FavoriteButton*/}
+                                            {/*    bienId={bien.id}*/}
+                                            {/*    previewDomain={previewDomain}*/}
+                                            {/*/>*/}
+                                            <FavoriteButton
+                                                bienId={Number(bien.id)}
+                                                previewDomain={previewDomain}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="featured-bien-card__body">
@@ -108,7 +140,7 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
 
                                         {bien.titre ? (
                                             <p className="featured-bien-card__text">
-                                                {bien.titre}
+                                            {bien.titre}
                                             </p>
                                         ) : null}
 
@@ -162,16 +194,7 @@ export function FeaturedBiensSlider({ biens, previewDomain }: Props) {
                                     </div>
                                 </Link>
 
-                                <div className="featured-bien-card__favorite">
-                                    {/*<FavoriteButton*/}
-                                    {/*    bienId={bien.id}*/}
-                                    {/*    previewDomain={previewDomain}*/}
-                                    {/*/>*/}
-                                    <FavoriteButton
-                                        bienId={Number(bien.id)}
-                                        previewDomain={previewDomain}
-                                    />
-                                </div>
+
                             </article>
                         </SwiperSlide>
                     );

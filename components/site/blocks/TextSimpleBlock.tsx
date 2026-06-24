@@ -1,5 +1,6 @@
 import type { CasaqBloc } from '@/lib/casaq';
 import { blockData } from '@/lib/site-blocks';
+import { parseSiteHtml } from '@/lib/site-html';
 
 type Props = {
     bloc: CasaqBloc;
@@ -20,10 +21,12 @@ export function TextSimpleBlock({ bloc }: Props) {
     }
 
     return (
-        <section className="section content-block">
+        <section className="section pd-l-r content-block">
             <div className="container">
                 {data.titre ? <h2>{data.titre}</h2> : null}
-                {content ? <p>{content}</p> : null}
+                {content ? <div className='txt'>
+                    {parseSiteHtml(content)}
+                    </div> : null}
             </div>
         </section>
     );

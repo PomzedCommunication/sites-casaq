@@ -4,9 +4,10 @@ import { BienCard } from '@/components/site/listings/BienCard';
 type Props = {
     biens: CasaqBien[];
     previewDomain?: string;
+    onBienHover?: (bienId: number | null) => void;
 };
 
-export function BiensGrid({ biens, previewDomain }: Props) {
+export function BiensGrid({ biens, previewDomain, onBienHover }: Props) {
     if (biens.length === 0) {
         return <p>Aucun bien disponible pour le moment.</p>;
     }
@@ -14,11 +15,16 @@ export function BiensGrid({ biens, previewDomain }: Props) {
     return (
         <div className="biens-grid">
             {biens.map((bien) => (
-                <BienCard
+                <div
                     key={bien.id}
-                    bien={bien}
-                    previewDomain={previewDomain}
-                />
+                    onMouseEnter={() => onBienHover?.(bien.id)}
+                    onMouseLeave={() => onBienHover?.(null)}
+                >
+                    <BienCard
+                        bien={bien}
+                        previewDomain={previewDomain}
+                    />
+                </div>
             ))}
         </div>
     );

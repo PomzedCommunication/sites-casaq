@@ -12,7 +12,7 @@ import type {
     ListingFilters,
 } from '@/lib/listing/listing-types';
 import type { CasaqPost } from '@/lib/casaq';
-
+import { ListingProvider } from '@/components/site/listings/ListingProvider';
 type Props = {
     site: CasaqSiteConfig;
     page: CasaqPage;
@@ -38,6 +38,39 @@ export function PageRenderer({
                                  availableFilters,
                                  currentPost,
                              }: Props) {
+    const forcedDeal =
+        page.template === 'listing_sale'
+            ? 'SALE'
+            : page.template === 'listing_rent'
+                ? 'RENT'
+                : undefined;
+
+    const safeInitialFilters: ListingFilters = {
+        sort: 'recent',
+        view: 'grid',
+        page: 1,
+        ...(initialFilters || {}),
+        deal: forcedDeal || initialFilters?.deal,
+    };
+
+    const providerKey = JSON.stringify({
+        deal: safeInitialFilters.deal,
+        categoryParent: safeInitialFilters.categoryParent,
+        city: safeInitialFilters.city,
+        lat: safeInitialFilters.lat,
+        lng: safeInitialFilters.lng,
+        rayon: safeInitialFilters.rayon,
+        prixMin: safeInitialFilters.prixMin,
+        prixMax: safeInitialFilters.prixMax,
+        piecesMin: safeInitialFilters.piecesMin,
+        piecesMax: safeInitialFilters.piecesMax,
+        surfaceMin: safeInitialFilters.surfaceMin,
+        surfaceMax: safeInitialFilters.surfaceMax,
+        prestige: safeInitialFilters.prestige,
+        sort: safeInitialFilters.sort,
+        page: safeInitialFilters.page,
+    });
+
     return (
         <SiteLayout
             site={site}
@@ -45,17 +78,26 @@ export function PageRenderer({
             previewDomain={previewDomain}
         >
             <FavoritesProvider>
-                <TemplateRegistry
-                    site={site}
-                    page={page}
-                    biens={biens}
-                    meta={biensMeta}
-                    currentPath={currentPath}
-                    currentDomain={currentDomain}
-                    previewDomain={previewDomain}
-                    initialFilters={initialFilters}
+                <ListingProvider
+                    key={providerKey}
+                    initialBiens={biens}
+                    initialMeta={biensMeta}
+                    initialFilters={safeInitialFilters}
                     availableFilters={availableFilters}
-                />
+                    previewDomain={previewDomain}
+                >
+                    <TemplateRegistry
+                        site={site}
+                        page={page}
+                        biens={biens}
+                        meta={biensMeta}
+                        currentPath={currentPath}
+                        currentDomain={currentDomain}
+                        previewDomain={previewDomain}
+                        initialFilters={safeInitialFilters}
+                        availableFilters={availableFilters}
+                    />
+                </ListingProvider>
             </FavoritesProvider>
         </SiteLayout>
     );
