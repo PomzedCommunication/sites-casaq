@@ -46,6 +46,7 @@ export function FavoriteButton({ bienId, previewDomain }: Props) {
                 onClick={handleClick}
                 disabled={loading || !loaded}
                 aria-pressed={active}
+                aria-label='favoris'
             >
             <span className="favorite-button__icon" aria-hidden="true">
                 <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">

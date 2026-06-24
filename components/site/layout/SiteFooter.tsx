@@ -192,7 +192,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                         </div>
                     </div>
                     <div className="site-footer__socials">
-                        {socials.facebook ? <a href={socials.facebook} target="_blank" rel="noreferrer">
+                        {socials.facebook ? <a href={socials.facebook} target="_blank" rel="noreferrer" aria-label='facebook'>
                             <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="52" height="52" rx="26" fill="white"/>
@@ -202,7 +202,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                             </svg>
 
                         </a> : null}
-                        {socials.linkedin ? <a href={socials.linkedin} target="_blank" rel="noreferrer">
+                        {socials.linkedin ? <a href={socials.linkedin} target="_blank" rel="noreferrer"  aria-label='linkedin'>
                             <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="52" height="52" rx="26" fill="white"/>
@@ -211,7 +211,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                                     fill="#575757"/>
                             </svg>
                         </a> : null}
-                        {socials.twitter ? <a href={socials.twitter} target="_blank" rel="noreferrer">
+                        {socials.twitter ? <a href={socials.twitter} target="_blank" rel="noreferrer"  aria-label='twitter'>
                             <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="52" height="52" rx="26" fill="white"/>
@@ -221,7 +221,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                             </svg>
 
                         </a> : null}
-                        {socials.instagram ? <a href={socials.instagram} target="_blank" rel="noreferrer">
+                        {socials.instagram ? <a href={socials.instagram} target="_blank" rel="noreferrer"  aria-label='instagram'>
                             <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="52" height="52" rx="26" fill="white"/>
@@ -232,7 +232,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                         </a> : null}
                     </div>
                     <div className="casaq-tipiq">
-                        <a href="https://pomzed.ch/" target="_blank" aria-label='Agence de communication dans le Jura'>
+                        <a href="https://pomzed.ch/" target="_blank" aria-label='TipiQ - Le portail immobilier du Jura'>
                             <svg width="50" height="15" viewBox="0 0 50 15" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -250,7 +250,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
 
 
                         </a>
-                        <a href="https://pomzed.ch/" target="_blank" aria-label='Agence de communication dans le Jura'>
+                        <a href="https://pomzed.ch/" target="_blank" aria-label='CasaQ - CRM immobilier'>
                             <svg width="61" height="15" viewBox="0 0 61 15" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <g clipPath="url(#clip0_371_8128)">

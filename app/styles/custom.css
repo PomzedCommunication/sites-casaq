@@ -510,6 +510,24 @@ PAGE LISTE biens
 }
 .listing-custom-select__menu button{
   display: block;
+  width: 100%;
+  text-align: left;
+  transition: 0.5s ease-in-out all;
+  padding: 8px 10px;
+  border-radius: 60px;
+
+}
+.listing-custom-select__menu button span{
+  opacity: 1!important;
+  font-size: 16px;
+}
+.listing-custom-select__menu .is-active{
+  background: var(--site-agency);
+  color: white;
+}
+.listing-custom-select__menu .is-active span{
+  color: white;
+  font-weight: 600;
 }
 .listing-toolbar select{
   width: fit-content;
@@ -1909,20 +1927,15 @@ Account inside
   fill: var(--site-agency);
 }
 .listing-custom-select__menu{
-  padding: var(--interne-md);
+  /*padding: var(--interne-md);*/
+  padding: 10px;
   border: 0;
 }
 .listing-filter-popover span,
 .listing-custom-select span{
   opacity: 0.6;
 }
-.listing-custom-select__menu button{
-  margin-bottom: 7px;
-  display: block;
-}
-.listing-custom-select__menu button:last-of-type{
-  margin-bottom: 0;
-}
+
 .site-header__brand{
   transition: 0.5s ease-in-out all;
 }
