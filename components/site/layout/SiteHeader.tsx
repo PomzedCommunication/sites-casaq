@@ -15,6 +15,7 @@ type Props = {
 export function SiteHeader({ site, previewDomain }: Props) {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [headerHidden, setHeaderHidden] = useState(false);
 
     useEffect(() => {
         setMenuOpen(false);
@@ -25,6 +26,43 @@ export function SiteHeader({ site, previewDomain }: Props) {
 
         return () => {
             document.body.classList.remove('site-mobile-menu-open');
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function updateHeader() {
+            const currentScrollY = window.scrollY;
+            const scrollingDown = currentScrollY > lastScrollY;
+            const scrollingUp = currentScrollY < lastScrollY;
+
+            if (menuOpen) {
+                setHeaderHidden(false);
+            } else if (currentScrollY < 80) {
+                setHeaderHidden(false);
+            } else if (scrollingDown && currentScrollY > 120) {
+                setHeaderHidden(true);
+            } else if (scrollingUp) {
+                setHeaderHidden(false);
+            }
+
+            lastScrollY = currentScrollY;
+            ticking = false;
+        }
+
+        function handleScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
         };
     }, [menuOpen]);
     return (
@@ -38,7 +76,11 @@ export function SiteHeader({ site, previewDomain }: Props) {
                 />
             ) : null}
 
-            <header className={`site-header ${menuOpen ? 'is-menu-open' : ''}`}>
+            <header
+                className={`site-header ${menuOpen ? 'is-menu-open' : ''} ${
+                    headerHidden ? 'is-hidden-on-scroll' : 'is-visible-on-scroll'
+                }`}
+            >
                 <Link
                     href={buildUrl('/', previewDomain)}
                     className={`site-header__brand ${isActivePath(pathname, '/') ? 'is-active' : ''}`}

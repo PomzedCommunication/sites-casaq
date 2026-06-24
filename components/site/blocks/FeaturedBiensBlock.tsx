@@ -142,7 +142,6 @@ export type SerializedBien = {
 
 function serializeBien(bien: CasaqBien): SerializedBien {
     const image =
-        bien.images?.[0]?.variants?.medium ||
         bien.images?.[0]?.variants?.large ||
         bien.images?.[0]?.url ||
         null;

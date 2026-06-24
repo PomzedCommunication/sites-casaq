@@ -3,6 +3,8 @@ import { SiteHeader } from '@/components/site/layout/SiteHeader';
 import { SiteFooter } from '@/components/site/layout/SiteFooter';
 import { SiteBodyTheme } from '@/components/site/layout/SiteBodyTheme';
 import { ScrollToTop } from '@/components/site/layout/ScrollToTop';
+import { SiteDomainCss } from '@/components/site/layout/SiteDomainCss';
+
 type Props = {
     site: CasaqSiteConfig;
     currentDomain: string;
@@ -43,7 +45,11 @@ export function SiteLayout({
     return (
         <>
             <ScrollToTop />
-
+            <SiteDomainCss
+                currentDomain={currentDomain}
+                previewDomain={previewDomain}
+                siteDomain={site.domain}
+            />
             <SiteBodyTheme config={site.config} />
 
             {assets?.googleFontHref ? (

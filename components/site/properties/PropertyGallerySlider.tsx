@@ -88,7 +88,8 @@ export function PropertyGallerySlider({ images, title }: Props) {
                                     alt={image.alt || `${title} - photo ${index + 1}`}
                                     fill
                                     priority={index === 0}
-                                    sizes="(max-width: 900px) 100vw, 900px"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1400px) 100vw, 1400px"
+                                    quality={95}
                                     className="property-detail__gallery-image"
                                 />
                             </div>

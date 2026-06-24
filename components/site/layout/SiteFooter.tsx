@@ -3,16 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CasaqSiteConfig } from '@/lib/casaq';
-import { NovimmobCss } from '@/components/site/styles/NovimmobCss';
-import type { ComponentType } from 'react';
+// import { NovimmobCss } from '@/components/site/styles/NovimmobCss';
+// import type { ComponentType } from 'react';
 
 type Props = {
     site: CasaqSiteConfig;
     previewDomain?: string;
 };
-const SITE_CSS_BY_DOMAIN: Record<string, React.ComponentType> = {
-    'exemple.ch': NovimmobCss,
-};
+// const SITE_CSS_BY_DOMAIN: Record<string, React.ComponentType> = {
+//     'novimmob.pix-preview.ch': NovimmobCss,
+// };
 
 export function SiteFooter({ site, previewDomain }: Props) {
     const footer = site.footer || {};
@@ -26,8 +26,8 @@ export function SiteFooter({ site, previewDomain }: Props) {
     const holidayClosures = Array.isArray(footer.holiday_closures)
         ? footer.holiday_closures
         : [];
-    const activeDomain = normalizeDomain(previewDomain || site.domain);
-    const SiteCss = SITE_CSS_BY_DOMAIN[activeDomain] || null;
+    // const activeDomain = normalizeDomain(previewDomain || site.domain);
+    // const SiteCss = SITE_CSS_BY_DOMAIN[activeDomain] || null;
 
     const openStatus = getOpenStatus(hourItems, holidayClosures);
     const contactAdresse = contact.adresse || site.infos.adresse;
@@ -40,7 +40,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
 
     return (
         <>
-            {SiteCss ? <SiteCss /> : null}
+            {/*{SiteCss ? <SiteCss /> : null}*/}
             {openStatus ? (
                 <div
                     className={`site-open-fixed white ${
@@ -270,7 +270,8 @@ export function SiteFooter({ site, previewDomain }: Props) {
                     </div>
 
                     <div className="site-footer__bottom">
-                        <p>© {new Date().getFullYear()} {site.agence.nom} | Réalisé sur mesure et avec passion - </p>
+                        <p>© {new Date().getFullYear()} {site.agence.nom} | Réalisé sur mesure et avec passion</p>
+                        <div className="site-footer__credit-logos">
                         <a href="https://pixlab.ch/agence-web-a-delemont/" target="_blank"
                            aria-label='Agence web dans le Jura'>
                             <svg width="53" height="14" viewBox="0 0 53 14" fill="none"
@@ -315,6 +316,7 @@ export function SiteFooter({ site, previewDomain }: Props) {
                             </svg>
 
                         </a>
+                        </div>
                         {legalLinks.length ? (
                             <nav className="site-footer__legal">
                                 {legalLinks.map((item) => (
