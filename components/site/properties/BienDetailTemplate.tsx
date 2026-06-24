@@ -1245,9 +1245,9 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
                         <div className="property-detail__map-card-inner">
                             <strong>{selectedPlace.name}</strong>
 
-                            {selectedPlace.address ? (
-                                <p>{selectedPlace.address}</p>
-                            ) : null}
+                            {/*{selectedPlace.address ? (*/}
+                            {/*    <p>{selectedPlace.address}</p>*/}
+                            {/*) : null}*/}
 
                             <small>
                                 {getPlaceCategoryLabel(selectedPlace.type)}
@@ -1398,8 +1398,8 @@ function ContactCard({ bien }: { bien: CasaqBien }) {
             <h3>Contact de visite</h3>
 
             <div className="property-detail__contact-person">
-                <div className="property-detail__contact-avatar">
-                    {contact.image ? (
+                {contact.image && (
+                    <div className="property-detail__contact-avatar">
                         <Image
                             src={contact.image}
                             alt={contact.name}
@@ -1407,10 +1407,9 @@ function ContactCard({ bien }: { bien: CasaqBien }) {
                             sizes="400px"
                             className="property-detail__contact-avatar-img"
                         />
-                    ) : (
-                        <span>{getInitials(contact.name)}</span>
-                    )}
+
                 </div>
+                )}
 
                 <div className="property-detail__contact-info">
                     <span className='label_avatar'>{getVisitContactTypeLabel(contact.type)}</span>

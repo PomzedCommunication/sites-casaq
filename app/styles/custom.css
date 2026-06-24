@@ -591,7 +591,9 @@ PAGE d'un bien
   display: grid;
   grid-template-columns: 2fr 180px;
 }
-
+.property-detail__summary-left>h2{
+  max-width: 750px;
+}
 .property-detail__gallery{
   margin-top: var(--ltspace);
 }
@@ -916,10 +918,14 @@ button:hover{
   margin-top: -54px;
   padding: 0 18px 18px;
 }
+.property-detail__map-tabs .is-active{
+  background: var(--site-grey);
+}
 
 .property-detail__map-card-inner {
   max-width: 220px;
   font-size: 13px;
+  padding: 20px;
 }
 
 .property-detail__map-card-inner strong {
