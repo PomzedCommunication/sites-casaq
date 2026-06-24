@@ -14,36 +14,57 @@ const DEAL_PATHS: Record<ListingDeal, string> = {
 };
 
 const CATEGORY_ALIASES: Record<string, string> = {
+  // Catégories parentes réelles
   appartement: 'appartements',
   appartements: 'appartements',
 
   maison: 'maisons',
   maisons: 'maisons',
 
-  villa: 'villas',
-  villas: 'villas',
-
   terrain: 'terrains',
   terrains: 'terrains',
+
+  'local-commercial': 'locaux-commerciaux',
+  'locaux-commerciaux': 'locaux-commerciaux',
+  local: 'locaux-commerciaux',
+  locaux: 'locaux-commerciaux',
+
+  hotellerie: 'hotellerie',
+  hôtellerie: 'hotellerie',
+
+  entreprise: 'entreprises',
+  entreprises: 'entreprises',
+
+  parking: 'parkings',
+  parkings: 'parkings',
+
+  'place-amarrage': 'places-amarrage',
+  'places-amarrage': 'places-amarrage',
+  'place-d-amarrage': 'places-amarrage',
+  'places-d-amarrage': 'places-amarrage',
 
   immeuble: 'immeubles',
   immeubles: 'immeubles',
 
-  commerce: 'commerces',
-  commerces: 'commerces',
+  'cle-en-main': 'cles-en-main',
+  'cles-en-main': 'cles-en-main',
+  'clé-en-main': 'cles-en-main',
+  'clés-en-main': 'cles-en-main',
 
-  bureau: 'bureaux',
-  bureaux: 'bureaux',
+  'mobile-home': 'mobile-homes',
+  'mobile-homes': 'mobile-homes',
 
-  local: 'locaux-commerciaux',
-  locaux: 'locaux-commerciaux',
-  'local-commercial': 'locaux-commerciaux',
-  'locaux-commerciaux': 'locaux-commerciaux',
-  'surface-commerciale': 'locaux-commerciaux',
-  'surfaces-commerciales': 'locaux-commerciaux',
+  annexe: 'annexes',
+  annexes: 'annexes',
 
-  parking: 'parkings',
-  parkings: 'parkings',
+  camping: 'campings',
+  campings: 'campings',
+
+  enseigne: 'enseignes',
+  enseignes: 'enseignes',
+
+  chambre: 'chambres',
+  chambres: 'chambres',
 };
 
 function normalizeCategorySlug(value?: string): string | undefined {

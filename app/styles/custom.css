@@ -99,6 +99,7 @@ p:last-child{
 .listing-search__location{
   width: 40%;
 }
+.listing-custom-select,
 .listing-filter-popover{
   width: 25%;
 }

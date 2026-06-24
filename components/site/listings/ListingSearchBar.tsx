@@ -30,36 +30,47 @@ function getPriceStep(deal?: ListingFilters['deal']): number {
 function getPriceFallbackMax(deal?: ListingFilters['deal']): number {
     return deal === 'RENT' ? 10000 : 5000000;
 }
-const FALLBACK_CATEGORY_OPTIONS = [
-    { value: 'appartements', label: 'Appartements' },
-    { value: 'maisons', label: 'Maisons' },
-    { value: 'villas', label: 'Villas' },
-    { value: 'terrains', label: 'Terrains' },
-    { value: 'immeubles', label: 'Immeubles' },
-    { value: 'commerces', label: 'Commerces' },
-    { value: 'bureaux', label: 'Bureaux' },
-    { value: 'locaux-commerciaux', label: 'Locaux commerciaux' },
-    { value: 'parkings', label: 'Parkings' },
-];
+// const FALLBACK_CATEGORY_OPTIONS = [
+//     { value: 'appartements', label: 'Appartements' },
+//     { value: 'maisons', label: 'Maisons' },
+//     { value: 'villas', label: 'Villas' },
+//     { value: 'terrains', label: 'Terrains' },
+//     { value: 'immeubles', label: 'Immeubles' },
+//     { value: 'commerces', label: 'Commerces' },
+//     { value: 'bureaux', label: 'Bureaux' },
+//     { value: 'locaux-commerciaux', label: 'Locaux commerciaux' },
+//     { value: 'parkings', label: 'Parkings' },
+// ];
+//
+// function mergeCategoryOptions(
+//     apiCategories?: { slug: string; label: string; count?: number }[]
+// ) {
+//     const map = new Map<string, { value: string; label: string; count?: number }>();
+//
+//     FALLBACK_CATEGORY_OPTIONS.forEach((category) => {
+//         map.set(category.value, category);
+//     });
+//
+//     apiCategories?.forEach((category) => {
+//         map.set(category.slug, {
+//             value: category.slug,
+//             label: category.label,
+//             count: category.count,
+//         });
+//     });
+//
+//     return Array.from(map.values());
+// }
+
 
 function mergeCategoryOptions(
     apiCategories?: { slug: string; label: string; count?: number }[]
 ) {
-    const map = new Map<string, { value: string; label: string; count?: number }>();
-
-    FALLBACK_CATEGORY_OPTIONS.forEach((category) => {
-        map.set(category.value, category);
-    });
-
-    apiCategories?.forEach((category) => {
-        map.set(category.slug, {
-            value: category.slug,
-            label: category.label,
-            count: category.count,
-        });
-    });
-
-    return Array.from(map.values());
+    return (apiCategories || []).map((category) => ({
+        value: category.slug,
+        label: category.label,
+        count: category.count,
+    }));
 }
 export function ListingSearchBar({
                                      variant = 'large',

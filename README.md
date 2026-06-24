@@ -181,7 +181,7 @@ sites-casaq/
 ├── app/
 │   ├── api/
 │   │   └── health/
-│   │       └── route.ts
+│   │       └── sitemap.ts
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── biens/
