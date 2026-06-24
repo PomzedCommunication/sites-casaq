@@ -28,7 +28,9 @@ export function SiteFooter({ site, previewDomain }: Props) {
     const SiteCss = SITE_CSS_BY_DOMAIN[activeDomain] || null;
 
     const openStatus = getOpenStatus(hourItems, holidayClosures);
-
+    const contactAdresse = contact.adresse || site.infos.adresse;
+    const contactTelephone = contact.telephone || site.infos.telephone;
+    const contactEmail = contact.email || site.infos.email;
     const footerLogoSrc =
         typeof footer.logo === 'string' && footer.logo.trim()
             ? footer.logo.trim()
@@ -163,25 +165,25 @@ export function SiteFooter({ site, previewDomain }: Props) {
                             <div className="site-footer__contact">
                                 <strong>{site.agence.nom}</strong>
 
-                                {site.infos.adresse ? (
+                                {contactAdresse ? (
                                     <div className="site-footer__address">
-                                        {splitLines(site.infos.adresse).map((line, index) => (
-                                            <span key={`${line}-${index}`}>
-                                                {line}
-                                            </span>
+                                        {splitLines(contactAdresse).map((line, index) => (
+                                                <span key={`${line}-${index}`}>
+                                                    {line}
+                                                </span>
                                         ))}
                                     </div>
                                 ) : null}
 
-                                {site.infos.telephone ? (
-                                    <a href={`tel:${cleanPhone(site.infos.telephone)}`}>
-                                        {site.infos.telephone}
+                                {contactTelephone ? (
+                                    <a href={`tel:${cleanPhone(contactTelephone)}`}>
+                                        {contactTelephone}
                                     </a>
                                 ) : null}
 
-                                {site.infos.email ? (
-                                    <a href={`mailto:${site.infos.email}`}>
-                                        {site.infos.email}
+                                {contactEmail ? (
+                                    <a href={`mailto:${contactEmail}`}>
+                                        {contactEmail}
                                     </a>
                                 ) : null}
                             </div>

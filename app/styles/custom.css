@@ -42,6 +42,12 @@ p,.p{
   color: var(--site-grey);
   margin-top: 0;
 }
+.txt li{
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 130%;
+  color: var(--site-grey);
+}
 strong.p{
   font-weight: 700;
   color: var(--site-text);
@@ -1258,6 +1264,7 @@ CONTACT
 .contact-block__horaires{
   margin-top: 20px;
 }
+.contact-block__horaires>strong,
 .contact-block__infos>strong{
   margin-bottom: 10px;
   display: block;
@@ -1265,6 +1272,9 @@ CONTACT
 .contact-block__infos a,
 .site__address span{
   display: block;
+}
+.contact-block__horaires .site-footer__hour-row.is-today *{
+  color: var(--site-text);
 }
 
 
@@ -2325,4 +2335,24 @@ Account inside
 
 .contact-account-nav__menu {
   display: none;
+}
+.bien-card__badge{
+  font-size: 14px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.favorite-action{
+  position: relative;
+}
+.favorite-message{
+  position: absolute;
+  width: 200px;
+  background: white;
+  padding: 10px;
+  left: calc(100% + 6px);
+  top: -13px;
+  border-radius: 7px;
 }

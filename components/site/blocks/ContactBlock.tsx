@@ -1,6 +1,6 @@
-import type {CasaqBloc, CasaqSiteConfig} from '@/lib/casaq';
-import {parseSiteHtml} from '@/lib/site-html';
-import {PropertyContactForm} from '@/components/site/properties/PropertyContactForm';
+import type { CasaqBloc, CasaqSiteConfig } from '@/lib/casaq';
+import { parseSiteHtml } from '@/lib/site-html';
+import { PropertyContactForm } from '@/components/site/properties/PropertyContactForm';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -12,11 +12,30 @@ type Data = {
     texte?: string;
 };
 
-export function ContactBlock({site, bloc}: Props) {
+type ContactHourItem = {
+    label?: string;
+    day?: string;
+    weekday?: number | string | null;
+    closed?: boolean;
+    slots?: Array<{
+        start?: string;
+        end?: string;
+    }>;
+    value?: string;
+    note?: string;
+};
+
+export function ContactBlock({ site, bloc }: Props) {
     const data = (bloc.data || {}) as Data;
+
     const footer = site.footer || {};
+    const contact = footer.contact || {};
     const hours = footer.hours || {};
     const hourItems = Array.isArray(hours.items) ? hours.items : [];
+
+    const contactAdresse = contact.adresse || site.infos.adresse;
+    const contactTelephone = contact.telephone || site.infos.telephone;
+    const contactEmail = contact.email || site.infos.email;
 
     return (
         <section className="section contact-block pd-l-r">
@@ -32,45 +51,56 @@ export function ContactBlock({site, bloc}: Props) {
                         ) : null}
 
                         <div className="contact-block__infos">
-                            <strong className="p" >{site.agence.nom}</strong>
+                            <strong className="p">{site.agence.nom}</strong>
 
-                            {site.infos.adresse ? (
+                            {contactAdresse ? (
                                 <div className="site__address">
-                                    {splitLines(site.infos.adresse).map((line, index) => (
-                                        <span className="p"  key={`${line}-${index}`}>
+                                    {splitLines(contactAdresse).map((line, index) => (
+                                        <span className="p" key={`${line}-${index}`}>
                                             {line}
                                         </span>
                                     ))}
                                 </div>
                             ) : null}
-                            {site.infos.telephone ? (
-                                <a className="p" href={`tel:${cleanPhone(site.infos.telephone)}`}>
-                                    {site.infos.telephone}
+
+                            {contactTelephone ? (
+                                <a className="p" href={`tel:${cleanPhone(contactTelephone)}`}>
+                                    {contactTelephone}
                                 </a>
                             ) : null}
 
-                            {site.infos.email ? (
-                                <a className="p" href={`mailto:${site.infos.email}`}>
-                                    {site.infos.email}
+                            {contactEmail ? (
+                                <a className="p" href={`mailto:${contactEmail}`}>
+                                    {contactEmail}
                                 </a>
                             ) : null}
                         </div>
+
                         <div className="contact-block__horaires">
-                            <strong  className="p" >Horaires</strong>
+                            <strong className="p">
+                                {hours.title || 'Horaires'}
+                            </strong>
 
                             {hourItems.length ? (
                                 <div className="site-footer__hours">
-                                    {hourItems.map((item, index) => (
-                                        <div key={index} className="site-footer__hour-row">
-                                        <span className="site-footer__hour-day p">
-                                            {item.day || item.label}
-                                        </span>
+                                    {hourItems.map((item, index) => {
+                                        const isToday = isTodayHourItem(item);
 
-                                            <span className="site-footer__hour-value p">
-                                            {formatHourItem(item)}
-                                        </span>
-                                        </div>
-                                    ))}
+                                        return (
+                                            <div
+                                                key={index}
+                                                className={`site-footer__hour-row ${isToday ? 'is-today' : ''}`}
+                                            >
+                                                <span className="site-footer__hour-day p">
+                                                    {item.label || item.day}
+                                                </span>
+
+                                                <span className="site-footer__hour-value p">
+                                                    {formatHourItem(item)}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             ) : null}
                         </div>
@@ -99,21 +129,31 @@ function splitLines(value?: string | null): string[] {
         .filter(Boolean);
 }
 
-function formatHourItem(item: {
-    value?: string;
-    morning?: string;
-    afternoon?: string;
-    note?: string;
-}) {
+function formatHourItem(item: ContactHourItem) {
+    if (item.closed) {
+        return item.note || 'Fermé';
+    }
+
+    const slots = Array.isArray(item.slots)
+        ? item.slots.filter((slot) => slot.start && slot.end)
+        : [];
+
+    if (slots.length) {
+        return slots
+            .map((slot) => `${slot.start} – ${slot.end}`)
+            .join(' et ');
+    }
+
     if (item.value) {
         return item.value;
     }
 
-    const parts = [item.morning, item.afternoon].filter(Boolean);
-
-    if (parts.length) {
-        return parts.join(' et ');
-    }
-
     return item.note || '';
+}
+
+function isTodayHourItem(item: ContactHourItem): boolean {
+    const now = new Date();
+    const weekday = now.getDay() === 0 ? 7 : now.getDay();
+
+    return Number(item.weekday) === weekday;
 }

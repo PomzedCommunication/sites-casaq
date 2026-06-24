@@ -83,6 +83,9 @@ export type CasaqSiteConfig = {
     }>;
     contact?: {
       title?: string;
+      email?: string | null;
+      telephone?: string | null;
+      adresse?: string | null;
     };
 
     legal_links?: Array<{

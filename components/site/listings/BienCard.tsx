@@ -128,7 +128,7 @@ export function BienCard({ bien, previewDomain }: Props) {
                 )}
 
                 {isNewBien(bien) ? (
-                    <span className="bien-card__badge">
+                    <span className="bien-card__badge site-btn btn-sm">
                         Nouveau
                     </span>
                 ) : null}
