@@ -467,7 +467,7 @@ export function CriteresClient({ previewDomain }: Props) {
                 </div>
             ) : searches.length === 0 ? (
                 <div className="account-panel">
-                    <h2>Aucune recherche enregistrée</h2>
+                    <h2 className='h3'>Aucune recherche enregistrée</h2>
                     <p>Créez vos critères pour retrouver plus facilement les biens qui vous correspondent.</p>
                 </div>
             ) : (

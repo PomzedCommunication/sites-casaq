@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import {
     clearContactToken,
@@ -14,24 +14,40 @@ type Props = {
 };
 
 export function ContactAccountNav({ previewDomain }: Props) {
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnected, setIsConnected] = useState<boolean | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+
     const pathname = usePathname();
+    const router = useRouter();
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        setIsConnected(Boolean(getContactToken()));
-
-        function onStorage() {
+        function refreshConnectedState() {
             setIsConnected(Boolean(getContactToken()));
         }
 
-        window.addEventListener('storage', onStorage);
+        refreshConnectedState();
+
+        window.addEventListener('storage', refreshConnectedState);
+        window.addEventListener('casaq-contact-auth', refreshConnectedState);
 
         return () => {
-            window.removeEventListener('storage', onStorage);
+            window.removeEventListener('storage', refreshConnectedState);
+            window.removeEventListener('casaq-contact-auth', refreshConnectedState);
         };
     }, []);
+
+    useEffect(() => {
+        if (isConnected !== false) {
+            return;
+        }
+
+        if (!isAccountPath(pathname)) {
+            return;
+        }
+
+        router.replace(buildUrl('/login', previewDomain));
+    }, [isConnected, pathname, previewDomain, router]);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -65,8 +81,13 @@ export function ContactAccountNav({ previewDomain }: Props) {
 
         localStorage.removeItem('casaq_contact_name');
         window.dispatchEvent(new Event('casaq-contact-name'));
+        window.dispatchEvent(new Event('casaq-contact-auth'));
 
-        window.location.href = buildUrl('/login', previewDomain);
+        router.replace(buildUrl('/login', previewDomain));
+    }
+
+    if (isConnected === null) {
+        return null;
     }
 
     if (!isConnected) {
@@ -91,7 +112,6 @@ export function ContactAccountNav({ previewDomain }: Props) {
                 <HeartIcon />
             </Link>
 
-            {/* Desktop : lien normal vers mon compte */}
             <Link
                 href={buildUrl('/mon-compte', previewDomain)}
                 className={`site-header__link_sup contact-account-nav__desktop-account ${
@@ -102,7 +122,6 @@ export function ContactAccountNav({ previewDomain }: Props) {
                 <AccountIcon />
             </Link>
 
-            {/* Mobile : bouton qui ouvre le sous-menu */}
             <button
                 type="button"
                 className={`site-header__link_sup contact-account-nav__mobile-toggle ${
@@ -175,7 +194,6 @@ export function ContactAccountNav({ previewDomain }: Props) {
         </div>
     );
 }
-
 function AccountMenuLink({
                              href,
                              label,

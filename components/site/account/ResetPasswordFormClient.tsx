@@ -50,7 +50,7 @@ export function ResetPasswordFormClient({ previewDomain }: Props) {
 
     return (
         <section className="account-auth__card">
-            <h1>Nouveau mot de passe</h1>
+            <h1 className='h2'>Nouveau mot de passe</h1>
             <p>Choisissez un nouveau mot de passe pour votre espace personnel.</p>
 
             {!token ? (

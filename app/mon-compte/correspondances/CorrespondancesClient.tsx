@@ -96,7 +96,7 @@ export function CorrespondancesClient({ previewDomain }: Props) {
 
                     {items.length === 0 ? (
                         <div className="account-panel">
-                            <h2>Aucune correspondance pour le moment</h2>
+                            <h2 className='h3'>Aucune correspondance pour le moment</h2>
                             <p>
                                 Créez ou ajustez vos critères de recherche. Les biens correspondants apparaîtront ici
                                 après calcul.
@@ -104,7 +104,7 @@ export function CorrespondancesClient({ previewDomain }: Props) {
 
                             <Link
                                 href={buildUrlWithPreviewDomain('/mon-compte/criteres', previewDomain)}
-                                className="account-button-link"
+                                className="account-button-link site-btn"
                             >
                                 Gérer mes critères
                             </Link>

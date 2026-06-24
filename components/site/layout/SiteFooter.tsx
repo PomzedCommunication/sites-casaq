@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CasaqSiteConfig } from '@/lib/casaq';
@@ -374,16 +376,92 @@ function formatHourItem(item: FooterHourItem) {
     return item.note || '';
 }
 
+// function getOpenStatus(
+//     items: FooterHourItem[],
+//     holidayClosures: HolidayClosure[] = [],
+// ) {
+//     const now = new Date();
+//
+//     const todayIso = [
+//         now.getFullYear(),
+//         String(now.getMonth() + 1).padStart(2, '0'),
+//         String(now.getDate()).padStart(2, '0'),
+//     ].join('-');
+//
+//     const holidayClosure = holidayClosures.find((item) => {
+//         return String(item.date || '').trim() === todayIso;
+//     });
+//
+//     if (holidayClosure) {
+//         return {
+//             open: false,
+//             todayLabel: holidayClosure.label || 'Jour férié',
+//         };
+//     }
+//
+//     const usableItems = items.filter((item) => Number(item.weekday));
+//
+//     if (!usableItems.length) {
+//         return null;
+//     }
+//
+//     const weekday = now.getDay() === 0 ? 7 : now.getDay();
+//
+//     const today = usableItems.find((item) => Number(item.weekday) === weekday);
+//
+//     if (!today) {
+//         return null;
+//     }
+//
+//     const todayLabel = formatHourItem(today);
+//
+//     if (today.closed) {
+//         return {
+//             open: false,
+//             todayLabel,
+//         };
+//     }
+//
+//     const slots = Array.isArray(today.slots)
+//         ? today.slots.filter((slot) => slot.start && slot.end)
+//         : [];
+//
+//     if (!slots.length) {
+//         return {
+//             open: false,
+//             todayLabel,
+//         };
+//     }
+//
+//     const currentMinutes = now.getHours() * 60 + now.getMinutes();
+//
+//     const open = slots.some((slot) => {
+//         const start = timeToMinutes(slot.start || '');
+//         const end = timeToMinutes(slot.end || '');
+//
+//         if (start === null || end === null) {
+//             return false;
+//         }
+//
+//         return currentMinutes >= start && currentMinutes < end;
+//     });
+//
+//     return {
+//         open,
+//         todayLabel,
+//     };
+// }
+
 function getOpenStatus(
     items: FooterHourItem[],
     holidayClosures: HolidayClosure[] = [],
 ) {
-    const now = new Date();
+    const now = getSwissNow();
 
     const todayIso = [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, '0'),
-        String(now.getDate()).padStart(2, '0'),
+        now.year,
+        String(now.month).padStart(2, '0'),
+        String(now.day).padStart(2, '0'),
     ].join('-');
 
     const holidayClosure = holidayClosures.find((item) => {
@@ -403,9 +481,7 @@ function getOpenStatus(
         return null;
     }
 
-    const weekday = now.getDay() === 0 ? 7 : now.getDay();
-
-    const today = usableItems.find((item) => Number(item.weekday) === weekday);
+    const today = usableItems.find((item) => Number(item.weekday) === now.weekday);
 
     if (!today) {
         return null;
@@ -431,7 +507,7 @@ function getOpenStatus(
         };
     }
 
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const currentMinutes = now.hours * 60 + now.minutes;
 
     const open = slots.some((slot) => {
         const start = timeToMinutes(slot.start || '');
@@ -449,6 +525,7 @@ function getOpenStatus(
         todayLabel,
     };
 }
+
 function timeToMinutes(value: string): number | null {
     const [hours, minutes] = value.split(':').map((part) => Number(part));
 
@@ -497,8 +574,44 @@ function splitLines(value?: string | null): string[] {
 }
 
 function isTodayHourItem(item: FooterHourItem): boolean {
-    const now = new Date();
-    const weekday = now.getDay() === 0 ? 7 : now.getDay();
+    const now = getSwissNow();
 
-    return Number(item.weekday) === weekday;
+    return Number(item.weekday) === now.weekday;
+}
+function getSwissNow() {
+    const parts = new Intl.DateTimeFormat('fr-CH', {
+        timeZone: 'Europe/Zurich',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    }).formatToParts(new Date());
+
+    const get = (type: string) => {
+        return parts.find((part) => part.type === type)?.value || '';
+    };
+
+    const weekdayText = get('weekday').toLowerCase();
+
+    const weekdayMap: Record<string, number> = {
+        lun: 1,
+        mar: 2,
+        mer: 3,
+        jeu: 4,
+        ven: 5,
+        sam: 6,
+        dim: 7,
+    };
+
+    return {
+        year: Number(get('year')),
+        month: Number(get('month')),
+        day: Number(get('day')),
+        hours: Number(get('hour')),
+        minutes: Number(get('minute')),
+        weekday: weekdayMap[weekdayText.slice(0, 3)] || 1,
+    };
 }
