@@ -789,7 +789,7 @@
     }
     .site-hero--search{
         margin-top: 80px;
-        height: calc(100vh - 80px);
+        height: calc(100dvh - 80px);
     }
 
 
@@ -845,5 +845,14 @@
     }
     .featured-bien-card__badge{
         display: none;
+    }
+
+
+    .eapps-facebook-feed-load-more-label{
+        font-size: 15px;
+        padding: 8px 15px;
+    }
+    .social-posts--cards{
+        overflow: hidden;
     }
 }

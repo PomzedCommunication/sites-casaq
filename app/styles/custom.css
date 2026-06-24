@@ -2411,3 +2411,37 @@ Header site
 .site-hero--no-image *{
   color: var(--site-text);
 }
+
+body .eapps-facebook-feed-large .eapps-facebook-feed-posts-item{
+  margin-top: 0;
+}
+body .eapps-facebook-feed-posts-inner{
+  border: 0;
+  margin-bottom: 0;
+  background: transparent;
+}
+body .eapps-facebook-feed-posts{
+  padding: 0;
+}
+body .eapps-facebook-feed-inner{
+  background: transparent;
+  border: 0;
+}
+.eapps-facebook-feed-load-more-label{
+  background: var(--site-agency);
+  color: #fff;
+  border-radius: 12px;
+  width: fit-content;
+  margin: auto;
+  padding: 11px 20px;
+  display: flex;
+  font-size: 17px;
+  line-height: 120%;
+}
+body .eapps-facebook-feed-posts-item-content-picture-visible,
+body .eapps-facebook-feed-posts-item-content-picture img{
+  width: 100%;
+}
+body .eapps-facebook-feed-load-more{
+  background: transparent!important;
+}
