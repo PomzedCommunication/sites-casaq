@@ -179,4 +179,9 @@
         bottom: 0;
         background-position: bottom;
     }
+    .site-hero--search:after{
+        height: 25vw;
+        bottom: 0;
+        background-position: bottom;
+    }
 }

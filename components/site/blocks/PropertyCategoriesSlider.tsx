@@ -78,8 +78,8 @@ export function PropertyCategoriesSlider({
                 onSwiper={bindNavigation}
                 breakpoints={{
                     0: {
-                        slidesPerView: 1,
-                        spaceBetween: 16,
+                        slidesPerView: 1.1,
+                        spaceBetween: 10,
                     },
                     980: {
                         slidesPerView: 2,

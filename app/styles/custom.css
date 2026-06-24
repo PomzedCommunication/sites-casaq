@@ -2407,3 +2407,7 @@ Header site
   opacity: 1;
   pointer-events: auto;
 }
+
+.site-hero--no-image *{
+  color: var(--site-text);
+}

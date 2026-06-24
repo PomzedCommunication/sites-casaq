@@ -36,11 +36,11 @@ export function HeroSimpleBlock({ site, bloc, previewDomain }: Props) {
     const text = data.texte || data.sous_titre;
 
     return (
-        <section className="site-hero site-hero--simple">
+        <section className={`site-hero site-hero--simple ${!image ? 'site-hero--no-image' : ''}`}>
             {image ? (
-                <>
-                    <Image
-                        src={image}
+            <>
+                <Image
+                    src={image}
                         alt={title || site.agence.nom || ''}
                         fill
                         priority

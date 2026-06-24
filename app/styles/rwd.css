@@ -508,6 +508,7 @@
     }
     .documents-download__card{
         padding: 60px var(--interne-bg) 30px var(--interne-bg);
+        margin-bottom: 20px;
     }
     .documents-download__card .icone-down,
     .documents-download__card .icone-pdf{
@@ -526,6 +527,7 @@
     }
     .links-cards__card{
         display: block;
+        margin-bottom: 20px;
     }
     .links-cards__arrow{
         width: 20px;
@@ -790,14 +792,58 @@
         height: calc(100vh - 80px);
     }
 
-    .site-hero--search:after{
-        height: 25vw;
-        bottom: 0;
-    }
+
     .site-footer__bottom{
         flex-wrap: wrap;
     }
     .site-footer__credit-logos{
         width: 100%;
+    }
+    .agency-news-filters__button{
+        margin-left: 10px;
+        height: 45px;
+        width: 45px;
+    }
+    .agency-news-filters__button svg{
+        height: 18px;
+        width: 18px;
+    }
+
+
+
+    .testimonials__slider,
+    .featured-biens__slider,
+    .property-categories__slider,
+    .agency-news__slider{
+        width: calc(100% + var(--md-side));
+    }
+
+    .testimonials__slider .swiper,
+    .featured-biens__slider .swiper,
+    .property-categories__slider .swiper,
+    .agency-news__slider .swiper{
+        padding-right: var(--md-side);
+    }
+    .testimonials__slider .swiper-slide,
+    .featured-biens__slider .swiper-slide,
+    .property-categories__slider .swiper-slide,
+    .agency-news__slider .swiper-slide{
+        transition: 0.5s ease-in-out all;
+        opacity: 0.6;
+    }
+    .testimonials__slider .swiper-slide-active,
+    .featured-biens__slider .swiper-slide-active,
+    .property-categories__slider .swiper-slide-active,
+    .agency-news__slider .swiper-slide-active{
+        opacity: 1;
+    }
+
+    .agency-news__controls,
+    .featured-biens__controls,
+    .property-categories__controls{
+        display: none;
+    }
+    .featured-bien-card__badge{
+        display: none;
     }
 }

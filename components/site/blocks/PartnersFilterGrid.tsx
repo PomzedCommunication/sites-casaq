@@ -51,6 +51,8 @@ export function PartnersFilterGrid({ partners }: Props) {
 
     return (
         <>
+            <div id='partners'>
+
             {categories.length ? (
                 <div className="partners__filters" aria-label="Filtrer par catégorie">
                     <button
@@ -150,6 +152,8 @@ export function PartnersFilterGrid({ partners }: Props) {
                         </article>
                     );
                 })}
+            </div>
+
             </div>
         </>
     );

@@ -70,12 +70,12 @@ export function AgencyNewsSlider({ posts, previewDomain }: Props) {
                 onSwiper={canSlide ? bindNavigation : undefined}
                 breakpoints={{
                     0: {
-                        slidesPerView: 1,
-                        spaceBetween: 16,
+                        slidesPerView: 1.1,
+                        spaceBetween: 10,
                     },
                     980: {
                         slidesPerView: 2,
-                        spaceBetween: 24,
+                        spaceBetween: 20,
                     },
                     1250: {
                         slidesPerView: 3,

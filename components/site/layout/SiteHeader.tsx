@@ -16,10 +16,10 @@ export function SiteHeader({ site, previewDomain }: Props) {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [headerHidden, setHeaderHidden] = useState(false);
-
-    useEffect(() => {
-        setMenuOpen(false);
-    }, [pathname]);
+    const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
+    // useEffect(() => {
+    //     setMenuOpen(false);
+    // }, [pathname]);
 
     useEffect(() => {
         document.body.classList.toggle('site-mobile-menu-open', menuOpen);
@@ -28,7 +28,10 @@ export function SiteHeader({ site, previewDomain }: Props) {
             document.body.classList.remove('site-mobile-menu-open');
         };
     }, [menuOpen]);
-
+    useEffect(() => {
+        setMenuOpen(false);
+        setOpenSubmenus({});
+    }, [pathname]);
     useEffect(() => {
         let lastScrollY = window.scrollY;
         let ticking = false;
@@ -126,14 +129,32 @@ export function SiteHeader({ site, previewDomain }: Props) {
                                 isActivePath(pathname, item.url) ||
                                 children.some((child) => isActivePath(pathname, child.url));
 
+                            const itemKey = `${item.label}-${item.url}`;
+                            const submenuOpen = Boolean(openSubmenus[itemKey]);
                             return (
                                 <div
-                                    key={`${item.label}-${item.url}`}
-                                    className={`site-header__item ${hasChildren ? 'has-submenu' : ''} ${active ? 'is-active' : ''}`}
+                                    key={itemKey}
+                                    className={`site-header__item ${hasChildren ? 'has-submenu' : ''} ${
+                                        active ? 'is-active' : ''
+                                    } ${submenuOpen ? 'is-submenu-open' : ''}`}
                                 >
                                     <Link
                                         href={buildUrl(item.url || '#', previewDomain)}
                                         className={`site-header__link ${active ? 'is-active' : ''}`}
+                                        onClick={(event) => {
+                                            if (!hasChildren) {
+                                                return;
+                                            }
+
+                                            if (window.matchMedia('(max-width: 1024px)').matches) {
+                                                event.preventDefault();
+
+                                                setOpenSubmenus((current) => ({
+                                                    ...current,
+                                                    [itemKey]: !current[itemKey],
+                                                }));
+                                            }
+                                        }}
                                     >
                                         {item.label}
 
@@ -148,9 +169,10 @@ export function SiteHeader({ site, previewDomain }: Props) {
                                     </Link>
 
                                     {hasChildren ? (
-                                        <div className="site-header__submenu">
+                                        <div
+                                            className={`site-header__submenu ${submenuOpen ? 'is-open' : ''}`}>
                                             {children.map((child) => {
-                                                const childActive = isActivePath(pathname, child.url);
+                                            const childActive = isActivePath(pathname, child.url);
 
                                                 return (
                                                     <Link

@@ -74,12 +74,12 @@ export function TestimonialsSlider({ testimonials }: Props) {
                 onSwiper={canSlide ? bindNavigation : undefined}
                 breakpoints={{
                     0: {
-                        slidesPerView: 1,
-                        spaceBetween: 16,
+                        slidesPerView: 1.1,
+                        spaceBetween: 10,
                     },
                     768: {
                         slidesPerView: 2,
-                        spaceBetween: 24,
+                        spaceBetween: 20,
                     },
                     1024: {
                         slidesPerView: 3,
