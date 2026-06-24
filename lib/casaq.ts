@@ -568,7 +568,7 @@ export async function getSiteBiensByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/biens/by-ids', baseUrl);
 
@@ -612,7 +612,7 @@ export async function getSitePropertyCategoriesByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/biens/categories/by-ids', baseUrl);
 
@@ -647,7 +647,7 @@ export async function getSitePosts(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/posts', baseUrl);
 
@@ -689,7 +689,7 @@ export async function getSitePostsByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/posts/by-ids', baseUrl);
 
@@ -857,7 +857,7 @@ export async function getSiteTeamMembers(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/team-members', baseUrl);
 
@@ -893,7 +893,7 @@ export async function getSiteTeamMembersByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/team-members/by-ids', baseUrl);
 
@@ -937,7 +937,7 @@ export async function getSiteTestimonials(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/testimonials', baseUrl);
 
@@ -977,7 +977,7 @@ export async function getSiteTestimonialsByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/testimonials/by-ids', baseUrl);
 
@@ -1025,7 +1025,7 @@ export async function getSitePartners(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/partners', baseUrl);
 
@@ -1064,7 +1064,7 @@ export async function getSitePartnersByIds(
   const baseUrl =
       process.env.CASAQ_API_URL ||
       process.env.NEXT_PUBLIC_CASAQ_API_URL ||
-      'https://dev.casaq.ch';
+      'https://app.casaq.ch';
 
   const url = new URL('/api/v1/partners/by-ids', baseUrl);
 

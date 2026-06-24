@@ -51,7 +51,7 @@ export function HeroSimpleBlock({ site, bloc, previewDomain }: Props) {
                     <div className="site-hero__overlay" />
                 </>
             ) : null}
-
+ 
                 <div className="site-hero__content white">
 
                     {title ? (

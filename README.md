@@ -214,7 +214,7 @@ sites-casaq/
 Fichier `.env.local` à la racine, jamais sur GitHub :
 
 ```env
-CASAQ_API_URL=https://dev.casaq.ch
+CASAQ_API_URL=https://app.casaq.ch
 CASAQ_REVALIDATE_SECRET=changer_ce_secret
 NEXT_PUBLIC_SITE_URL=https://sites.casaq.ch
 ```
@@ -222,7 +222,7 @@ NEXT_PUBLIC_SITE_URL=https://sites.casaq.ch
 En local :
 
 ```env
-CASAQ_API_URL=https://dev.casaq.ch
+CASAQ_API_URL=https://app.casaq.ch
 CASAQ_REVALIDATE_SECRET=dev_secret
 NEXT_PUBLIC_SITE_URL=http://localhost:3000 
 ```
