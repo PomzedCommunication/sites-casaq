@@ -712,9 +712,11 @@ function getImages(bien: CasaqBien): Array<{ src: string; alt?: string | null }>
     return (bien.images || [])
         .map((image) => ({
             src:
+                image.variants?.original ||
                 image.variants?.xl ||
                 image.variants?.large ||
                 image.variants?.medium ||
+                image.variants?.small ||
                 image.url ||
                 '',
             alt: image.alt || bien.titre,
@@ -1531,12 +1533,13 @@ function getPriceCharacteristicItems(
         isTruthy(finance?.price_starting_at) ||
         isTruthy(finance?.prix_des);
 
-    const pricePeriodId =
+    const pricePeriodId = normalizePeriodId(
         finance?.price_period_id ??
         finance?.periode_prix_id ??
         getNestedValue(bien, 'prix.price_period_id') ??
-        getNestedValue(bien, 'prix.periode_prix_id') ??
-        2;
+        getNestedValue(bien, 'prix.periode_prix_id'),
+        2
+    );
 
     const netRent =
         finance?.net ??
@@ -1556,8 +1559,7 @@ function getPriceCharacteristicItems(
         getNestedValue(bien, 'details.charges');
 
     const chargesMode = finance?.charges_inclusives ?? null;
-    const chargesPeriodId = finance?.charges_period_id ?? 2;
-
+    const chargesPeriodId = normalizePeriodId(finance?.charges_period_id, 2);
     const totalRent = getRentTotalValue({
         rent: netRent,
         rentPeriodId: pricePeriodId,
@@ -1931,8 +1933,10 @@ function SmoothDetails({
 }
 function serializeSimilarBien(bien: CasaqBien) {
     const image =
-        bien.images?.[0]?.variants?.medium ||
+        bien.images?.[0]?.variants?.original ||
+        bien.images?.[0]?.variants?.xl ||
         bien.images?.[0]?.variants?.large ||
+        bien.images?.[0]?.variants?.medium ||
         bien.images?.[0]?.url ||
         null;
 
@@ -2981,4 +2985,12 @@ function splitLines(value?: string | null): string[] {
         .split(/\r?\n|<br\s*\/?>/i)
         .map((line) => line.trim())
         .filter(Boolean);
+}
+
+function normalizePeriodId(value: unknown, fallback: number | string = 2): number | string {
+    if (typeof value === 'number' || typeof value === 'string') {
+        return value;
+    }
+
+    return fallback;
 }

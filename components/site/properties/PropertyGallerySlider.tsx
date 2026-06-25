@@ -27,6 +27,7 @@ export function PropertyGallerySlider({ images, title }: Props) {
     const nextRef = useRef<HTMLButtonElement | null>(null);
 
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const canLoop = images.length > 1;
 
@@ -54,8 +55,7 @@ export function PropertyGallerySlider({ images, title }: Props) {
     if (!images.length) {
         return (
             <section className="property-detail__gallery pd-l-r">
-                <div className="property-detail__gallery-empty">
-                </div>
+                <div className="property-detail__gallery-empty" />
             </section>
         );
     }
@@ -78,23 +78,34 @@ export function PropertyGallerySlider({ images, title }: Props) {
                                 : null,
                     }}
                     onSwiper={bindNavigation}
+                    onSlideChange={(swiper) => {
+                        setActiveIndex(swiper.realIndex);
+                    }}
                     className="property-detail__gallery-swiper"
                 >
-                    {images.map((image, index) => (
-                        <SwiperSlide key={`${image.src}-${index}`}>
-                            <div className="property-detail__gallery-slide">
-                                <Image
-                                    src={image.src}
-                                    alt={image.alt || `${title} - photo ${index + 1}`}
-                                    fill
-                                    priority={index === 0}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1400px) 100vw, 1400px"
-                                    quality={95}
-                                    className="property-detail__gallery-image"
-                                />
-                            </div>
-                        </SwiperSlide>
-                    ))}
+                    {images.map((image, index) => {
+                        const isImportant =
+                            index === activeIndex ||
+                            index === activeIndex + 1 ||
+                            index === activeIndex - 1;
+
+                        return (
+                            <SwiperSlide key={`${image.src}-${index}`}>
+                                <div className="property-detail__gallery-slide">
+                                    <Image
+                                        src={image.src}
+                                        alt={image.alt || `${title} - photo ${index + 1}`}
+                                        fill
+                                        priority={index === 0}
+                                        loading={index === 0 ? 'eager' : 'lazy'}
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1400px) 92vw, 1280px"
+                                        quality={isImportant ? 88 : 78}
+                                        className="property-detail__gallery-image"
+                                    />
+                                </div>
+                            </SwiperSlide>
+                        );
+                    })}
                 </Swiper>
             </div>
 
@@ -106,6 +117,7 @@ export function PropertyGallerySlider({ images, title }: Props) {
                         slidesPerView="auto"
                         spaceBetween={12}
                         watchSlidesProgress
+
                         className="property-detail__thumbs-swiper"
                     >
                         {images.slice(0, 12).map((image, index) => (
@@ -121,7 +133,9 @@ export function PropertyGallerySlider({ images, title }: Props) {
                                         src={image.src}
                                         alt={image.alt || `${title} - miniature ${index + 1}`}
                                         fill
+                                        loading="lazy"
                                         sizes="120px"
+                                        quality={45}
                                         className="property-detail__thumb-image"
                                     />
                                 </button>
