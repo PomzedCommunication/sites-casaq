@@ -129,7 +129,8 @@ export async function generateMetadata({
     const slugParts = resolvedParams.slug || [];
     const page = resolvePage(site, slugParts);
     if (isNewsSinglePath(slugParts)) {
-        const post = await getSitePost(domain, slugParts[1]);
+        const isPreview = resolvedSearchParams?.preview === '1';
+        const post = await getSitePost(domain, slugParts[1], isPreview);
 
         if (post) {
             return {
@@ -191,8 +192,10 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
         notFound();
     }
     if (isNewsSinglePath(slugParts)) {
-        const post = await getSitePost(domain, slugParts[1]);
+        const isPreview = resolvedSearchParams?.preview === '1';
+        const post = await getSitePost(domain, slugParts[1], isPreview);
 
+         
         if (!post) {
             notFound();
         }

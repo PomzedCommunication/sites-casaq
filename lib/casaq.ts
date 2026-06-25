@@ -737,23 +737,36 @@ export type CasaqPost = {
 export async function getSitePost(
     domain: string,
     slug: string,
+    preview = false,
 ): Promise<CasaqPost | null> {
   if (!API_URL) {
     throw new Error('CASAQ_API_URL manquant dans .env.local');
   }
 
   const search = new URLSearchParams();
+  // search.set('domain', domain);
   search.set('domain', domain);
 
+  if (preview) {
+    search.set('preview', '1');
+  }
   const url = `${API_URL}/api/v1/posts/${encodeURIComponent(slug)}?${search.toString()}`;
 
-  const res = await fetch(url, {
-    next: {
-      revalidate: 60,
-      tags: [`site-post:${domain}:${slug}`],
-    },
-  });
-
+  // const res = await fetch(url, {
+  //   next: {
+  //     revalidate: 60,
+  //     tags: [`site-post:${domain}:${slug}`],
+  //   },
+  // });
+  const res = await fetch(url, preview
+      ? { cache: 'no-store' }
+      : {
+        next: {
+          revalidate: 60,
+          tags: [`site-post:${domain}:${slug}`],
+        },
+      }
+  );
   if (!res.ok) {
     return null;
   }
