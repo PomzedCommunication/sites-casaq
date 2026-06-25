@@ -42,12 +42,29 @@ p,.p{
   color: var(--site-grey);
   margin-top: 0;
 }
+.txt ul{
+  padding-left: 0;
+  list-style: none;
+}
+
 .txt li{
   font-size: 18px;
   font-weight: 500;
   line-height: 130%;
   color: var(--site-grey);
+  position: relative;
+  padding-left: 30px;
 }
+.txt li::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  height: 1px;
+  background: var(--site-agency);
+  width: 15px;
+}
+
 strong.p{
   font-weight: 700;
   color: var(--site-text);

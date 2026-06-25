@@ -2367,7 +2367,7 @@ function HtmlBlock({ value }: { value?: string | null }) {
     }
 
     return (
-        <div className="property-detail__html-content p">
+        <div className="property-detail__html-content txt p">
             {parse(value)}
         </div>
     );

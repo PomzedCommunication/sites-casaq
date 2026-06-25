@@ -42,12 +42,15 @@
     body .site-mobile-menu-open {
         overflow: hidden;
     }
-    p,.p, li{
+    p,.p{
         font-size: 16px;
         color: var(--site-grey);
 
     }
+    .txt li{
+        font-size: 16px;
 
+    }
 
     .site-header {
         height: 75px;
@@ -1010,5 +1013,22 @@
     }
     .account-search-list>button{
         display: flex;
+    }
+    .property-detail__map-tabs{
+        gap: 4px;
+        margin-top: -93px;
+    }
+    .property-detail__map-tabs button{
+        padding: 10px;
+        font-size: 12px;
+
+    }
+    .property-detail__phone a{
+        width: 35px;
+        height: 35px;
+    }
+    .property-detail__phone a svg{
+        width: 15px;
+        height: 15px;
     }
 }
