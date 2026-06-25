@@ -828,12 +828,8 @@ function formatHeroPrice(bien: CasaqBien): string {
 }
 
 function getFullAddress(bien: CasaqBien): string {
-    const localisationAddress =
-        getStringValue(bien, 'localisation.adresse_affichee') ||
-        getStringValue(bien, 'localisation.adresse_complete');
-
-    if (localisationAddress) {
-        return localisationAddress;
+    if (!canShowExactAddress(bien)) {
+        return '';
     }
 
     return [
@@ -844,7 +840,21 @@ function getFullAddress(bien: CasaqBien): string {
         .filter(Boolean)
         .join(', ');
 }
+function canShowExactAddress(bien: CasaqBien): boolean {
+    const publicMode = bien.adresse?.public_mode;
+    const substitutionAddress = bien.adresse?.adresse_substitution;
+    const street = bien.adresse?.rue;
 
+    if (publicMode === 'radius') {
+        return false;
+    }
+
+    if (substitutionAddress) {
+        return false;
+    }
+
+    return Boolean(street);
+}
 function getAvailabilityLabel(bien: CasaqBien): string | null {
     const disponibilite = getNestedValue(bien, 'caracteristiques.disponibilite') as
         | {
@@ -2279,20 +2289,22 @@ const wizardMapStyles: google.maps.MapTypeStyle[] = [
 ];
 
 function getFullDescription(bien: CasaqBien): string | null {
-    const parts = [
+    const values = [
         getStringValue(bien, 'descriptif.description'),
         getStringValue(bien, 'descriptif.descriptif'),
         getStringValue(bien, 'descriptif.long'),
         getStringValue(bien, 'descriptif.full'),
         getStringValue(bien, 'descriptif.short'),
         typeof bien.resume === 'string' ? bien.resume : null,
-    ].filter((value): value is string => Boolean(value));
+    ];
 
-    if (parts.length === 0) {
-        return null;
+    for (const value of values) {
+        if (value && value.trim()) {
+            return value.trim();
+        }
     }
 
-    return parts.join('<br><br>');
+    return null;
 }
 function HtmlBlock({ value }: { value?: string | null }) {
     if (!value) {

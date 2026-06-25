@@ -42,11 +42,15 @@
     body .site-mobile-menu-open {
         overflow: hidden;
     }
-    p,.p{
-        font-size: 17px;
+    p,.p, li{
+        font-size: 16px;
+        color: var(--site-grey);
+
     }
+
+
     .site-header {
-        height: 90px;
+        height: 75px;
         padding: var(--interne-md) var(--md-side);
     }
 
@@ -120,7 +124,7 @@
         z-index: 10002;
         width: min(420px, 100vw);
         height: 100dvh;
-        padding: 110px var(--interne-bg) var(--interne-bg);
+        padding: 100px var(--interne-bg) var(--interne-bg);
         background: var(--site-background);
         transform: translateX(100%);
         transition: transform 0.35s ease;
@@ -154,7 +158,7 @@
 
     .site-header__link {
         width: 100%;
-        padding: 16px 0;
+        padding: 15px 0;
         justify-content: space-between;
     }
 
@@ -201,6 +205,8 @@
     }
     .services-cards__grid{
         grid-template-columns: 1fr;
+        padding-left: var(--md-side);
+        padding-right: var(--md-side);
     }
     .stat-card{
         padding: 0;
@@ -476,7 +482,7 @@
     .site-hero--simple{
         /*height: 65vh;*/
         height: 55vh;
-        margin-top: 80px;
+        margin-top: 65px;
     }
     .site-btn{
         padding: 11px 18px;
@@ -493,7 +499,7 @@
         min-height: unset;
     }
     .site-open-fixed{
-        bottom: 50px;
+        bottom: 200px;
         transform: translate(calc(100% - 45px));
     }
     .site-open-fixed__icon{
@@ -569,7 +575,7 @@
         flex-direction: column;
         gap: 24px;
         padding: 30px var(--md-side) 0 var(--md-side);
-        margin-top: 90px;
+        margin-top: 75px;
 
     }
 
@@ -788,8 +794,8 @@
         width: 20px;
     }
     .site-hero--search{
-        margin-top: 80px;
-        height: calc(100dvh - 80px);
+        margin-top: 65px;
+        height: calc(100dvh - 65px);
     }
 
 
@@ -854,5 +860,146 @@
     }
     .social-posts--cards{
         overflow: hidden;
+    }
+
+    .grid-details{
+        display: block;
+    }
+    .property-detail__features-grid{
+        grid-template-columns: repeat(2,1fr);
+    }
+    .property-detail__feature:nth-of-type(3){
+        padding-left: 0;
+    }
+    .property-detail__feature:nth-of-type(2):after{
+        display: none;
+    }
+    .property-detail__feature:nth-of-type(5),
+    .property-detail__feature:nth-of-type(6),
+    .property-detail__feature:nth-of-type(7),
+    .property-detail__feature:nth-of-type(8){
+        display: none;
+    }
+
+    .property-detail__content{
+        display: block;
+    }
+    .property-detail__documents{
+        grid-template-columns: 1fr;
+        grid-gap: 15px;
+    }
+    .property-detail__form-grid{
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+    }
+    .property-detail__hero-content h1 {
+        font-size: 24px;
+    }
+    .property-detail__badges > div{
+        font-size: 11px;
+        margin-right: 3px;
+    }
+    .property-detail__badges > div svg{
+        display: none;
+    }
+    .property-detail__badges > div svg {
+        margin-right: 3px;
+    }
+    .property-detail__hero-content p {
+        font-size: 14px;
+    }
+
+
+    .property-detail__price-box{
+        margin: 20px 0;
+    }
+    .property-detail__feature svg{
+        width: 15px;
+        height: auto;
+    }
+    .property-detail__characteristics-blocks{
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+    }
+    .property-detail__characteristics-block *{
+        font-size: 14px;
+    }
+    .property-detail__gallery-main{
+        height: 50vw;
+    }
+    .property-detail__thumb{
+        width: 74px;
+        height: 52px;
+    }
+    .property-detail__thumb-slide{
+        margin-top: 10px;
+    }
+    .site-floating-actions__item{
+        height: 35px;
+        width: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+    }
+    .site-floating-actions__item .favorite-button svg{
+        width: 16px;
+        height: auto;
+
+    }
+    .site-floating-actions__item svg{
+        height: auto;
+        width: 13px;
+    }
+    .site-floating-actions{
+        bottom: 19px;
+        right: 11px;
+    }
+    .property-detail__accordion{
+        margin-bottom: 12px;
+        padding: 0px 0 12px;
+    }
+    .property-detail__accordion .accordion-title{
+        padding-right: 20px;
+    }
+    .accordion-title > svg{
+        width: 16px;
+        height: auto;
+    }
+    .property-detail__accordions{
+        margin-top: 30px;
+        padding: 12px 0 0 0;
+    }
+    .property-detail__contact-card{
+        margin-top: 30px;
+    }
+    .property-detail__document svg{
+        height: 20px;
+        width: auto;
+    }
+    .property-detail__document{
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+
+    .property-detail__html-content span{
+        color: var(--site-grey);
+    }
+    .property-detail__description-item *{
+        color: var(--site-grey);
+
+    }
+    .property-detail__agency-info>div{
+        padding-top: 15px;
+        border-top: 1px solid var(--site-agency);
+    }
+    .form-grid{
+        grid-template-columns: 1fr;
+    }
+    .form-checkbox input{
+        background: white;
+    }
+    .featured-bien-card__image-wrap{
+        margin-bottom: 20px;
     }
 }

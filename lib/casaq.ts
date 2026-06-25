@@ -137,6 +137,7 @@ export type CasaqBien = {
   categorie?: string | null;
   adresse?: {
     rue?: string | null;
+    adresse_substitution?: string | null;
     npa?: string | null;
     ville?: string | null;
     pays?: string | null;

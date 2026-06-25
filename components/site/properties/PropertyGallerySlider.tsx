@@ -115,7 +115,7 @@ export function PropertyGallerySlider({ images, title }: Props) {
                         modules={[Thumbs, A11y]}
                         onSwiper={setThumbsSwiper}
                         slidesPerView="auto"
-                        spaceBetween={12}
+                        spaceBetween={10}
                         watchSlidesProgress
 
                         className="property-detail__thumbs-swiper"

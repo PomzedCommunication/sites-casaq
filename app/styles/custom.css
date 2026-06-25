@@ -1933,7 +1933,7 @@ Account inside
 }
 .favorite-button__icon{
   line-height: 0;
-  margin-left: -1px;
+  /*margin-left: -1px;*/
 }
 .featured-bien-card__favorite{
   position: absolute;
@@ -2574,4 +2574,8 @@ body .eapps-facebook-feed-load-more{
 }
 .property-detail__agency-address span{
   display: block;
+}
+
+.property-detail__accordion .accordion-title{
+  margin-bottom: 0;
 }
