@@ -61,7 +61,6 @@ export function PropertyCategoriesSlider({
         });
     };
 
-    console.log(categories)
 
     return (
         <div className="property-categories__slider">

@@ -35,7 +35,7 @@ export function ServicesCardsBlock({ bloc, previewDomain }: Props) {
     const items = Array.isArray(data.items) ? data.items : [];
 
     return (
-        <section className="services-cards">
+        <section className="section services-cards">
             <div className="container">
                 <div className="services-cards__grid">
                     {items.map((item, index) => {

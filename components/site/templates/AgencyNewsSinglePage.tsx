@@ -15,6 +15,8 @@ import { BlocksRenderer } from '@/components/site/blocks/BlocksRenderer';
 import Image from "next/image";
 import {cleanSiteText} from "@/lib/text";
 import { AgencyNewsBlock } from '@/components/site/blocks/AgencyNewsBlock';
+import {SiteFloatingActions} from "@/components/site/SiteFloatingActions";
+import React from "react";
 
 type Props = {
     site: CasaqSiteConfig;
@@ -61,6 +63,7 @@ export function AgencyNewsSinglePage({
     };
     return (
         <main className="site-main">
+            <SiteFloatingActions type="news" />
 
             <section className="site-hero site-hero--simple">
                 {post.cover_image ? (

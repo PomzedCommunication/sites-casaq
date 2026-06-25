@@ -32,6 +32,7 @@ const SITE_ASSETS_BY_DOMAIN: Record<string, SiteAssets> = {
     //     fontFamily: "'Playfair Display', serif",
     // },
 };
+import { SiteFloatingActions } from '@/components/site/SiteFloatingActions';
 
 export function SiteLayout({
                                site,
@@ -45,6 +46,7 @@ export function SiteLayout({
     return (
         <>
             <ScrollToTop />
+            <SiteFloatingActions />
             <SiteDomainCss
                 currentDomain={currentDomain}
                 previewDomain={previewDomain}

@@ -148,6 +148,8 @@ export type CasaqBien = {
   caracteristiques?: {
     pieces?: string | number | null;
     chambres?: string | number | null;
+    nb_bathrooms?: string | number | null;
+    salles_bain?: string | number | null;
     surface_habitable?: string | number | null;
     surface_terrain?: string | number | null;
   };

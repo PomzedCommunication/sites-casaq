@@ -16,6 +16,7 @@ export function SiteHeader({ site, previewDomain }: Props) {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [headerHidden, setHeaderHidden] = useState(false);
+    const [headerAtTop, setHeaderAtTop] = useState(true);
     const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
     // useEffect(() => {
     //     setMenuOpen(false);
@@ -38,6 +39,7 @@ export function SiteHeader({ site, previewDomain }: Props) {
 
         function updateHeader() {
             const currentScrollY = window.scrollY;
+            setHeaderAtTop(currentScrollY < 10);
             const scrollingDown = currentScrollY > lastScrollY;
             const scrollingUp = currentScrollY < lastScrollY;
 
@@ -82,7 +84,7 @@ export function SiteHeader({ site, previewDomain }: Props) {
             <header
                 className={`site-header ${menuOpen ? 'is-menu-open' : ''} ${
                     headerHidden ? 'is-hidden-on-scroll' : 'is-visible-on-scroll'
-                }`}
+                } ${headerAtTop ? 'is-at-top' : 'is-scrolled'}`}
             >
                 <Link
                     href={buildUrl('/', previewDomain)}
@@ -172,7 +174,7 @@ export function SiteHeader({ site, previewDomain }: Props) {
                                         <div
                                             className={`site-header__submenu ${submenuOpen ? 'is-open' : ''}`}>
                                             {children.map((child) => {
-                                            const childActive = isActivePath(pathname, child.url);
+                                                const childActive = isActivePath(pathname, child.url);
 
                                                 return (
                                                     <Link
