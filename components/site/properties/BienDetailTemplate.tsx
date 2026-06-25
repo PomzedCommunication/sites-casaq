@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Circle,
     GoogleMap,
@@ -33,7 +33,7 @@ export function BienDetailTemplate({
                                        similarBiens = [],
                                    }: Props) {
     const images = getImages(bien);
-    const mainImage = images[0] || null;
+    const mainImage = getHeroImage(bien) || images[0] || null;
 
     const features = getMainFeatures(bien);
     const documents = getDocuments(bien);
@@ -53,6 +53,8 @@ export function BienDetailTemplate({
                         alt={mainImage.alt || bien.titre}
                         fill
                         priority
+                        fetchPriority="high"
+                        quality={95}
                         sizes="100vw"
                         className="property-detail__hero-image"
                     />
@@ -204,11 +206,14 @@ export function BienDetailTemplate({
             </section>
 
             {/* GALERIE */}
-            <PropertyGallerySlider
+            {/*<PropertyGallerySlider*/}
+            {/*    images={images}*/}
+            {/*    title={bien.titre}*/}
+            {/*/>*/}
+            <DeferredPropertyGallerySlider
                 images={images}
                 title={bien.titre}
             />
-
             {/* CONTENU PRINCIPAL + CONTACT */}
             <section className="property-detail__content pd-l-r">
                 <div className="property-detail__main">
@@ -294,8 +299,7 @@ export function BienDetailTemplate({
                             <a
                                 key={document.url}
                                 href={document.url}
-                                target="_blank"
-                                rel="noreferrer"
+                                download={getDocumentDownloadName(document)}
                                 className="property-detail__document white"
                             >
                                 <svg
@@ -346,7 +350,7 @@ export function BienDetailTemplate({
                         </p>
 
                         <div>
-                            <strong>{site.agence.nom}</strong>
+                            <strong className="p">{site.agence.nom}</strong>
 
                             {contactAdresse ? (
                                 <div className="property-detail__agency-address">
@@ -466,6 +470,60 @@ function FeatureItem({
         </div>
     );
 }
+
+function DeferredPropertyGallerySlider({
+                                           images,
+                                           title,
+                                       }: {
+    images: Array<{ src: string; alt?: string | null }>;
+    title: string;
+}) {
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
+    const [shouldRender, setShouldRender] = useState(false);
+
+    useEffect(() => {
+        const element = wrapperRef.current;
+
+        if (!element || shouldRender) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShouldRender(true);
+                    observer.disconnect();
+                }
+            },
+            {
+                rootMargin: '900px 0px',
+            }
+        );
+
+        observer.observe(element);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [shouldRender]);
+
+    return (
+        <div ref={wrapperRef}>
+            {shouldRender ? (
+                <PropertyGallerySlider
+                    images={images}
+                    title={title}
+                />
+            ) : (
+                <section className="property-detail__gallery pd-l-r">
+                    <div className="property-detail__gallery-placeholder" />
+                </section>
+            )}
+        </div>
+    );
+}
+
+
 function getFeatureIcon(
     type: 'pieces' | 'bedrooms' | 'bathrooms' | 'kitchen' | 'balcony' | 'terrace' | 'surface' | 'parking'
 ) {
@@ -715,15 +773,12 @@ function getImages(bien: CasaqBien): Array<{ src: string; alt?: string | null }>
                 image.variants?.original ||
                 image.variants?.xl ||
                 image.variants?.large ||
-                image.variants?.medium ||
-                image.variants?.small ||
                 image.url ||
                 '',
             alt: image.alt || bien.titre,
         }))
         .filter((image) => Boolean(image.src));
 }
-
 function getDocuments(bien: CasaqBien): Array<{
     label: string;
     url: string;
@@ -2312,7 +2367,7 @@ function HtmlBlock({ value }: { value?: string | null }) {
     }
 
     return (
-        <div className="property-detail__html-content">
+        <div className="property-detail__html-content p">
             {parse(value)}
         </div>
     );
@@ -3005,4 +3060,46 @@ function normalizePeriodId(value: unknown, fallback: number | string = 2): numbe
     }
 
     return fallback;
+}
+
+function getDocumentDownloadName(document: {
+    label: string;
+    extension?: string | null;
+}): string {
+    const cleanLabel = document.label
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9À-ÿ]+/gi, '-')
+        .replace(/^-+|-+$/g, '');
+
+    const extension = document.extension
+        ? document.extension.replace('.', '').toLowerCase()
+        : 'pdf';
+
+    return `${cleanLabel || 'document'}.${extension}`;
+}
+
+function getHeroImage(bien: CasaqBien): { src: string; alt?: string | null } | null {
+    const image = bien.images?.[0];
+
+    if (!image) {
+        return null;
+    }
+
+    const src =
+        image.variants?.original ||
+        image.variants?.xl ||
+        image.variants?.large ||
+        image.variants?.medium ||
+        image.url ||
+        '';
+
+    if (!src) {
+        return null;
+    }
+
+    return {
+        src,
+        alt: image.alt || bien.titre,
+    };
 }

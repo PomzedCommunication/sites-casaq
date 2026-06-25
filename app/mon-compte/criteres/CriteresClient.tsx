@@ -469,6 +469,10 @@ export function CriteresClient({ previewDomain }: Props) {
                 <div className="account-panel">
                     <h2 className='h3'>Aucune recherche enregistrée</h2>
                     <p>Créez vos critères pour retrouver plus facilement les biens qui vous correspondent.</p>
+
+                    <button type="button" className="account-primary-button site-btn" onClick={openCreateForm}>
+                        Nouvelle recherche
+                    </button>
                 </div>
             ) : (
                 <div className="account-search-list">
@@ -531,14 +535,14 @@ export function CriteresClient({ previewDomain }: Props) {
                                 >
                                     <svg width="19" height="20" viewBox="0 0 19 20" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M2.86719 3.92678V16.1026C2.86706 16.4503 2.93545 16.7946 3.06845 17.1158C3.20145 17.4371 3.39646 17.729 3.64232 17.9749C3.88819 18.2207 4.18009 18.4157 4.50135 18.5487C4.82262 18.6817 5.16694 18.7501 5.51464 18.75H12.9267C13.6286 18.75 14.3018 18.4712 14.7981 17.9749C15.2944 17.4786 15.5732 16.8054 15.5732 16.1035V3.92581M0.75 3.92678H17.6914"
-                                                stroke="#031239" strokeWidth="1.5" strokeLinecap="round"
-                                                strokeLinejoin="round"/>
-                                            <path
-                                                d="M6.0437 3.92676V2.33789C6.04345 2.12921 6.08438 1.92254 6.16414 1.72971C6.24391 1.53687 6.36095 1.36168 6.50856 1.21417C6.65616 1.06666 6.83142 0.949723 7.0243 0.870072C7.21718 0.790421 7.42389 0.749618 7.63257 0.750003H10.8083C11.017 0.749618 11.2237 0.790421 11.4166 0.870072C11.6095 0.949723 11.7848 1.06666 11.9324 1.21417C12.08 1.36168 12.197 1.53687 12.2768 1.72971C12.3565 1.92254 12.3975 2.12921 12.3972 2.33789V3.92676M7.10327 14.6071V9.31507M11.3386 14.6071V9.31507"
-                                                stroke="#031239" strokeWidth="1.5" strokeLinecap="round"
-                                                strokeLinejoin="round"/>
+                                        <path
+                                            d="M2.86719 3.92678V16.1026C2.86706 16.4503 2.93545 16.7946 3.06845 17.1158C3.20145 17.4371 3.39646 17.729 3.64232 17.9749C3.88819 18.2207 4.18009 18.4157 4.50135 18.5487C4.82262 18.6817 5.16694 18.7501 5.51464 18.75H12.9267C13.6286 18.75 14.3018 18.4712 14.7981 17.9749C15.2944 17.4786 15.5732 16.8054 15.5732 16.1035V3.92581M0.75 3.92678H17.6914"
+                                            stroke="#031239" strokeWidth="1.5" strokeLinecap="round"
+                                            strokeLinejoin="round"/>
+                                        <path
+                                            d="M6.0437 3.92676V2.33789C6.04345 2.12921 6.08438 1.92254 6.16414 1.72971C6.24391 1.53687 6.36095 1.36168 6.50856 1.21417C6.65616 1.06666 6.83142 0.949723 7.0243 0.870072C7.21718 0.790421 7.42389 0.749618 7.63257 0.750003H10.8083C11.017 0.749618 11.2237 0.790421 11.4166 0.870072C11.6095 0.949723 11.7848 1.06666 11.9324 1.21417C12.08 1.36168 12.197 1.53687 12.2768 1.72971C12.3565 1.92254 12.3975 2.12921 12.3972 2.33789V3.92676M7.10327 14.6071V9.31507M11.3386 14.6071V9.31507"
+                                            stroke="#031239" strokeWidth="1.5" strokeLinecap="round"
+                                            strokeLinejoin="round"/>
 
                                     </svg>
 
@@ -547,6 +551,9 @@ export function CriteresClient({ previewDomain }: Props) {
                         </article>
 
                     ))}
+                    <button type="button" className="account-primary-button site-btn" onClick={openCreateForm}>
+                        Nouvelle recherche
+                    </button>
                 </div>
             )}
         </AccountShell>

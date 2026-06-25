@@ -84,7 +84,8 @@ export function PropertyGallerySlider({ images, title }: Props) {
                     className="property-detail__gallery-swiper"
                 >
                     {images.map((image, index) => {
-                        const isImportant =
+                        const shouldLoad =
+                            index === 0 ||
                             index === activeIndex ||
                             index === activeIndex + 1 ||
                             index === activeIndex - 1;
@@ -92,16 +93,24 @@ export function PropertyGallerySlider({ images, title }: Props) {
                         return (
                             <SwiperSlide key={`${image.src}-${index}`}>
                                 <div className="property-detail__gallery-slide">
-                                    <Image
-                                        src={image.src}
-                                        alt={image.alt || `${title} - photo ${index + 1}`}
-                                        fill
-                                        priority={index === 0}
-                                        loading={index === 0 ? 'eager' : 'lazy'}
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1400px) 92vw, 1280px"
-                                        quality={isImportant ? 88 : 78}
-                                        className="property-detail__gallery-image"
-                                    />
+                                    {shouldLoad ? (
+                                        <Image
+                                            src={image.src}
+                                            alt={image.alt || `${title} - photo ${index + 1}`}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1400px) 92vw, 1400px"
+                                            quality={94}
+                                            className="property-detail__gallery-image"
+                                            {...(index === 0
+                                                ? {
+                                                    priority: true,
+                                                    fetchPriority: 'high' as const,
+                                                }
+                                                : {
+                                                    loading: 'lazy' as const,
+                                                })}
+                                        />
+                                    ) : null}
                                 </div>
                             </SwiperSlide>
                         );
@@ -117,7 +126,6 @@ export function PropertyGallerySlider({ images, title }: Props) {
                         slidesPerView="auto"
                         spaceBetween={10}
                         watchSlidesProgress
-
                         className="property-detail__thumbs-swiper"
                     >
                         {images.slice(0, 12).map((image, index) => (
@@ -135,7 +143,7 @@ export function PropertyGallerySlider({ images, title }: Props) {
                                         fill
                                         loading="lazy"
                                         sizes="120px"
-                                        quality={45}
+                                        quality={70}
                                         className="property-detail__thumb-image"
                                     />
                                 </button>

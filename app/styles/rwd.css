@@ -956,8 +956,8 @@
         right: 11px;
     }
     .property-detail__accordion{
-        margin-bottom: 12px;
-        padding: 0px 0 12px;
+        margin-bottom: 15px;
+        padding: 0px 0 15px;
     }
     .property-detail__accordion .accordion-title{
         padding-right: 20px;
@@ -968,7 +968,7 @@
     }
     .property-detail__accordions{
         margin-top: 30px;
-        padding: 12px 0 0 0;
+        padding: 15px 0 0 0;
     }
     .property-detail__contact-card{
         margin-top: 30px;
@@ -1001,5 +1001,14 @@
     }
     .featured-bien-card__image-wrap{
         margin-bottom: 20px;
+    }
+    .property-detail__accordion-content{
+        padding-top: 15px;
+    }
+    .listing-custom-select, .listing-filter-popover{
+        width: 100%;
+    }
+    .account-search-list>button{
+        display: flex;
     }
 }

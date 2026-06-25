@@ -2579,3 +2579,10 @@ body .eapps-facebook-feed-load-more{
 .property-detail__accordion .accordion-title{
   margin-bottom: 0;
 }
+.property-detail__agency-info strong{
+  margin-bottom: 5px;
+  display: block;
+}
+.account-search-list>button{
+  display: none;
+}
