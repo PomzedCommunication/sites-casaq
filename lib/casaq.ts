@@ -195,19 +195,34 @@ export type CasaqBien = {
 
 const API_URL = process.env.CASAQ_API_URL;
 
-export async function getSiteConfig(domain: string): Promise<CasaqSiteConfig | null> {
+export async function getSiteConfig(
+    domain: string,
+    preview = false,
+): Promise<CasaqSiteConfig | null> {
   if (!API_URL) {
     throw new Error('CASAQ_API_URL manquant dans .env.local');
   }
 
-  const url = `${API_URL}/api/v1/site-config?domain=${encodeURIComponent(domain)}`;
+  const search = new URLSearchParams();
+  search.set('domain', domain);
 
-  const res = await fetch(url, {
-    next: {
-      revalidate: 60,
-      tags: [`site-config:${domain}`],
-    },
-  });
+  if (preview) {
+    search.set('preview', '1');
+  }
+
+  const url = `${API_URL}/api/v1/site-config?${search.toString()}`;
+
+  const res = await fetch(
+      url,
+      preview
+          ? { cache: 'no-store' }
+          : {
+            next: {
+              revalidate: 60,
+              tags: [`site-config:${domain}`],
+            },
+          },
+  );
 
   if (!res.ok) {
     return null;
@@ -301,6 +316,7 @@ export async function getSiteBiens(
 export async function getSiteBien(
     domain: string,
     id: string | number,
+    preview = false,
 ): Promise<CasaqBien | null> {
   if (!API_URL) {
     throw new Error('CASAQ_API_URL manquant dans .env.local');
@@ -309,14 +325,23 @@ export async function getSiteBien(
   const search = new URLSearchParams();
   search.set('domain', domain);
 
+  if (preview) {
+    search.set('preview', '1');
+  }
+
   const url = `${API_URL}/api/v1/biens/${id}?${search.toString()}`;
 
-  const res = await fetch(url, {
-    next: {
-      revalidate: 60,
-      tags: [`site-bien:${domain}:${id}`],
-    },
-  });
+  const res = await fetch(
+      url,
+      preview
+          ? { cache: 'no-store' }
+          : {
+            next: {
+              revalidate: 60,
+              tags: [`site-bien:${domain}:${id}`],
+            },
+          },
+  );
 
   if (!res.ok) {
     return null;

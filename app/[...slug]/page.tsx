@@ -117,7 +117,8 @@ export async function generateMetadata({
     const resolvedSearchParams = await searchParams;
 
     const domain = await getCurrentDomain(resolvedSearchParams);
-    const site = await getSiteConfig(domain);
+    const isPreview = resolvedSearchParams?.preview === '1';
+    const site = await getSiteConfig(domain, isPreview);
 
     if (!site) {
         return {
@@ -129,7 +130,7 @@ export async function generateMetadata({
     const slugParts = resolvedParams.slug || [];
     const page = resolvePage(site, slugParts);
     if (isNewsSinglePath(slugParts)) {
-        const isPreview = resolvedSearchParams?.preview === '1';
+        // const isPreview = resolvedSearchParams?.preview === '1';
         const post = await getSitePost(domain, slugParts[1], isPreview);
 
         if (post) {
@@ -172,7 +173,8 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
     const resolvedSearchParams = await searchParams;
 
     const domain = await getCurrentDomain(resolvedSearchParams);
-    const site = await getSiteConfig(domain);
+    const isPreview = resolvedSearchParams?.preview === '1';
+    const site = await getSiteConfig(domain, isPreview);
     const previewDomain =
         typeof resolvedSearchParams?.site === 'string'
             ? resolvedSearchParams.site
@@ -192,10 +194,10 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
         notFound();
     }
     if (isNewsSinglePath(slugParts)) {
-        const isPreview = resolvedSearchParams?.preview === '1';
+        // const isPreview = resolvedSearchParams?.preview === '1';
         const post = await getSitePost(domain, slugParts[1], isPreview);
 
-         
+
         if (!post) {
             notFound();
         }

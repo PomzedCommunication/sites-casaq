@@ -17,6 +17,7 @@ type PageProps = {
     }>;
     searchParams?: Promise<{
         site?: string;
+        preview?: string;
     }>;
 };
 
@@ -30,7 +31,10 @@ export async function generateMetadata({
     const id = extractBienIdFromSlug(resolvedParams.slug);
 
     const domain = await getCurrentDomain(resolvedSearchParams);
-    const site = await getSiteConfig(domain);
+    const isPreview = resolvedSearchParams?.preview === '1';
+    const site = await getSiteConfig(domain, isPreview);
+
+
     if (!site) {
         return {
             title: 'Site non configuré — CasaQ',
@@ -43,7 +47,7 @@ export async function generateMetadata({
         };
     }
 
-    const bien = await getSiteBien(domain, id);
+    const bien = await getSiteBien(domain, id, isPreview);
     if (!bien) {
         return {
             title: `${site.agence.nom} — Bien introuvable`,
@@ -88,12 +92,12 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     }
 
     const domain = await getCurrentDomain(resolvedSearchParams);
-    const site = await getSiteConfig(domain);
-
+    const isPreview = resolvedSearchParams?.preview === '1';
+    const site = await getSiteConfig(domain, isPreview);
     if (!site) {
         return <SiteNotConfigured domain={domain} />;
     }
-    const bien = await getSiteBien(domain, id);
+    const bien = await getSiteBien(domain, id, isPreview);
 
     if (!bien) {
         notFound();
@@ -103,14 +107,20 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     const canonicalPath = getBienSeoPath(bien);
     const currentPath = `/${resolvedParams.deal}/${resolvedParams.category}/${resolvedParams.city}/${resolvedParams.slug}`;
 
-    if (canonicalPath !== currentPath) {
+    // if (canonicalPath !== currentPath) {
+    //     const previewQuery = resolvedSearchParams?.site
+    //         ? `?site=${encodeURIComponent(resolvedSearchParams.site)}`
+    //         : '';
+    //
+    //     redirect(`${canonicalPath}${previewQuery}`);
+    // }
+    if (!isPreview && canonicalPath !== currentPath) {
         const previewQuery = resolvedSearchParams?.site
             ? `?site=${encodeURIComponent(resolvedSearchParams.site)}`
             : '';
 
         redirect(`${canonicalPath}${previewQuery}`);
     }
-
     return (
         <SiteLayout
             site={site}
