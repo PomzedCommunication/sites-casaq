@@ -4,6 +4,7 @@ import { SiteFooter } from '@/components/site/layout/SiteFooter';
 import { SiteBodyTheme } from '@/components/site/layout/SiteBodyTheme';
 import { ScrollToTop } from '@/components/site/layout/ScrollToTop';
 import { SiteDomainCss } from '@/components/site/layout/SiteDomainCss';
+import { GoogleAnalytics } from '@/components/site/GoogleAnalytics';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -45,6 +46,8 @@ export function SiteLayout({
 
     return (
         <>
+            <GoogleAnalytics measurementId={site.seo?.google_analytics} />
+
             <ScrollToTop />
             <SiteFloatingActions />
             <SiteDomainCss
