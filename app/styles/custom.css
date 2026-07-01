@@ -628,6 +628,11 @@ PAGE d'un bien
 .property-detail__gallery-main{
   position: relative;
 }
+.property-detail__gallery-main{
+  /*max-width: 60vw;*/
+  /*display: flex;*/
+  /*margin: auto;*/
+}
 .property-detail__badges{
   display: flex;
   margin-bottom: var(--interne-md);

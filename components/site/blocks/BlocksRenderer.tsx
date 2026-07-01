@@ -52,10 +52,15 @@ export function BlocksRenderer({
                                    blocs,
                                }: Props) {
     const blocsToRender = blocs || page.blocs || [];
+
+    console.log('PAGE BLOCS', page.slug, page.blocs);
+    console.log('PROP BLOCS', blocs);
+    console.log('BLOCS RENDERED BEFORE FILTER', blocsToRender);
+    console.log('BLOCS RENDERED AFTER FILTER', blocsToRender.filter((bloc) => bloc.actif !== false));
     return (
         <>
             {blocsToRender
-                .filter((bloc) => bloc.actif !== false)
+                .filter((bloc) => isBlocActive(bloc))
                 .sort((a, b) => (a.ordre || 0) - (b.ordre || 0))
                 .map((bloc, index) => {
                     const key = `${bloc.type}-${index}`;
@@ -221,4 +226,17 @@ export function BlocksRenderer({
             })}
         </>
     );
+}
+function isBlocActive(bloc: CasaqBloc): boolean {
+    const value = bloc.actif as unknown;
+
+    if (value === false) return false;
+    if (value === 0) return false;
+    if (value === '0') return false;
+    if (value === 'false') return false;
+    if (value === 'off') return false;
+    if (value === 'no') return false;
+    if (value === null) return false;
+
+    return true;
 }

@@ -34,24 +34,64 @@ export function ListingTemplate({
                                     initialFilters,
                                     availableFilters,
                                 }: Props) {
+    // const forcedDeal =
+    //     page.template === 'listing_sale'
+    //         ? 'SALE'
+    //         : page.template === 'listing_rent'
+    //             ? 'RENT'
+    //             : undefined;
+    const normalizedPath = currentPath.replace(/^\/+|\/+$/g, '');
+    const firstSegment = normalizedPath.split('/')[0] || '';
+
     const forcedDeal =
-        page.template === 'listing_sale'
+        firstSegment === 'acheter'
             ? 'SALE'
-            : page.template === 'listing_rent'
+            : firstSegment === 'louer'
                 ? 'RENT'
                 : undefined;
+    const isBiensPage = firstSegment === 'biens';
+    const isGeneralListing = firstSegment === 'biens';
+
+
 
     const safeInitialFilters: ListingFilters = {
         sort: 'recent',
         view: 'grid',
         page: 1,
         ...(initialFilters || {}),
-        deal: forcedDeal || initialFilters?.deal,
+        deal: forcedDeal ?? (isBiensPage ? undefined : initialFilters?.deal),
     };
+    // const safeInitialFilters: ListingFilters = {
+    //     sort: 'recent',
+    //     view: 'grid',
+    //     page: 1,
+    //     ...(initialFilters || {}),
+    //     deal: forcedDeal || initialFilters?.deal,
+    // };
+
+    // const providerKey = JSON.stringify({
+    //     deal: safeInitialFilters.deal,
+    //     categoryParent: safeInitialFilters.categoryParent,
+    //     city: safeInitialFilters.city,
+    //     lat: safeInitialFilters.lat,
+    //     lng: safeInitialFilters.lng,
+    //     rayon: safeInitialFilters.rayon,
+    //     prixMin: safeInitialFilters.prixMin,
+    //     prixMax: safeInitialFilters.prixMax,
+    //     piecesMin: safeInitialFilters.piecesMin,
+    //     piecesMax: safeInitialFilters.piecesMax,
+    //     surfaceMin: safeInitialFilters.surfaceMin,
+    //     surfaceMax: safeInitialFilters.surfaceMax,
+    //     prestige: safeInitialFilters.prestige,
+    //     sort: safeInitialFilters.sort,
+    //     page: safeInitialFilters.page,
+    // });
 
     const providerKey = JSON.stringify({
         deal: safeInitialFilters.deal,
+        category: safeInitialFilters.category,
         categoryParent: safeInitialFilters.categoryParent,
+        locationLabel: safeInitialFilters.locationLabel,
         city: safeInitialFilters.city,
         lat: safeInitialFilters.lat,
         lng: safeInitialFilters.lng,
@@ -66,6 +106,7 @@ export function ListingTemplate({
         sort: safeInitialFilters.sort,
         page: safeInitialFilters.page,
     });
+
     //
     // const title =
     //     page.template === 'listing_sale'
@@ -73,20 +114,36 @@ export function ListingTemplate({
     //         : page.template === 'listing_rent'
     //             ? 'Biens à louer'
     //             : page.titre || 'Nos biens';
+    // const title = buildListingTitle({
+    //     total: meta.total,
+    //     filters: safeInitialFilters,
+    //     pageTitle: page.titre,
+    // });
+
     const title = buildListingTitle({
         total: meta.total,
         filters: safeInitialFilters,
         pageTitle: page.titre,
+        forcedDeal,
     });
     return (
-        <ListingProvider
-            key={providerKey}
-            initialBiens={biens}
-            initialMeta={meta}
-            initialFilters={safeInitialFilters}
-            availableFilters={availableFilters}
-            previewDomain={previewDomain}
-        >
+        // <ListingProvider
+        //     key={providerKey}
+        //     initialBiens={biens}
+        //     initialMeta={meta}
+        //     initialFilters={safeInitialFilters}
+        //     availableFilters={availableFilters}
+        //     previewDomain={previewDomain}
+        // >
+            <ListingProvider
+                key={providerKey}
+                initialBiens={biens}
+                initialMeta={meta}
+                initialFilters={safeInitialFilters}
+                availableFilters={availableFilters}
+                previewDomain={previewDomain}
+                forcedDeal={forcedDeal}
+            >
             <section className="page-liste-bien pd-l-r">
                 <ListingSearchBar
                     variant="large"
@@ -108,18 +165,18 @@ function buildListingTitle({
                                total,
                                filters,
                                pageTitle,
-                               template,
+                               forcedDeal,
                            }: {
     total: number;
     filters: ListingFilters;
     pageTitle?: string | null;
-    template?: string | null;
+    forcedDeal?: 'SALE' | 'RENT';
 }): string {
     const count = new Intl.NumberFormat('fr-CH').format(total);
 
     const isPlural = total !== 1;
     const type = getListingTypeLabel(filters, isPlural);
-    const deal = getDealLabel(filters.deal, template);
+    const deal = getDealLabel(forcedDeal ?? filters.deal);
     const location = getLocationLabel(filters);
 
     if (location) {
@@ -129,28 +186,42 @@ function buildListingTitle({
     return `${count} ${type} ${deal}`;
 }
 
-function getDealLabel(
-    deal?: string | null,
-    template?: string | null
-): string {
-    const resolvedDeal =
-        deal ||
-        (template === 'listing_sale'
-            ? 'SALE'
-            : template === 'listing_rent'
-                ? 'RENT'
-                : undefined);
+// function getDealLabel(
+//     deal?: string | null,
+//     template?: string | null
+// ): string {
+//     const resolvedDeal =
+//         deal ||
+//         (template === 'listing_sale'
+//             ? 'SALE'
+//             : template === 'listing_rent'
+//                 ? 'RENT'
+//                 : undefined);
+//
+//     if (resolvedDeal === 'RENT') {
+//         return 'à louer';
+//     }
+//
+//     if (resolvedDeal === 'SALE') {
+//         return 'à vendre';
+//     }
+//
+//     return 'disponibles';
+// }
 
-    if (resolvedDeal === 'RENT') {
+
+function getDealLabel(deal?: string | null): string {
+    if (deal === 'RENT') {
         return 'à louer';
     }
 
-    if (resolvedDeal === 'SALE') {
+    if (deal === 'SALE') {
         return 'à vendre';
     }
 
     return 'disponibles';
 }
+
 function getListingTypeLabel(
     filters: ListingFilters,
     plural = true
