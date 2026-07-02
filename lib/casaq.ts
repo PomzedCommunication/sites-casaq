@@ -193,8 +193,9 @@ export type CasaqBien = {
   }>;
 };
 
-const API_URL = process.env.CASAQ_API_URL;
-
+const API_URL =
+    process.env.NEXT_PUBLIC_CASAQ_API_URL ||
+    process.env.CASAQ_API_URL;
 export async function getSiteConfig(
     domain: string,
     preview = false,
@@ -1162,4 +1163,116 @@ export async function getSiteSimilarBiens(
   const json = await res.json();
 
   return Array.isArray(json.data) ? json.data : [];
+}
+
+
+
+export type TrackBienEventType =
+    | 'view'
+    | 'contact_click'
+    | 'favorite'
+    | 'document_download'
+    | 'share'
+    | 'phone_click'
+    | 'email_click';
+
+function getContactToken(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const possibleKeys = [
+    'casaq_contact_token',
+    'contact_token',
+    'casaq_auth_token',
+    'auth_token',
+  ];
+
+  for (const key of possibleKeys) {
+    const value = window.localStorage.getItem(key);
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function getOrCreateVisitorId(): string {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const key = 'casaq_visitor_id';
+  let value = window.localStorage.getItem(key);
+
+  if (!value) {
+    value = crypto.randomUUID();
+    window.localStorage.setItem(key, value);
+  }
+
+  return value;
+}
+
+function getOrCreateSessionId(): string {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const key = 'casaq_session_id';
+  let value = window.sessionStorage.getItem(key);
+
+  if (!value) {
+    value = crypto.randomUUID();
+    window.sessionStorage.setItem(key, value);
+  }
+
+  return value;
+}
+
+export async function trackBienEvent(
+    domain: string,
+    bienId: number,
+    type: TrackBienEventType,
+    meta: Record<string, unknown> = {},
+): Promise<void> {
+  if (!API_URL || typeof window === 'undefined') {
+    return;
+  }
+  console.log('[CasaQ tracking] sending', {
+    apiUrl: API_URL,
+    domain,
+    bienId,
+    type,
+  });
+  const token = getContactToken();
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  try {
+    await fetch(`${API_URL}/api/v1/track?domain=${encodeURIComponent(domain)}`, {
+      method: 'POST',
+      headers,
+      keepalive: true,
+      body: JSON.stringify({
+        bien_id: bienId,
+        type,
+        page_url: window.location.href,
+        referrer: document.referrer || null,
+        visitor_id: getOrCreateVisitorId(),
+        session_id: getOrCreateSessionId(),
+        source: 'site',
+        meta,
+      }),
+    });
+  } catch {
+    // Ne jamais bloquer l’utilisateur pour une stat.
+  }
 }

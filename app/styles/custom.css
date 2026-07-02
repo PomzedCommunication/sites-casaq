@@ -1419,7 +1419,10 @@ Partenaires
   margin-right: 10px;
   margin-bottom: 10px;
 }
-
+.partners__filter.is-active{
+  background: var(--site-agency);
+  color: white;
+}
 .partners__card{
   background-color: white;
   padding: var(--interne-bg);

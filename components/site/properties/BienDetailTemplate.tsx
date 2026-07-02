@@ -18,6 +18,7 @@ import { FeaturedBiensSlider } from '@/components/site/blocks/FeaturedBiensSlide
 import { FavoriteButton } from '@/components/site/favorites/FavoriteButton';
 import parse from 'html-react-parser';
 import { SiteFloatingActions } from '@/components/site/SiteFloatingActions';
+import { trackBienEvent } from '@/lib/casaq';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -41,10 +42,24 @@ export function BienDetailTemplate({
     const contactTelephone = site.footer?.contact?.telephone || site.infos.telephone;
     const contactEmail = site.footer?.contact?.email || site.infos.email;
 
+    useEffect(() => {
+        trackBienEvent(domain, bien.id, 'view');
+    }, [domain, bien.id]);
+
+    const contactClickTrackedRef = useRef(false);
+
+    const trackContactClickOnce = () => {
+        if (contactClickTrackedRef.current) {
+            return;
+        }
+
+        contactClickTrackedRef.current = true;
+        trackBienEvent(domain, bien.id, 'contact_click');
+    };
 
     return (
         <main className="property-detail">
-            <SiteFloatingActions type="property" bienId={bien.id} />
+            <SiteFloatingActions type="property" bienId={bien.id} domain={domain} />
             {/* HERO */}
             <section className="site-hero site-hero--simple property-detail__hero ">
                 {mainImage ? (
@@ -263,7 +278,7 @@ export function BienDetailTemplate({
 
                 {getVisitContact(bien) ? (
                     <aside>
-                        <ContactCard bien={bien} />
+                        <ContactCard bien={bien} domain={domain} />
                     </aside>
                 ) : null}
             </section>
@@ -297,6 +312,7 @@ export function BienDetailTemplate({
                     <div className="property-detail__documents">
                         {documents.map((document) => (
                             <a
+                                onClick={() => trackBienEvent(domain, bien.id, 'document_download')}
                                 key={document.url}
                                 href={document.url}
                                 download={getDocumentDownloadName(document)}
@@ -372,7 +388,7 @@ export function BienDetailTemplate({
                         </div>
                     </div>
 
-                    <div className="property-detail__form">
+                    <div className="property-detail__form" onClick={trackContactClickOnce}>
                         <div className="property-detail__selected-property">
                             <label>Bien sélectionné</label>
                             <div>{bien.titre}</div>
@@ -2373,7 +2389,7 @@ function HtmlBlock({ value }: { value?: string | null }) {
     );
 }
 
-function ContactCard({ bien }: { bien: CasaqBien }) {
+function ContactCard({ bien, domain }: { bien: CasaqBien; domain: string }) {
     const contact = getVisitContact(bien);
 
     if (!contact) {
@@ -2405,7 +2421,7 @@ function ContactCard({ bien }: { bien: CasaqBien }) {
                     <div className="property-detail__phone">
 
                     {contact.email ? (
-                        <a href={`mailto:${contact.email}`}>
+                        <a href={`mailto:${contact.email}`} onClick={() => trackBienEvent(domain, bien.id, 'email_click')}>
                             <svg width="26" height="21" viewBox="0 0 26 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.6 21C1.885 21 1.27313 20.7432 0.7644 20.2296C0.255667 19.7159 0.000866667 19.0977 0 18.375V2.625C0 1.90312 0.2548 1.28537 0.7644 0.77175C1.274 0.258125 1.88587 0.000875 2.6 0H23.4C24.115 0 24.7273 0.25725 25.2369 0.77175C25.7465 1.28625 26.0009 1.904 26 2.625V18.375C26 19.0969 25.7456 19.7151 25.2369 20.2296C24.7282 20.7441 24.1159 21.0009 23.4 21H2.6ZM13 11.8125L23.4 5.25V2.625L13 9.1875L2.6 2.625V5.25L13 11.8125Z" fill="white"/>
                             </svg>
@@ -2414,7 +2430,7 @@ function ContactCard({ bien }: { bien: CasaqBien }) {
                     ) : null}
 
                     {contact.phone ? (
-                        <a href={`tel:${cleanPhoneHref(contact.phone)}`}>
+                        <a href={`tel:${cleanPhoneHref(contact.phone)}`} onClick={() => trackBienEvent(domain, bien.id, 'phone_click')}>
                             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4.22333 9.08833C5.90333 12.39 8.61 15.085 11.9117 16.7767L14.4783 14.21C14.7933 13.895 15.26 13.79 15.6683 13.93C16.975 14.3617 18.3867 14.595 19.8333 14.595C20.475 14.595 21 15.12 21 15.7617V19.8333C21 20.475 20.475 21 19.8333 21C8.87833 21 0 12.1217 0 1.16667C0 0.525 0.525 0 1.16667 0H5.25C5.89167 0 6.41667 0.525 6.41667 1.16667C6.41667 2.625 6.65 4.025 7.08167 5.33167C7.21 5.74 7.11667 6.195 6.79 6.52167L4.22333 9.08833Z" fill="white"/>
                             </svg>
