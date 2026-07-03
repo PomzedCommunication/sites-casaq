@@ -12,16 +12,40 @@ type Props = {
 export function PartnersFilterGrid({ partners }: Props) {
     const [activeCategory, setActiveCategory] = useState<string>('all');
 
+    // const categories = useMemo(() => {
+    //     const map = new Map<string, string>();
+    //
+    //     partners.forEach((partner) => {
+    //         if (!partner.category) {
+    //             return;
+    //         }
+    //
+    //         const key = String(partner.category_id || partner.category);
+    //         map.set(key, partner.category);
+    //     });
+    //
+    //     return Array.from(map.entries()).map(([id, label]) => ({
+    //         id,
+    //         label,
+    //     }));
+    // }, [partners]);
     const categories = useMemo(() => {
         const map = new Map<string, string>();
 
         partners.forEach((partner) => {
-            if (!partner.category) {
+            if (partner.categories?.length) {
+                partner.categories.forEach((category) => {
+                    map.set(String(category.id), category.label);
+                });
+
                 return;
             }
 
-            const key = String(partner.category_id || partner.category);
-            map.set(key, partner.category);
+            // fallback ancien format
+            if (partner.category) {
+                const key = String(partner.category_id || partner.category);
+                map.set(key, partner.category);
+            }
         });
 
         return Array.from(map.entries()).map(([id, label]) => ({
@@ -29,18 +53,37 @@ export function PartnersFilterGrid({ partners }: Props) {
             label,
         }));
     }, [partners]);
-
+    // const filteredPartners = useMemo(() => {
+    //     if (activeCategory === 'all') {
+    //         return partners;
+    //     }
+    //
+    //     return partners.filter((partner) => {
+    //         const key = String(partner.category_id || partner.category || '');
+    //         return key === activeCategory;
+    //     });
+    // }, [partners, activeCategory]);
     const filteredPartners = useMemo(() => {
         if (activeCategory === 'all') {
             return partners;
         }
 
         return partners.filter((partner) => {
+            if (partner.category_ids?.length) {
+                return partner.category_ids.map(String).includes(activeCategory);
+            }
+
+            if (partner.categories?.length) {
+                return partner.categories.some(
+                    (category) => String(category.id) === activeCategory
+                );
+            }
+
+            // fallback ancien format
             const key = String(partner.category_id || partner.category || '');
             return key === activeCategory;
         });
     }, [partners, activeCategory]);
-
     if (!partners.length) {
         return (
             <div className="partners__empty">

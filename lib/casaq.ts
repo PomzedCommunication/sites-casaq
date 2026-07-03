@@ -1044,7 +1044,21 @@ export async function getSiteTestimonialsByIds(
 
   return Array.isArray(json.data) ? json.data : [];
 }
-
+//
+// export type CasaqPartner = {
+//   id: number;
+//   name: string;
+//   slug?: string | null;
+//   trade?: string | null;
+//   city?: string | null;
+//   description?: string | null;
+//   email?: string | null;
+//   phone?: string | null;
+//   website?: string | null;
+//   logo_image?: string | null;
+//   category?: string | null;
+//   category_id?: number | null;
+// };
 export type CasaqPartner = {
   id: number;
   name: string;
@@ -1056,15 +1070,24 @@ export type CasaqPartner = {
   phone?: string | null;
   website?: string | null;
   logo_image?: string | null;
+
+  // Ancien format
   category?: string | null;
   category_id?: number | null;
-};
 
+  // Nouveau format multi
+  categories?: Array<{
+    id: number;
+    label: string;
+  }>;
+  category_ids?: number[];
+};
 export async function getSitePartners(
     domain: string,
     options?: {
       limit?: number;
       categoryId?: string | number | null;
+      categoryIds?: Array<string | number>;
     },
 ): Promise<CasaqPartner[]> {
   const baseUrl =
@@ -1080,7 +1103,9 @@ export async function getSitePartners(
   if (options?.categoryId) {
     url.searchParams.set('category_id', String(options.categoryId));
   }
-
+  if (options?.categoryIds?.length) {
+    url.searchParams.set('category_ids', options.categoryIds.map(String).join(','));
+  }
   const response = await fetch(url.toString(), {
     next: {
       revalidate: 60,
