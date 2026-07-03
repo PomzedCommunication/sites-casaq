@@ -26,7 +26,7 @@ export async function PartnersBlock({ bloc, currentDomain }: Props) {
     const data = blockData<Data>(bloc);
 
     const mode = data.mode === 'latest' ? 'all' : data.mode || 'all';
-    const limit = Number(data.nb || 24);
+    const limit = Number(data.nb || 60);
     const partnerIds = Array.isArray(data.partner_ids) ? data.partner_ids : [];
 
     const partners =

@@ -1098,7 +1098,7 @@ export async function getSitePartners(
   const url = new URL('/api/v1/partners', baseUrl);
 
   url.searchParams.set('domain', domain);
-  url.searchParams.set('limit', String(options?.limit || 24));
+  url.searchParams.set('limit', String(options?.limit || 60));
 
   if (options?.categoryId) {
     url.searchParams.set('category_id', String(options.categoryId));
