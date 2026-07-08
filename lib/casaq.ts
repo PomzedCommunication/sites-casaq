@@ -432,7 +432,7 @@ export async function createSiteDemande(
 
   const json = await res.json().catch(() => null);
   console.log(json);
-  
+
   return {
     success: res.ok && json?.success === true,
     message: json?.message || 'Impossible d’envoyer la demande.',

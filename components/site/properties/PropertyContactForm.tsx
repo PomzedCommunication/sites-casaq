@@ -121,7 +121,7 @@ export function PropertyContactForm({ domain, bienId }: Props) {
                     name="message"
                     placeholder="Message"
                     rows={5}
-                    defaultValue="Bonjour, je souhaite recevoir plus d'informations sur ce bien."
+                    defaultValue="Bonjour, "
                 />
             </div>
 
