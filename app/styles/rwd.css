@@ -1031,4 +1031,63 @@
         width: 15px;
         height: 15px;
     }
+
+    .site-hero__content p{
+        overflow: hidden;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        text-align: left;
+    }
+
+    .partners__filters {
+        display: none;
+    }
+
+    .partners__select {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: white;
+    }
+    .property-detail__badges > div.adresse-ville{
+        display: none;
+    }
+
+
+        .property-detail__gallery {
+            padding-top: 20px;
+        }
+
+        .property-detail__gallery-main {
+            height: 62vw;
+        }
+
+        .property-detail__gallery-swiper .swiper-slide {
+            width: 82vw;
+            height: 62vw;
+        }
+
+        .property-detail__gallery-slide {
+            transform: scale(1);
+            border-radius: 10px;
+        }
+
+        .swiper-slide-prev .property-detail__gallery-slide {
+            transform: scale(1) translate(15px, 0px);
+        }
+
+        .swiper-slide-next .property-detail__gallery-slide {
+            transform: scale(1) translate(-15px, 0%);
+        }
+
+        .property-detail__gallery-swiper .swiper-slide-active .property-detail__gallery-slide {
+            transform: scale(1);
+        }
+
+        .property-detail__gallery-actions {
+            margin-top: 15px;
+        }
+
 }

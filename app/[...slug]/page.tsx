@@ -152,6 +152,79 @@ export async function generateMetadata({
         }
     }
 
+
+
+    const isListingPage = page ? pageNeedsBiens(page) : false;
+
+    if (page && isListingPage) {
+        const hasListingFilters =
+            slugParts.length > 1 ||
+            Boolean(resolvedSearchParams?.category) ||
+            Boolean(resolvedSearchParams?.categoryParent) ||
+            Boolean(resolvedSearchParams?.city) ||
+            Boolean(resolvedSearchParams?.prixMin) ||
+            Boolean(resolvedSearchParams?.prixMax) ||
+            Boolean(resolvedSearchParams?.piecesMin) ||
+            Boolean(resolvedSearchParams?.piecesMax) ||
+            Boolean(resolvedSearchParams?.surfaceMin) ||
+            Boolean(resolvedSearchParams?.surfaceMax) ||
+            Boolean(resolvedSearchParams?.prestige);
+
+        if (!hasListingFilters) {
+            return {
+                title: page.meta_title || page.titre || `${site.agence.nom} — Immobilier`,
+                description:
+                    page.meta_description ||
+                    site.seo.meta_description ||
+                    `Site immobilier de ${site.agence.nom}`,
+                icons: site.config.favicon
+                    ? {
+                        icon: site.config.favicon,
+                        shortcut: site.config.favicon,
+                        apple: site.config.favicon,
+                    }
+                    : undefined,
+            };
+        }
+
+        // SEO dynamique ici seulement si filtre
+
+        const listingSlugParts =
+            slugParts[0] === 'biens'
+                ? []
+                : slugParts;
+
+        const initialFilters = parseListingPath(
+            listingSlugParts,
+            resolvedSearchParams
+        );
+
+        const listingDeal = resolveListingDeal(page, slugParts);
+
+        const resolvedFilters: ListingFilters = {
+            ...initialFilters,
+            deal: initialFilters.deal || listingDeal,
+        };
+
+        const seo = buildListingMetadata({
+            filters: resolvedFilters,
+            page,
+            siteName: site.agence.nom,
+        });
+
+        return {
+            title: seo.title,
+            description: seo.description,
+            icons: site.config.favicon
+                ? {
+                    icon: site.config.favicon,
+                    shortcut: site.config.favicon,
+                    apple: site.config.favicon,
+                }
+                : undefined,
+        };
+    }
+
     return {
         title: page?.meta_title || page?.titre || `${site.agence.nom} — Immobilier`,
         description:
@@ -324,4 +397,71 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
             availableFilters={availableFilters}
         />
     );
+}
+
+function buildListingMetadata({
+                                  filters,
+                                  page,
+                                  siteName,
+                              }: {
+    filters: ListingFilters;
+    page: CasaqPage;
+    siteName: string;
+}) {
+    const dealLabel =
+        filters.deal === 'RENT'
+            ? 'à louer'
+            : filters.deal === 'SALE'
+                ? 'à vendre'
+                : 'immobiliers';
+
+    const type = getSeoTypeLabel(filters);
+    const location = filters.city
+        ? ` à ${formatSeoLocation(filters.city)}`
+        : ' dans le Jura bernois';
+
+    const title = `${type} ${dealLabel}${location} | ${siteName}`;
+
+    const description =
+        filters.deal === 'RENT'
+            ? `Trouvez votre ${type.toLowerCase()} ${dealLabel}${location} avec ${siteName}. Découvrez nos biens disponibles et contactez notre agence immobilière.`
+            : `Découvrez nos ${type.toLowerCase()} ${dealLabel}${location} avec ${siteName}. Une agence immobilière locale pour vendre ou acheter sereinement.`;
+
+    return {
+        title: limitText(title, 60),
+        description: limitText(description, 160),
+    };
+}
+
+function getSeoTypeLabel(filters: ListingFilters): string {
+    const category = filters.category || filters.categoryParent;
+
+    if (!category) return 'Biens immobiliers';
+
+    const value = String(category).replace(/-/g, ' ').toLowerCase();
+
+    if (value.includes('appartement')) return 'Appartements';
+    if (value.includes('maison')) return 'Maisons';
+    if (value.includes('villa')) return 'Villas';
+    if (value.includes('terrain')) return 'Terrains';
+    if (value.includes('immeuble')) return 'Immeubles';
+    if (value.includes('bureau')) return 'Bureaux';
+    if (value.includes('commerce') || value.includes('local')) return 'Locaux commerciaux';
+    if (value.includes('parking')) return 'Parkings';
+
+    return 'Biens immobiliers';
+}
+
+function formatSeoLocation(value: string): string {
+    return value
+        .replace(/-/g, ' ')
+        .split(' ')
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+function limitText(value: string, max: number): string {
+    if (value.length <= max) return value;
+    return value.slice(0, max - 1).trim();
 }

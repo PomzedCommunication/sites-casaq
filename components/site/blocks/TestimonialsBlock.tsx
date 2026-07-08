@@ -71,7 +71,7 @@ export async function TestimonialsBlock({ bloc, currentDomain }: Props) {
                     <TestimonialsSlider testimonials={serializedTestimonials} />
                 ) : (
                     <div className="testimonials__empty">
-                        Aucun témoignage disponible.
+                        {/*Aucun témoignage disponible.*/}
                     </div>
                 )}
             </div>

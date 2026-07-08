@@ -65,8 +65,11 @@ export function PropertyGallerySlider({ images, title }: Props) {
             <div className="property-detail__gallery-main">
                 <Swiper
                     modules={[Navigation, A11y, Thumbs]}
-                    slidesPerView={1}
-                    spaceBetween={1}
+                    // slidesPerView={1}
+                    // spaceBetween={1}
+                    slidesPerView="auto"
+                    centeredSlides
+                    spaceBetween={30}
                     navigation
                     grabCursor
                     watchOverflow
@@ -118,40 +121,40 @@ export function PropertyGallerySlider({ images, title }: Props) {
                 </Swiper>
             </div>
 
-            {images.length > 1 ? (
-                <div className="property-detail__thumbs">
-                    <Swiper
-                        modules={[Thumbs, A11y]}
-                        onSwiper={setThumbsSwiper}
-                        slidesPerView="auto"
-                        spaceBetween={10}
-                        watchSlidesProgress
-                        className="property-detail__thumbs-swiper"
-                    >
-                        {images.slice(0, 12).map((image, index) => (
-                            <SwiperSlide
-                                key={`${image.src}-thumb-${index}`}
-                                className="property-detail__thumb-slide"
-                            >
-                                <button
-                                    type="button"
-                                    className="property-detail__thumb"
-                                >
-                                    <Image
-                                        src={image.src}
-                                        alt={image.alt || `${title} - miniature ${index + 1}`}
-                                        fill
-                                        loading="lazy"
-                                        sizes="120px"
-                                        quality={70}
-                                        className="property-detail__thumb-image"
-                                    />
-                                </button>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
-            ) : null}
+            {/*{images.length > 1 ? (*/}
+            {/*    <div className="property-detail__thumbs">*/}
+            {/*        <Swiper*/}
+            {/*            modules={[Thumbs, A11y]}*/}
+            {/*            onSwiper={setThumbsSwiper}*/}
+            {/*            slidesPerView="auto"*/}
+            {/*            spaceBetween={10}*/}
+            {/*            watchSlidesProgress*/}
+            {/*            className="property-detail__thumbs-swiper"*/}
+            {/*        >*/}
+            {/*            {images.slice(0, 12).map((image, index) => (*/}
+            {/*                <SwiperSlide*/}
+            {/*                    key={`${image.src}-thumb-${index}`}*/}
+            {/*                    className="property-detail__thumb-slide"*/}
+            {/*                >*/}
+            {/*                    <button*/}
+            {/*                        type="button"*/}
+            {/*                        className="property-detail__thumb"*/}
+            {/*                    >*/}
+            {/*                        <Image*/}
+            {/*                            src={image.src}*/}
+            {/*                            alt={image.alt || `${title} - miniature ${index + 1}`}*/}
+            {/*                            fill*/}
+            {/*                            loading="lazy"*/}
+            {/*                            sizes="120px"*/}
+            {/*                            quality={70}*/}
+            {/*                            className="property-detail__thumb-image"*/}
+            {/*                        />*/}
+            {/*                    </button>*/}
+            {/*                </SwiperSlide>*/}
+            {/*            ))}*/}
+            {/*        </Swiper>*/}
+            {/*    </div>*/}
+            {/*) : null}*/}
 
             <div className="property-detail__gallery-actions">
                 <SliderArrows

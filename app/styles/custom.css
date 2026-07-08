@@ -334,6 +334,9 @@ cta-banner
   margin: 0;
   align-items: center;
 }
+.section-heading .txt{
+  max-width: 850px;
+}
 
 /*****
 ACTUS
@@ -359,6 +362,13 @@ ACTUS
 }
 .agency-news__image-wrap img{
   object-fit: cover;
+}
+.agency-news__content p{
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  text-align: left;
 }
 .agency-news__badge{
   position: absolute;
@@ -2609,5 +2619,74 @@ body .eapps-facebook-feed-load-more{
   display: block;
 }
 .account-search-list>button{
+  display: none;
+}
+
+.partners__select {
+  display: none;
+}
+
+
+.property-detail__gallery {
+  overflow: hidden;
+  padding-top: 40px;
+  padding-bottom: 10px;
+}
+
+.property-detail__gallery-main {
+  /*height: 390px;*/
+  height: 38vw;
+
+  overflow: visible;
+}
+
+.property-detail__gallery-swiper {
+  overflow: visible;
+  height: 100%;
+}
+
+.property-detail__gallery-swiper .swiper-wrapper {
+  align-items: center;
+}
+
+.property-detail__gallery-swiper .swiper-slide {
+  width: 50vw;
+  height: 38vw;
+  opacity: 0.25;
+  transition: opacity 0.35s ease;
+}
+
+.property-detail__gallery-swiper .swiper-slide-active {
+  opacity: 1;
+}
+
+.property-detail__gallery-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  transform: scale(0.55);
+  transition: transform 0.35s ease;
+  transform-origin: center;
+  line-height: 0;
+
+}
+
+.swiper-slide-prev .property-detail__gallery-slide{
+  transform: scale(.55) translate(30%, 0);
+}
+.swiper-slide-next .property-detail__gallery-slide{
+  transform: scale(.55) translate(-30%, 0);
+}
+.property-detail__gallery-swiper .swiper-slide-active .property-detail__gallery-slide {
+  transform: scale(1);
+}
+
+.property-detail__gallery-image {
+  object-fit: cover;
+}
+
+.property-detail__thumbs {
   display: none;
 }

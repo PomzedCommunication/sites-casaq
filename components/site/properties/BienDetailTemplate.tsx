@@ -93,7 +93,7 @@ export function BienDetailTemplate({
                         ) : null}
 
                         {bien.adresse?.ville ? (
-                            <div className="site-btn btn-grey btn-sm">
+                            <div className="site-btn btn-grey btn-sm adresse-ville">
                                 <svg width="10" height="15" viewBox="0 0 10 15" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path
