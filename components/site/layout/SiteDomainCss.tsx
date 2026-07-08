@@ -29,7 +29,7 @@ export function SiteDomainCss({
 
     if (activeDomain !== 'novimmob.ch') {
         return null;
-    } 
+    }
 
     return <NovimmobCss />;
 }

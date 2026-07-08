@@ -5,6 +5,7 @@ import { SiteBodyTheme } from '@/components/site/layout/SiteBodyTheme';
 import { ScrollToTop } from '@/components/site/layout/ScrollToTop';
 import { SiteDomainCss } from '@/components/site/layout/SiteDomainCss';
 import { GoogleAnalytics } from '@/components/site/GoogleAnalytics';
+import { CookieBanner } from '@/components/site/CookieBanner';
 
 type Props = {
     site: CasaqSiteConfig;
@@ -86,6 +87,7 @@ export function SiteLayout({
                 {children}
 
                 <SiteFooter site={site} previewDomain={previewDomain} />
+                <CookieBanner />
             </main>
         </>
     );

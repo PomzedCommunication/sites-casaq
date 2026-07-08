@@ -1327,6 +1327,7 @@ SINGLE POST
   margin-right: auto;
   max-width: calc(900px + var(--md-side) * 2);
 }
+
 .image-simple__figure{
   margin: 0;
 }
@@ -2693,4 +2694,125 @@ body .eapps-facebook-feed-load-more{
 
 .property-detail__thumbs {
   display: none;
+}
+
+
+
+
+
+/*******************
+
+COOOOKIE
+ */
+.site-cookie-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.site-cookie-banner {
+  position: fixed;
+  right: var(--md-side);
+  bottom: 40px;
+  z-index: 10001;
+  width: min(520px, calc(100vw - 40px));
+  padding: var(--interne-bg);
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.site-cookie-banner__title {
+  margin-bottom: 15px;
+}
+
+.site-cookie-banner__text {
+  margin-bottom: 20px;
+}
+
+.site-cookie-banner__link {
+  color: var(--site-agency);
+  text-decoration: underline;
+}
+
+.site-cookie-banner__details {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.site-cookie-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: var(--interne-md);
+  border-radius: 12px;
+  background: var(--site-background);
+}
+
+.site-cookie-row__info strong,
+.site-cookie-row__info span {
+  display: block;
+}
+
+.site-cookie-row__info span {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--site-grey);
+}
+
+.site-cookie-toggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--site-grey);
+}
+
+.site-cookie-toggle__knob {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  transition: 0.25s ease;
+}
+
+.site-cookie-toggle--on {
+  background: var(--site-agency);
+}
+
+.site-cookie-toggle--on .site-cookie-toggle__knob {
+  transform: translateX(22px);
+}
+
+.site-cookie-toggle--disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.site-cookie-banner__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.site-cookie-banner__button {
+  background: var(--site-agency);
+  color: white;
+}
+
+.site-cookie-banner__button--secondary {
+  background: var(--site-background);
+  color: var(--site-text);
+}
+
+.content-block {
+  max-width: 950px;
 }

@@ -1090,4 +1090,21 @@
             margin-top: 15px;
         }
 
+
+
+        .site-cookie-banner {
+            right: 20px;
+            bottom: 20px;
+            padding: var(--interne-md);
+        }
+
+        .site-cookie-banner__actions {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .site-cookie-banner__button {
+            width: 100%;
+        }
+
 }
