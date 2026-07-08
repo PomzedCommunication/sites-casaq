@@ -20,7 +20,7 @@ type SiteAssets = {
 };
 
 const SITE_ASSETS_BY_DOMAIN: Record<string, SiteAssets> = {
-    'novimmob.pix-preview.ch': {
+    'novimmob.ch': {
         googleFontHref:
             'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
     },

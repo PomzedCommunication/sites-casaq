@@ -27,9 +27,9 @@ export function SiteDomainCss({
         previewDomain || currentDomain || siteDomain,
     );
 
-    if (activeDomain !== 'novimmob.pix-preview.ch') {
+    if (activeDomain !== 'novimmob.ch') {
         return null;
-    }
+    } 
 
     return <NovimmobCss />;
 }

@@ -148,7 +148,6 @@ function serializeBien(bien: CasaqBien): SerializedBien {
 
     const locality = bien.adresse?.ville || '';
     const category = bien.categorie || '';
-    console.log(bien)
     return {
         id:        bien.id,
         href:      getBienSeoPath(bien),
