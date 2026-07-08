@@ -53,10 +53,10 @@ export function BlocksRenderer({
                                }: Props) {
     const blocsToRender = blocs || page.blocs || [];
 
-    console.log('PAGE BLOCS', page.slug, page.blocs);
-    console.log('PROP BLOCS', blocs);
-    console.log('BLOCS RENDERED BEFORE FILTER', blocsToRender);
-    console.log('BLOCS RENDERED AFTER FILTER', blocsToRender.filter((bloc) => bloc.actif !== false));
+    // console.log('PAGE BLOCS', page.slug, page.blocs);
+    // console.log('PROP BLOCS', blocs);
+    // console.log('BLOCS RENDERED BEFORE FILTER', blocsToRender);
+    // console.log('BLOCS RENDERED AFTER FILTER', blocsToRender.filter((bloc) => bloc.actif !== false));
     return (
         <>
             {blocsToRender

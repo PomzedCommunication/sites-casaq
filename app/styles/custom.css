@@ -1478,6 +1478,10 @@ Partenaires
   border-radius: 50%;
   background-color: var(--site-agency);
   margin: 0 7px;
+  transition: 0.4s ease-in-out all;
+}
+.partners__actions>a:hover{
+  opacity: 0.6;
 }
 
 /***
@@ -1507,7 +1511,7 @@ Liens grid
   object-fit: contain;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 80%;
   height: 100px;
   margin: 0 auto 20px;
   display: flex;

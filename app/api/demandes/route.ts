@@ -25,9 +25,15 @@ export async function POST(request: NextRequest) {
             { status: 400 },
         );
     }
+    const bienId =
+        body.bien_id !== undefined && body.bien_id !== null && body.bien_id !== ''
+            ? Number(body.bien_id)
+            : null;
+
 
     const result = await createSiteDemande(domain, {
-        bien_id: Number(body.bien_id),
+        // bien_id: Number(body.bien_id),
+        bien_id: bienId,
         civilite: body.civilite ? String(body.civilite) as '1' | '2' | '3' | '4' : undefined,
         firstname: String(body.firstname || ''),
         lastname: String(body.lastname || ''),

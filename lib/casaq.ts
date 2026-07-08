@@ -367,6 +367,44 @@ export type CreateDemandePayload = {
   page_url?: string;
 };
 
+// export async function createSiteDemande(
+//     domain: string,
+//     payload: CreateDemandePayload,
+// ): Promise<{
+//   success: boolean;
+//   message?: string;
+//   errors?: Record<string, string>;
+// }> {
+//   if (!API_URL) {
+//     throw new Error('CASAQ_API_URL manquant dans .env.local');
+//   }
+//
+//   const url = `${API_URL}/api/v1/demandes?domain=${encodeURIComponent(domain)}`;
+//
+//   const res = await fetch(url, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(payload),
+//   });
+//
+//   const json = await res.json().catch(() => null);
+//
+//   if (!res.ok) {
+//     return {
+//       success: false,
+//       message: json?.message || 'Impossible d’envoyer la demande.',
+//       errors: json?.errors,
+//     };
+//   }
+//
+//   return {
+//     success: true,
+//     message: json?.message || 'Demande envoyée.',
+//   };
+// }
+
 export async function createSiteDemande(
     domain: string,
     payload: CreateDemandePayload,
@@ -386,24 +424,23 @@ export async function createSiteDemande(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      domain,
+      ...payload,
+    }),
   });
 
   const json = await res.json().catch(() => null);
 
-  if (!res.ok) {
-    return {
-      success: false,
-      message: json?.message || 'Impossible d’envoyer la demande.',
-      errors: json?.errors,
-    };
-  }
-
   return {
-    success: true,
-    message: json?.message || 'Demande envoyée.',
+    success: res.ok && json?.success === true,
+    message: json?.message || 'Impossible d’envoyer la demande.',
+    errors: json?.errors,
+    debug: json,
   };
 }
+
+
 export type ContactAccount = {
   id: number;
   civilite?: string | null;
