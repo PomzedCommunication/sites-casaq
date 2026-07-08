@@ -13,7 +13,6 @@ function normalizeGoogleAnalyticsId(value?: string | null): string | null {
         return null;
     }
 
-    // Accepte uniquement les Measurement IDs GA4 du type G-XXXXXXXX
     if (!/^G-[A-Z0-9]+$/i.test(id)) {
         return null;
     }
@@ -32,10 +31,10 @@ export function GoogleAnalytics({ measurementId }: Props) {
         <>
             <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`}
-                strategy="afterInteractive"
+                strategy="beforeInteractive"
             />
 
-            <Script id={`google-analytics-${id}`} strategy="afterInteractive">
+            <Script id={`google-analytics-${id}`} strategy="beforeInteractive">
                 {`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
