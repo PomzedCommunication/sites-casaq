@@ -7,9 +7,9 @@ const Template2Css = dynamic(
         import('@/components/site/styles/Templates/Template2Css').then(
             (mod) => mod.Template2Css,
         ),
-    {
-        ssr: false,
-    },
+    // {
+    //     ssr: false,
+    // },
 );
 
 

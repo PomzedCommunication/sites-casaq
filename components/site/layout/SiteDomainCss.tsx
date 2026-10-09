@@ -7,9 +7,9 @@ const NovimmobCss = dynamic(
         import('@/components/site/styles/NovimmobCss').then(
             (mod) => mod.NovimmobCss,
         ),
-    {
-        ssr: false,
-    },
+    // {
+    //     ssr: false,
+    // },
 );
 
 const ServicesImmobilierCss = dynamic(
@@ -17,9 +17,9 @@ const ServicesImmobilierCss = dynamic(
         import('@/components/site/styles/ServicesImmobilierCss').then(
             (mod) => mod.ServicesImmobilierCss,
         ),
-    {
-        ssr: false,
-    },
+    // {
+    //     ssr: false,
+    // },
 );
 
 

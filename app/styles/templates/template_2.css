@@ -1831,7 +1831,7 @@ body:has(.listing-more-filters){
     text-decoration: none;
 }
 
-.section-heading--with-action .site-btn{
+.section-heading--with-action>.site-btn{
     padding: 5px 0 4px;
     width: fit-content;
     height: fit-content;
