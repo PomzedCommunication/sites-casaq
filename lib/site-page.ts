@@ -4,6 +4,7 @@ const BIENS_BLOCK_TYPES = [
   'biens',
   'biens_listing',
   'featured_biens',
+    'properties_list',
 ];
 
 export function getPageDeal(page: CasaqPage): 'SALE' | 'RENT' | undefined {
@@ -15,14 +16,35 @@ export function getPageDeal(page: CasaqPage): 'SALE' | 'RENT' | undefined {
     return 'RENT';
   }
 
-  const biensBloc = page.blocs.find((bloc) =>
-      ['biens', 'biens_listing', 'featured_biens'].includes(bloc.type),
-  );
+  // const biensBloc = page.blocs.find((bloc) =>
+  //     ['biens', 'biens_listing', 'featured_biens', 'properties_list'].includes(bloc.type),
+  // );
+  //
+  // console.log('deal:', biensBloc?.data);
+  //
+  // const deal = biensBloc?.data?.deal;
+  //
+  // if (deal === 'SALE' || deal === 'RENT') {
+  //   return deal;
+  // }
 
-  const deal = biensBloc?.data?.deal;
 
-  if (deal === 'SALE' || deal === 'RENT') {
-    return deal;
+  const deals = page.blocs
+      .filter((bloc) =>
+          ['biens', 'biens_listing', 'featured_biens', 'properties_list'].includes(
+              bloc.type,
+          ),
+      )
+      .map((bloc) => bloc.data?.deal)
+      .filter(
+          (deal): deal is 'SALE' | 'RENT' =>
+              deal === 'SALE' || deal === 'RENT',
+      );
+
+  const uniqueDeals = [...new Set(deals)];
+
+  if (uniqueDeals.length === 1) {
+    return uniqueDeals[0];
   }
 
   return undefined;
@@ -30,7 +52,7 @@ export function getPageDeal(page: CasaqPage): 'SALE' | 'RENT' | undefined {
 
 export function getPageBiensLimit(page: CasaqPage): number {
   const biensBloc = page.blocs.find((bloc) =>
-      ['biens', 'biens_listing', 'featured_biens'].includes(bloc.type),
+      ['biens', 'biens_listing', 'featured_biens', 'properties_list'].includes(bloc.type),
   );
 
   const nb = Number(biensBloc?.data?.nb || 12);

@@ -43,19 +43,19 @@ export function LinksCardsBlock({ bloc, previewDomain }: Props) {
     return (
         <section className={`section links-cards links-cards--${variant} pd-l-r`}>
             <div className="container">
-                <div className="section-heading section-heading--with-action">
-                    <div>
-                        <h2>{data.titre || 'Nos actualités'}</h2>
+                {data.titre || data.texte ? (
+                    <div className="section-heading section-heading--with-action">
+                        <div>
+                            {data.titre ? <h2>{data.titre}</h2> : null}
 
-                        {data.texte ? (
-                            <div className="txt">
-                                {parseSiteHtml(data.texte)}
-                            </div>
-                        ) : null}
+                            {data.texte ? (
+                                <div className="txt">
+                                    {parseSiteHtml(data.texte)}
+                                </div>
+                            ) : null}
+                        </div>
                     </div>
-
-
-                </div>
+                ) : null}
 
                 {items.length ? (
                     <div className="links-cards__grid">

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { buildUrlWithPreviewDomain } from '@/lib/contact-auth-client';
 import { useFavorites } from '@/components/site/favorites/FavoritesProvider';
 import { trackBienEvent } from '@/lib/casaq';
+import { SiteIcon } from '@/components/site/icons/SiteIcon';
 
 type Props = {
     bienId: number;
@@ -65,15 +66,12 @@ export function FavoriteButton({ bienId, previewDomain, domain }: Props) {
                 aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'}
             >
                 <span className="favorite-button__icon" aria-hidden="true">
-                    <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M8.32444 2.875L9 3.8125L9.67556 2.875C10.4578 1.7875 11.6133 1 13 1C15.2133 1 17 2.88438 17 5.21875C17 6.09063 16.7511 6.89688 16.3244 7.5625C15.6044 8.69687 9 16 9 16C9 16 2.39556 8.69687 1.67556 7.5625C1.24889 6.89688 1 6.09063 1 5.21875C1 2.88438 2.78667 1 5 1C6.38667 1 7.54222 1.7875 8.32444 2.875Z"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
+
+                    <SiteIcon name="favoris" />
+
+{/*                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="21" viewBox="0 0 25 21" fill="none">*/}
+{/*  <path d="M7.47653 0.75C3.84551 0.75 0.75 3.46673 0.75 6.99327C0.75 9.42657 1.88894 11.4746 3.39882 13.1712C4.90478 14.8627 6.84698 16.2824 8.6011 17.471L11.63 19.5216C11.792 19.6311 11.983 19.6896 12.1786 19.6896C12.3741 19.6896 12.5652 19.6311 12.7271 19.5216L15.756 17.471C17.5115 16.2824 19.4524 14.8627 20.957 13.1712C22.4682 11.4746 23.6071 9.42657 23.6071 6.99327C23.6071 3.46673 20.5116 0.75 16.8806 0.75C15.0076 0.75 13.3606 1.62771 12.1786 2.76404C10.9965 1.62771 9.3482 0.75 7.47653 0.75Z" stroke="#E41745" stroke-width="1.5"/>*/}
+{/*</svg>*/}
                 </span>
             </button>
 

@@ -16,14 +16,32 @@ type Props = {
     onChange: (values: { min?: number; max?: number }) => void;
 };
 
+// function formatValue(value?: number): string {
+//     if (value === undefined || value === null) {
+//         return '';
+//     }
+//
+//     return new Intl.NumberFormat('fr-CH', {
+//         maximumFractionDigits: 1,
+//     }).format(value);
+// }
+
 function formatValue(value?: number): string {
     if (value === undefined || value === null) {
         return '';
     }
 
-    return new Intl.NumberFormat('fr-CH', {
-        maximumFractionDigits: 1,
-    }).format(value);
+    const rounded = Math.round(value * 10) / 10;
+    const [integer, decimal] = String(rounded).split('.');
+
+    const formattedInteger = integer.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        "'"
+    );
+
+    return decimal
+        ? `${formattedInteger}.${decimal}`
+        : formattedInteger;
 }
 
 export function ListingRangeFields({

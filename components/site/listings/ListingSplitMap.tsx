@@ -8,6 +8,7 @@ import { BiensGrid } from './BiensGrid';
 import { ListingSort } from './ListingSort';
 import { Pagination } from './Pagination';
 import { useListing } from './ListingProvider';
+import {CasaqSiteConfig} from "@/lib/casaq";
 
 const ListingGoogleMap = dynamic(() => import('./ListingGoogleMap'), {
     ssr: false,
@@ -16,12 +17,15 @@ const ListingGoogleMap = dynamic(() => import('./ListingGoogleMap'), {
 type Props = {
     currentPath: string;
     previewDomain?: string;
+    site: CasaqSiteConfig;
+    title?: string;
+
 };
 
 const MAP_VISIBLE_STORAGE_KEY = 'listing_map_visible';
 const MOBILE_BREAKPOINT = 980;
 
-export function ListingSplitMap({ currentPath, previewDomain }: Props) {
+export function ListingSplitMap({ currentPath, previewDomain, site, title="" }: Props) {
     const { biens, meta } = useListing();
 
     const [hoveredBienId, setHoveredBienId] = useState<number | null>(null);
@@ -83,7 +87,16 @@ export function ListingSplitMap({ currentPath, previewDomain }: Props) {
             }`}
         >
             <div className="listing-split__results">
+
+                {title ? (
+
+                <div className="listing-heading">
+                    <h2 className='h3'>{title}</h2>
+                </div>
+                    ) : null }
+
                 <div className="listing-toolbar listing-toolbar--split white">
+
                     <ListingSort />
 
                     {!isMobile ? (
@@ -146,6 +159,18 @@ export function ListingSplitMap({ currentPath, previewDomain }: Props) {
 
             {showMap ? (
                 <aside className="listing-split__map">
+
+                    { site?.template_key === 'template_2' && !isMobile ? (
+                            <button
+                                type="button"
+                                className="listing-map-toggle"
+                                onClick={toggleMapVisible}
+                            >
+                                {mapVisible ? 'Masquer la carte' : 'Afficher la carte'}
+
+                            </button>
+                    ) : null }
+
                     <ListingGoogleMap
                         biens={biens}
                         previewDomain={previewDomain}

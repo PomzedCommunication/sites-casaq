@@ -26,8 +26,12 @@ import { SocialPostsBlock } from '@/components/site/blocks/SocialPostsBlock';
 import { AgencyNewsBlock } from '@/components/site/blocks/AgencyNewsBlock';
 import { PlaceholderBlock } from '@/components/site/blocks/PlaceholderBlock';
 import { ImageTextBlock } from '@/components/site/blocks/ImageTextBlock';
+import { ImageTextPointsBlock } from '@/components/site/blocks/ImageTextPointsBlock';
+import { ImageTextReviewsBlock } from '@/components/site/blocks/ImageTextReviewsBlock';
+import { ImageTextListeBlock } from '@/components/site/blocks/ImageTextListeBlock';
 import { TimelineHistoryBlock } from '@/components/site/blocks/TimelineHistoryBlock';
 import { ImageSimpleBlock } from '@/components/site/blocks/ImageSimpleBlock';
+import { VideoSimpleBlock } from '@/components/site/blocks/VideoSimpleBlock';
 import { DocumentsDownloadBlock } from '@/components/site/blocks/DocumentsDownloadBlock';
 import { LinksCardsBlock } from '@/components/site/blocks/LinksCardsBlock';
 
@@ -52,6 +56,7 @@ export function BlocksRenderer({
                                    blocs,
                                }: Props) {
     const blocsToRender = blocs || page.blocs || [];
+
 
     // console.log('PAGE BLOCS', page.slug, page.blocs);
     // console.log('PROP BLOCS', blocs);
@@ -106,11 +111,31 @@ export function BlocksRenderer({
                                 previewDomain={previewDomain}
                             />
                         );
+                    case 'image_text_points':
+                        return (<ImageTextPointsBlock
+                            key={key}
+                            bloc={bloc}
+                            previewDomain={previewDomain}
+                        />);
+                    case 'image_text_service':
+                        // return <PlaceholderBlock key={key} bloc={bloc} />;
+                        return (<ImageTextListeBlock
+                            key={key}
+                            bloc={bloc}
+                            previewDomain={previewDomain}
+                        />);
+                    case 'image_text_reviews':
+                        return (<ImageTextReviewsBlock
+                            key={key}
+                            bloc={bloc}
+                            previewDomain={previewDomain}
+                        />);
                     case 'featured_biens':
                         return (
                             <FeaturedBiensBlock
                                 key={key}
                                 bloc={bloc}
+                                site={site}
                                 biens={biens}
                                 currentDomain={currentDomain}
                                 previewDomain={previewDomain}
@@ -126,6 +151,20 @@ export function BlocksRenderer({
                                 previewDomain={previewDomain}
                             />
                         );
+
+                    case 'properties_list':
+                        return (
+                            <FeaturedBiensBlock
+                                key={key}
+                                bloc={bloc}
+                                site={site}
+                                biens={biens}
+                                currentDomain={currentDomain}
+                                previewDomain={previewDomain}
+                            />
+                        );
+                        // return <PlaceholderBlock key={key} bloc={bloc} />;
+                    // return <ImageSimpleBlock key={key} bloc={bloc} />;
 
                     case 'services_cards':
                         return (
@@ -162,6 +201,9 @@ export function BlocksRenderer({
                         return <ImageGalleryBlock key={key} bloc={bloc} />;
                     case 'image_simple':
                         return <ImageSimpleBlock key={key} bloc={bloc} />;
+                    case 'video':
+                        // return <PlaceholderBlock key={key} bloc={bloc} />;
+                        return <VideoSimpleBlock key={key} bloc={bloc} />;
                     case 'pillars':
                         return (
                             <PillarsBlock

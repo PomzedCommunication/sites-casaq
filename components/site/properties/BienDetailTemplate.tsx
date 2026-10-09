@@ -10,20 +10,37 @@ import {
     InfoWindow,
     useJsApiLoader,
 } from '@react-google-maps/api';
-import type { CasaqBien, CasaqSiteConfig } from '@/lib/casaq';
+import {CasaqBien, CasaqBloc, CasaqDocs, CasaqSiteConfig} from '@/lib/casaq';
 import { getBienSeoPath } from '@/lib/property-url';
 import { PropertyContactForm } from '@/components/site/properties/PropertyContactForm';
 import { PropertyGallerySlider } from '@/components/site/properties/PropertyGallerySlider';
+import { PropertyGallery } from '@/components/site/properties/PropertyGallery';
 import { FeaturedBiensSlider } from '@/components/site/blocks/FeaturedBiensSlider';
 import { FavoriteButton } from '@/components/site/favorites/FavoriteButton';
 import parse from 'html-react-parser';
 import { SiteFloatingActions } from '@/components/site/SiteFloatingActions';
 import { trackBienEvent } from '@/lib/casaq';
+import {FeaturedBiensBlock} from "@/components/site/blocks/FeaturedBiensBlock";
+
+
+
+// import type { CasaqBiensMeta, CasaqBien, CasaqPage, CasaqSiteConfig } from '@/lib/casaq';
+import { LandingTemplate } from '@/components/site/templates/LandingTemplate';
+import { ContentTemplate } from '@/components/site/templates/ContentTemplate';
+import { ContactTemplate } from '@/components/site/templates/ContactTemplate';
+import { ListingTemplate } from '@/components/site/templates/ListingTemplate';
+import type {
+    ListingAvailableFilters,
+    ListingFilters,
+} from '@/lib/listing/listing-types';
+import {SiteIcon} from "@/components/site/icons/SiteIcon";
 
 type Props = {
     site: CasaqSiteConfig;
     bien: CasaqBien;
+    // bloc: CasaqBloc;
     domain: string;
+    previewDomain?: string;
     similarBiens?: CasaqBien[];
 };
 const googleMapsLibraries: 'places'[] = ['places'];
@@ -31,16 +48,21 @@ export function BienDetailTemplate({
                                        site,
                                        bien,
                                        domain,
+                                       previewDomain,
                                        similarBiens = [],
                                    }: Props) {
     const images = getImages(bien);
     const mainImage = getHeroImage(bien) || images[0] || null;
 
-    const features = getMainFeatures(bien);
+    const features = getMainFeatures(bien, site.template_key);
     const documents = getDocuments(bien);
     const contactAdresse = site.footer?.contact?.adresse || site.infos.adresse;
     const contactTelephone = site.footer?.contact?.telephone || site.infos.telephone;
     const contactEmail = site.footer?.contact?.email || site.infos.email;
+
+    // console.log('unique bien', bien);
+
+    // console.log('test piscine', site);
 
     useEffect(() => {
         trackBienEvent(domain, bien.id, 'view');
@@ -56,6 +78,205 @@ export function BienDetailTemplate({
         contactClickTrackedRef.current = true;
         trackBienEvent(domain, bien.id, 'contact_click');
     };
+
+    // console.log('test bien similaire', similarBiens);
+
+
+    if (site.template_key === "template_2"){
+        return(
+            <main className="property-detail">
+
+                <SiteFloatingActions type="default" domain={domain} />
+
+
+                <PropertyGallery
+                    images={images}
+                    title={bien.titre}
+                />
+
+
+                {/* CONTENU PRINCIPAL + CONTACT */}
+                <section className="property-detail__content pd-l-r">
+                    <div className="property-detail__main">
+
+                        <section className="property-titre-caracteristique" >
+
+                            <div className={"property-top-infos"}>
+                                <span>
+                                    <strong>
+                                         {bien.deal === "RENT" ? ( "À louer"
+                                         ) : ("À vendre")}
+                                    </strong>{getFullAddress(bien) ? (<> <div className="separateur-info"></div> {getFullAddress(bien)}</>) : null}
+
+                                </span>
+
+                                <SiteFloatingActions type="property" bienId={bien.id} domain={domain} />
+
+                            </div>
+
+                            <h1 className='property-title'>{bien.titre}</h1>
+
+                            <p className='property-big-price'>
+                                {formatHeroPrice(bien)}
+                            </p>
+
+
+                            <div className="property-detail__features-grid">
+                                {features.map((feature) => (
+                                    <FeatureItem
+                                        key={feature.label}
+                                        label={feature.label}
+                                        value={feature.value}
+                                        type={feature.type}
+                                    />
+                                ))}
+                            </div>
+
+
+                            <SmoothDetails className="property-detail__all-features">
+                                <summary>
+                                    Toutes les caractéristiques
+                                    <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 0L5 5L10 0H0Z" fill="#575757"/>
+                                    </svg>
+                                </summary>
+
+                                <div className="property-detail__characteristics-blocks">
+
+
+                                    {getCharacteristicBlocks(bien).map((block) => (
+
+                                        <CharacteristicTableBlock
+                                            key={block.title}
+                                            title={block.title}
+                                            items={block.items}
+                                        />
+                                    ))}
+                                </div>
+                            </SmoothDetails>
+
+                        </section>
+
+                        <div className="property-detail__accordions">
+                                <SmoothAccordion
+                                    key={"Description"}
+                                    title={"Description"}
+                                    defaultOpen={true}
+                                >
+                                    {getFullDescription(bien) ? (
+                                        <HtmlBlock value={getFullDescription(bien)}/>
+                                    ) : (
+                                        <p>Description à compléter dans CasaQ.</p>
+                                    )}
+
+                                </SmoothAccordion>
+
+                            {getDescriptionBlocks(bien).map((block, index) => (
+                                <SmoothAccordion
+                                    key={block.title}
+                                    title={block.title}
+                                    defaultOpen={index === 0}
+                                >
+
+
+                                    {block.items.map((item) => (
+                                        <div
+                                            key={`${block.title}-${item.label}`}
+                                            className="property-detail__description-item"
+                                        >
+                                            <h3>{item.label}</h3>
+                                            <HtmlBlock value={item.value} />
+                                        </div>
+                                    ))}
+                                </SmoothAccordion>
+                            ))}
+                        </div>
+                    </div>
+
+                    {getVisitContact(bien) ? (
+                        <aside>
+                            <ContactCard bien={bien} domain={domain} site={site} documents={documents} />
+                        </aside>
+                    ) : null}
+                </section>
+
+
+                <section className={"section pd-l-r"}>
+                    <h2>Localisation</h2>
+                        <PropertyLocationMap bien={bien} site={site}/>
+                </section>
+
+
+
+
+
+
+
+
+            {/* INTÉRÊT + DOCUMENTS + FORMULAIRE */}
+            <section className="property-detail__lead pd-l-r">
+
+                <h2>Contact</h2>
+
+
+                    <div className="property-detail__form" onClick={trackContactClickOnce}>
+                        <div className="property-detail__selected-property">
+                            <label>Bien sélectionné</label>
+                            <div>{bien.titre}</div>
+                        </div>
+
+                        <PropertyContactForm
+                            domain={domain}
+                            bienId={bien.id}
+                        />
+                    </div>
+            </section>
+
+            {similarBiens.length > 0 ? (
+                <section className="section pd-l-r featured-biens featured-biens--carousel">
+                    <div className="container">
+                        <div className="section-heading section-heading--with-action">
+                            <div>
+                                <h2>Biens similaires</h2>
+
+                                <div className="txt">
+                                    <p>
+                                        Retrouvez une sélection de biens pouvant également vous intéresser.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <Link
+                                href="/biens"
+                                className="site-btn site-btn--primary"
+                            >
+                                Voir tous les biens
+                            </Link>
+                        </div>
+
+                        <FeaturedBiensSlider
+                            biens={similarBiens.map(serializeSimilarBien)}
+                            previewDomain={previewDomain}
+                        />
+
+                        {/*<FeaturedBiensBlock*/}
+                        {/*    bloc={bloc}*/}
+                        {/*    site={site}*/}
+                        {/*    biens={similarBiens.map(serializeSimilarBien)}*/}
+                        {/*    currentDomain={domain}*/}
+                        {/*    previewDomain={previewDomain}*/}
+                        {/*/>*/}
+                    </div>
+                </section>
+            ) : null}
+
+
+        </main>
+        );
+    }
+
+
+
 
     return (
         <main className="property-detail">
@@ -271,14 +492,14 @@ export function BienDetailTemplate({
                             </SmoothAccordion>
                         ))}
                         <SmoothAccordion title="Localisation">
-                            <PropertyLocationMap bien={bien}/>
+                            <PropertyLocationMap bien={bien} site={site}/>
                         </SmoothAccordion>
                     </div>
                 </div>
 
                 {getVisitContact(bien) ? (
                     <aside>
-                        <ContactCard bien={bien} domain={domain} />
+                        <ContactCard bien={bien} domain={domain} site={site} documents={documents} />
                     </aside>
                 ) : null}
             </section>
@@ -453,7 +674,16 @@ export function BienDetailTemplate({
 
                         <FeaturedBiensSlider
                             biens={similarBiens.map(serializeSimilarBien)}
+                            previewDomain={previewDomain}
                         />
+
+                        {/*<FeaturedBiensBlock*/}
+                        {/*    bloc={bloc}*/}
+                        {/*    site={site}*/}
+                        {/*    biens={similarBiens.map(serializeSimilarBien)}*/}
+                        {/*    currentDomain={domain}*/}
+                        {/*    previewDomain={previewDomain}*/}
+                        {/*/>*/}
                     </div>
                 </section>
             ) : null}
@@ -541,7 +771,7 @@ function DeferredPropertyGallerySlider({
 
 
 function getFeatureIcon(
-    type: 'pieces' | 'bedrooms' | 'bathrooms' | 'kitchen' | 'balcony' | 'terrace' | 'surface' | 'parking'
+    type: 'pieces' | 'bedrooms' | 'bathrooms' | 'kitchen' | 'balcony' | 'terrace' | 'surface' | 'parking' | 'surface_habitable'| 'surface_terrain' | 'pieces' |'construction_year' | 'disponibilite'
 ) {
     switch (type) {
         case 'bedrooms':
@@ -635,28 +865,40 @@ function getFeatureIcon(
                 </svg>
             );
 
+        case 'surface_habitable':
+            return (
+
+                <SiteIcon name="surface_habitable" />
+            );
+
+        case 'surface_terrain':
+            return (
+
+                <SiteIcon name="surface_terrain" />
+            );
+
+        case 'construction_year':
+            return (
+
+                <SiteIcon name="construction" />
+            );
+
+        case 'disponibilite':
+            return (
+
+                <SiteIcon name="disponibilite" />
+            );
+
+
         case 'pieces':
         default:
             return (
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clipPath="url(#clip0_365_4504)">
-                        <path
-                            d="M11 13.1705L21.868 17.5409L21.956 17.5705H22L11 22L0 17.5705H0.0733333L0.132 17.5409L11 13.1705ZM11.3667 0L22 4.28188V16.8027L11.352 12.5208L11.3667 12.4617V0Z"
-                            fill="#575757"/>
-                        <path
-                            d="M10.6333 0V12.4027L10.648 12.4913V12.5208L7.33333 13.8497L2.93333 15.6215L0 16.8027V4.28188L10.6333 0Z"
-                            fill="#575757"/>
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_365_4504">
-                            <rect width="22" height="22" fill="white"/>
-                        </clipPath>
-                    </defs>
-                </svg>
-
+                <SiteIcon name="nombre_pieces" />
             );
     }
 }
+
+
 
 type MainFeatureType =
     | 'pieces'
@@ -666,18 +908,29 @@ type MainFeatureType =
     | 'balcony'
     | 'terrace'
     | 'surface'
-    | 'parking';
+    | 'surface_habitable'
+    | 'surface_terrain'
+    | 'parking'
+    | 'construction_year'
+    | 'disponibilite';
 
-function getMainFeatures(bien: CasaqBien): Array<{
+type MainFeature = {
+    type: MainFeatureType;
     label: string;
     value?: string | number | null;
-    type: MainFeatureType;
-}> {
-    return [
-        {
-            type: 'pieces',
-            label: 'Pièces',
-            value: getFeatureValue(
+};
+
+const featureDefinitions: Record<
+    MainFeatureType,
+    {
+        label: string;
+        getValue: (bien: CasaqBien) => string | number | null | undefined;
+    }
+> = {
+    pieces: {
+        label: 'Pièces',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.pieces',
                     'caracteristiques.nb_pieces',
@@ -685,11 +938,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'pieces',
                 ])
             ),
-        },
-        {
-            type: 'bedrooms',
-            label: 'Chambres',
-            value: getFeatureValue(
+    },
+
+    bedrooms: {
+        label: 'Chambres',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.chambres',
                     'caracteristiques.nb_bedrooms',
@@ -697,11 +951,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'nb_bedrooms',
                 ])
             ),
-        },
-        {
-            type: 'bathrooms',
-            label: 'Salles de bain',
-            value: getFeatureValue(
+    },
+
+    bathrooms: {
+        label: 'Salles de bain',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.nb_bathrooms',
                     'caracteristiques.salles_bain',
@@ -712,11 +967,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'nb_bathrooms',
                 ])
             ),
-        },
-        {
-            type: 'kitchen',
-            label: 'Cuisine',
-            value: getFeatureValue(
+    },
+
+    kitchen: {
+        label: 'Cuisine',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.cuisine',
                     'caracteristiques.cuisines',
@@ -725,11 +981,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'kitchens',
                 ])
             ),
-        },
-        {
-            type: 'balcony',
-            label: 'Balcon',
-            value: getFeatureValue(
+    },
+
+    balcony: {
+        label: 'Balcon',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.balcons',
                     'caracteristiques.balcon',
@@ -737,11 +994,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'balconies',
                 ])
             ),
-        },
-        {
-            type: 'terrace',
-            label: 'Terrasse',
-            value: getFeatureValue(
+    },
+
+    terrace: {
+        label: 'Terrasse',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'caracteristiques.terrasses',
                     'caracteristiques.terrasse',
@@ -749,11 +1007,12 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'terrasses',
                 ])
             ),
-        },
-        {
-            type: 'surface',
-            label: 'Surface',
-            value: formatSurface(
+    },
+
+    surface: {
+        label: 'Surface',
+        getValue: (bien) =>
+            formatSurface(
                 getFirstValue(bien, [
                     'caracteristiques.surface_habitable',
                     'surfaces.surface_habitable',
@@ -761,11 +1020,36 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'surface_living',
                 ])
             ),
-        },
-        {
-            type: 'parking',
-            label: 'Parking',
-            value: getFeatureValue(
+    },
+
+    surface_habitable: {
+        label: 'Surface habitable',
+        getValue: (bien) =>
+            formatSurface(
+                getFirstValue(bien, [
+                    'caracteristiques.surface_habitable',
+                    'surfaces.surface_habitable',
+                    'details.surface_living',
+                    'surface_living',
+                ])
+            ),
+    },
+
+    surface_terrain: {
+        label: 'Terrain',
+        getValue: (bien) =>
+            formatSurface(
+                getFirstValue(bien, [
+                    'caracteristiques.surface_terrain',
+                    'caracteristiques.surface_terrain',
+                ])
+            ),
+    },
+
+    parking: {
+        label: 'Parking',
+        getValue: (bien) =>
+            getFeatureValue(
                 getFirstValue(bien, [
                     'stationnement.total.nombre',
                     'caracteristiques.parking',
@@ -779,9 +1063,82 @@ function getMainFeatures(bien: CasaqBien): Array<{
                     'nb_parking_ext',
                 ])
             ),
-        },
-    ];
+    },
+
+    construction_year: {
+        label: 'Construction',
+        getValue: (bien) =>
+            getFeatureValue(
+                getFirstValue(bien, [
+                    'caracteristiques.annee_construction',
+                    'batiment.annee_construction',
+                    'details.annee_construction',
+                ])
+            ),
+    },
+
+    disponibilite: {
+        label: 'Disponibilité',
+        getValue: (bien) =>
+            getFeatureValue(
+                getFirstValue(bien, [
+                    'caracteristiques.disponibilite.label',
+                ])
+            ),
+    },
+};
+
+
+const templateFeatures: Record<string, MainFeatureType[]> = {
+    template_1: [
+        'pieces',
+        'bedrooms',
+        'bathrooms',
+        'kitchen',
+        'balcony',
+        'terrace',
+        'surface',
+        'parking',
+    ],
+
+    template_2: [
+        'surface_habitable',
+        'surface_terrain',
+        'pieces',
+        'construction_year',
+        'disponibilite',
+    ],
+};
+
+
+function getMainFeatures(
+    bien: CasaqBien,
+    templateKey?: string | null
+): MainFeature[] {
+    const featureTypes =
+        templateFeatures[templateKey ?? ''] ??
+        templateFeatures.template_1;
+
+    return featureTypes
+        .map((type) => {
+            const definition = featureDefinitions[type];
+
+            return {
+                type,
+                label: definition.label,
+                value: definition.getValue(bien),
+            };
+        })
+        .filter(
+            (feature) =>
+                feature.value !== null &&
+                feature.value !== undefined &&
+                feature.value !== ''
+        );
 }
+
+
+
 function getImages(bien: CasaqBien): Array<{ src: string; alt?: string | null }> {
     return (bien.images || [])
         .map((image) => ({
@@ -884,48 +1241,102 @@ function getNestedValue(item: unknown, path: string): unknown {
     }, item);
 }
 
+// function formatHeroPrice(bien: CasaqBien): string {
+//     if (bien.prix?.sur_demande || !bien.prix?.formatte) {
+//         return 'Prix sur demande';
+//     }
+//
+//     if (bien.deal === 'RENT') {
+//         return bien.prix.formatte.includes('/')
+//             ? bien.prix.formatte
+//             : `${bien.prix.formatte} / mois`;
+//     }
+//
+//     return bien.prix.formatte;
+// }
 function formatHeroPrice(bien: CasaqBien): string {
     if (bien.prix?.sur_demande || !bien.prix?.formatte) {
         return 'Prix sur demande';
     }
 
-    if (bien.deal === 'RENT') {
-        return bien.prix.formatte.includes('/')
-            ? bien.prix.formatte
-            : `${bien.prix.formatte} / mois`;
+    let price = bien.prix.formatte.trim();
+
+    // Pas de décimales ou décimales à .00
+    if (!/[.,]\d+$/.test(price) || /[.,]00$/.test(price)) {
+        price = price.replace(/[.,]00$/, '') + '.-';
     }
 
-    return bien.prix.formatte;
-}
+    if (bien.deal === 'RENT') {
+        return price.includes('/')
+            ? price
+            : `${price} / mois`;
+    }
 
+    return price;
+}
 function getFullAddress(bien: CasaqBien): string {
-    if (!canShowExactAddress(bien)) {
+    const adresse = bien.adresse;
+
+    if (!adresse) {
         return '';
     }
 
+
+    // Mode radius : pas d'adresse exacte
+    if (adresse.public_mode === 'radius') {
+        return '';
+    }
+
+    // Mode public : on affiche l'adresse de substitution si elle existe
+    if (adresse.public_mode === 'public') {
+        return adresse.adresse_substitution || '';
+    }
+
+    // Sinon : adresse exacte
     return [
-        bien.adresse?.rue,
-        bien.adresse?.npa,
-        bien.adresse?.ville,
+        adresse.rue,
+        adresse.npa,
+        adresse.ville,
     ]
         .filter(Boolean)
         .join(', ');
 }
-function canShowExactAddress(bien: CasaqBien): boolean {
-    const publicMode = bien.adresse?.public_mode;
-    const substitutionAddress = bien.adresse?.adresse_substitution;
-    const street = bien.adresse?.rue;
 
-    if (publicMode === 'radius') {
-        return false;
-    }
-
-    if (substitutionAddress) {
-        return false;
-    }
-
-    return Boolean(street);
-}
+//
+// function getFullAddress(bien: CasaqBien): string {
+//     if (!canShowExactAddress(bien)) {
+//         return '';
+//     }
+//
+//     return [
+//         bien.adresse?.rue,
+//         bien.adresse?.npa,
+//         bien.adresse?.ville,
+//     ]
+//         .filter(Boolean)
+//         .join(', ');
+// }
+// function canShowExactAddress(bien: CasaqBien): boolean {
+//     const publicMode = bien.adresse?.public_mode;
+//     const substitutionAddress = bien.adresse?.adresse_substitution;
+//     const street = bien.adresse?.rue;
+//
+//     if (publicMode === 'radius') {
+//         return false;
+//     }
+//
+//
+//     if (publicMode === 'public_mode') {
+//         return false;
+//     }
+//
+//
+//     if (substitutionAddress) {
+//         return false;
+//     }
+//
+//     return Boolean(street);
+// }
 function getAvailabilityLabel(bien: CasaqBien): string | null {
     const disponibilite = getNestedValue(bien, 'caracteristiques.disponibilite') as
         | {
@@ -1837,7 +2248,15 @@ function SmoothAccordion({
 }) {
     defaultOpen = false
     const [isOpen, setIsOpen] = useState(defaultOpen);
+    const [height, setHeight] = useState(0);
     const contentRef = useRef<HTMLDivElement>(null);
+
+
+    useEffect(() => {
+        if (isOpen && contentRef.current) {
+            setHeight(contentRef.current.scrollHeight);
+        }
+    }, [isOpen, children]);
 
     return (
         <div className={`property-detail__accordion ${isOpen ? 'is-open' : ''}`}>
@@ -1868,9 +2287,7 @@ function SmoothAccordion({
             <div
                 className="property-detail__accordion-panel"
                 style={{
-                    maxHeight: isOpen
-                        ? `${contentRef.current?.scrollHeight || 0}px`
-                        : '0px',
+                    maxHeight: isOpen ? `${height}px` : '0px',
                 }}
             >
                 <div
@@ -2041,6 +2458,13 @@ function serializeSimilarBien(bien: CasaqBien) {
             'caracteristiques.bathrooms',
             'caracteristiques.salles_bain',
         ]),
+        pieces: bien.caracteristiques?.pieces?.toString() ?? null,
+        created_at: bien.created_at ?? null,
+        surface_habitable:
+            bien.caracteristiques?.surface_habitable?.toString() ?? null,
+        surface_terrain:
+            bien.caracteristiques?.surface_terrain?.toString() ?? null,
+        ville: bien.adresse?.ville?.toString() ?? null,
         price: formatPrice(bien),
     };
 }
@@ -2057,11 +2481,29 @@ function getSimilarNumberValue(item: unknown, paths: string[]): string | null {
     return null;
 }
 
-function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
+function PropertyLocationMap({ bien, site }: { bien: CasaqBien; site: CasaqSiteConfig}) {
     const mapRef = useRef<google.maps.Map | null>(null);
     const [activeCategory, setActiveCategory] = useState<PlaceCategory | null>(null);
     const [places, setPlaces] = useState<NearbyPlace[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<NearbyPlace | null>(null);
+
+    const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+
+    useEffect(() => {
+        if (!mapRef.current) {
+            return;
+        }
+
+        const timeout = window.setTimeout(() => {
+            google.maps.event.trigger(mapRef.current!, 'resize');
+        }, 100);
+
+        return () => {
+            window.clearTimeout(timeout);
+        };
+    }, [isMapFullscreen]);
+
+
     const lat = Number(bien.adresse?.lat);
     const lng = Number(bien.adresse?.lng);
 
@@ -2178,8 +2620,15 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
         }
     };
 
+
     return (
-        <div className="property-detail__map">
+        <div className={[
+            'property-detail__map', isMapFullscreen
+                ? 'is-fullscreen'
+                : '',
+        ]
+            .filter(Boolean)
+            .join(' ')}>
             <GoogleMap
                 mapContainerClassName="property-detail__google-map"
                 center={center}
@@ -2187,8 +2636,9 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
                 options={{
                     styles: wizardMapStyles,
                     mapTypeControl: false,
-                    fullscreenControl: true,
+                    fullscreenControl: false,
                     streetViewControl: false,
+                    zoomControl: false,
                     clickableIcons: false,
                     gestureHandling: 'cooperative',
                     backgroundColor: '#E8EFE7',
@@ -2202,9 +2652,9 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
                         center={center}
                         radius={radius}
                         options={{
-                            fillColor: '#C98A4B',
+                            fillColor: site.config.couleur_agence,
                             fillOpacity: 0.26,
-                            strokeColor: '#B97500',
+                            strokeColor: site.config.couleur_agence,
                             strokeOpacity: 0.7,
                             strokeWeight: 1,
                             clickable: false,
@@ -2227,7 +2677,7 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
                         icon={{
                             path: google.maps.SymbolPath.CIRCLE,
                             scale: 7,
-                            fillColor: '#FF6B00',
+                            fillColor: site.config.couleur_agence,
                             fillOpacity: 1,
                             strokeColor: '#ffffff',
                             strokeWeight: 2,
@@ -2257,6 +2707,56 @@ function PropertyLocationMap({ bien }: { bien: CasaqBien }) {
                     </InfoWindow>
                 ) : null}
             </GoogleMap>
+
+            <div className="property-detail__map-controls">
+                <button
+                    type="button"
+                    className="property-detail__map-control property-detail__map-control--fullscreen"
+                    onClick={() => setIsMapFullscreen((value) => !value)}
+                    aria-label={
+                        isMapFullscreen
+                            ? 'Réduire la carte'
+                            : 'Agrandir la carte'
+                    }
+                >
+                    {isMapFullscreen ? '×' : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M7.75 0.75L14.75 0.75V7.75M14.75 0.75L9.5 6M7.75 14.75H0.75V7.75M0.75 14.75L6 9.5" stroke="#E41745" stroke-width="1.5"/>
+                        </svg>
+                    )}
+                </button>
+
+                <div className="property-detail__map-zoom">
+                    <button
+                        type="button"
+                        className="property-detail__map-control"
+                        onClick={() => mapRef.current?.setZoom(
+                            (mapRef.current.getZoom() || 15) + 1
+                        )}
+                        aria-label="Zoom avant"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M6 0L6 12M12 6L0 6" stroke="#E41745" stroke-width="2"/>
+                        </svg>
+                    </button>
+
+                    <button
+                        type="button"
+                        className="property-detail__map-control"
+                        onClick={() => mapRef.current?.setZoom(
+                            Math.max(
+                                (mapRef.current.getZoom() || 15) - 1,
+                                3
+                            )
+                        )}
+                        aria-label="Zoom arrière"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2" fill="none">
+                            <path d="M10 1H0" stroke="#E41745" stroke-width="2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
             <div className="property-detail__map-tabs">
                 {placeCategories.map((category) => (
@@ -2389,11 +2889,102 @@ function HtmlBlock({ value }: { value?: string | null }) {
     );
 }
 
-function ContactCard({ bien, domain }: { bien: CasaqBien; domain: string }) {
+function ContactCard({ bien, domain, site, documents }: { bien: CasaqBien; domain: string; site: CasaqSiteConfig;  documents: CasaqDocs[]; }) {
     const contact = getVisitContact(bien);
 
     if (!contact) {
         return null;
+    }
+
+    if (site.template_key === 'template_2'){
+        // console.log('document', documents);
+        return (
+            <div className="property-detail__contact-card">
+                <h3>Votre interlocutrice</h3>
+
+                <div className="property-detail__contact-person">
+                    {contact.image && (
+                        <div className="property-detail__contact-avatar">
+                            <Image
+                                src={contact.image}
+                                alt={contact.name}
+                                fill
+                                sizes="400px"
+                                className="property-detail__contact-avatar-img"
+                            />
+
+                        </div>
+                    )}
+
+                    <div className="property-detail__contact-info">
+
+                        <p>
+                            <strong className="h3">{contact.name}</strong>
+                            {getVisitContactTypeLabel(contact.type)} <br/>
+
+                            {contact.phone ? (
+                                <a href={`tel:${cleanPhoneHref(contact.phone)}`} onClick={() => trackBienEvent(domain, bien.id, 'phone_click')}>
+                                    {formatSwissPhone(contact.phone)}
+                                </a>
+                            ) : null}
+
+                            {contact.email ? (
+                                <a href={`mailto:${contact.email}`} onClick={() => trackBienEvent(domain, bien.id, 'email_click')}>
+                                    {contact.email}
+                                </a>
+                            ) : null}
+                        </p>
+
+                        <p className={"italic"}>Visites uniquement sur RDV</p>
+                    </div>
+                </div>
+
+                <Link className="site-btn lien_info_contact" href="/contact">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M10.719 1.97656L9.48879 3.2067L12.7932 6.51082L14.0234 5.28067C14.6589 4.64527 14.6589 3.61591 14.0234 2.9805L13.0219 1.97656C12.3865 1.34115 11.357 1.34115 10.7216 1.97656H10.719ZM8.91433 3.78111L2.98933 9.70819C2.72498 9.97252 2.53181 10.3004 2.42505 10.6588L1.52524 13.7163C1.4617 13.9324 1.52016 14.1637 1.67775 14.3212C1.83535 14.4788 2.06665 14.5373 2.28016 14.4763L5.33798 13.5766C5.69638 13.4698 6.02428 13.2766 6.28863 13.0123L12.2187 7.08523L8.91433 3.78111Z" fill="#E41745"/>
+                    </svg>
+                    Contact
+                </Link>
+
+
+                {documents.length > 0 ? (
+<>
+                        {documents.map((document) => (
+                            document.url ? (
+                                <a
+                                    key={document.id ?? document.url}
+                                    href={document.url}
+                                    download={getDocumentDownloadName(document)}
+                                    className="site-btn lien_info_contact property-detail__contact-document"
+                                    onClick={() =>
+                                        trackBienEvent(
+                                            domain,
+                                            bien.id,
+                                            'document_download'
+                                        )
+                                    }
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="15"
+                                        height="15"
+                                        viewBox="0 0 15 15"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M3.75 0H8.71219C8.96081 5.30976e-05 9.19923 0.09886 9.375 0.274687L12.8503 3.75C13.0261 3.92577 13.1249 4.16419 13.125 4.41281V13.125C13.125 13.6223 12.9275 14.0992 12.5758 14.4508C12.2242 14.8025 11.7473 15 11.25 15H3.75C3.25272 15 2.77581 14.8025 2.42417 14.4508C2.07254 14.0992 1.875 13.6223 1.875 13.125V1.875C1.875 1.37772 2.07254 0.900806 2.42417 0.549175C2.77581 0.197544 3.25272 0 3.75 0ZM8.90625 1.40625V3.28125C8.90625 3.52989 9.00502 3.76835 9.18084 3.94416C9.35665 4.11998 9.59511 4.21875 9.84375 4.21875H11.7188L8.90625 1.40625Z"
+                                            fill="#E41745"
+                                        />
+                                    </svg>
+
+                                    {document.label}
+                                </a>
+                            ) : null
+                        ))}
+                   </>
+                ) : null}
+            </div>
+        );
     }
 
     return (
@@ -2442,6 +3033,19 @@ function ContactCard({ bien, domain }: { bien: CasaqBien; domain: string }) {
             </div>
         </div>
     );
+}
+
+function formatSwissPhone(phone: string): string {
+    const cleaned = phone.replace(/\s+/g, '');
+
+    if (/^\+41\d{9}$/.test(cleaned)) {
+        return cleaned.replace(
+            /^\+41(\d{2})(\d{3})(\d{2})(\d{2})$/,
+            '+41 $1 $2 $3 $4'
+        );
+    }
+
+    return phone;
 }
 
 function getVisitContact(bien: CasaqBien): {
@@ -2663,6 +3267,7 @@ function CharacteristicTableBlock({
                     >
                         <span>{item.label}</span>
                         <strong>{item.value}</strong>
+
                     </div>
                 ))}
             </div>
@@ -3078,11 +3683,8 @@ function normalizePeriodId(value: unknown, fallback: number | string = 2): numbe
     return fallback;
 }
 
-function getDocumentDownloadName(document: {
-    label: string;
-    extension?: string | null;
-}): string {
-    const cleanLabel = document.label
+function getDocumentDownloadName(document: CasaqDocs): string {
+    const cleanLabel = (document.label ?? '')
         .trim()
         .toLowerCase()
         .replace(/[^a-z0-9À-ÿ]+/gi, '-')

@@ -15,6 +15,7 @@ type Data = {
 export function ImageSimpleBlock({ bloc }: Props) {
     const data = blockData<Data>(bloc);
 
+
     if (!data.image) {
         return null;
     }

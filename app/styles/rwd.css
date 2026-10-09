@@ -227,8 +227,11 @@
         display: none;
     }
     .cta-banner__inner .section-heading .site-btn{
-        display: inline-block;
+        display: inline-flex;
         margin-top: 20px;
+    }
+    .cta-banner__inner .section-heading .super-pose-btn .site-btn:nth-child(2) {
+        margin-top: 0;
     }
     .section-heading--with-action > div:first-of-type{
         padding-right: 0;
@@ -275,9 +278,13 @@
     .biens-grid{
         display: block;
     }
-    .site-footer__socials svg{
+    .site-footer__socials .icon_rs{
         height: 40px;
         width: 40px;
+    }
+    .site-footer__socials svg{
+        height: 20px;
+        width: 20px;
     }
     .property-categories__card > span{
         font-size: 40px;
@@ -1016,7 +1023,6 @@
     }
     .property-detail__map-tabs{
         gap: 4px;
-        margin-top: -93px;
     }
     .property-detail__map-tabs button{
         padding: 10px;
@@ -1092,6 +1098,46 @@
 
 
 
+
+    .property-gallery-lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10001;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        background-color: white;
+        padding: 100px var(--bg-side);
+        width: 100%;
+    }
+
+    .property-gallery-lightbox__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .property-gallery-lightbox__item {
+        position: relative;
+        width: 100%;
+        height: 20vw;
+    }
+
+    /* 3e, 6e, 9e... → pleine largeur */
+    .property-gallery-lightbox__item:nth-child(3n),
+    .property-gallery-lightbox__item {
+        height: 60vw;
+    }
+
+
+
+    .point img {
+        flex: 0 0 auto;
+        height: 50px;
+        width: 50px;
+    }
+
+
+
         .site-cookie-banner {
             right: 20px;
             bottom: 20px;
@@ -1107,4 +1153,15 @@
             width: 100%;
         }
 
+}
+
+
+@media (max-width: 500px) {
+    .liste.colonne-2 {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .liste.colonne-2>div:nth-child(2){
+        border-top: solid 0 transparent;
+    }
 }

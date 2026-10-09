@@ -1,6 +1,10 @@
 import type { CasaqBloc, CasaqSiteConfig } from '@/lib/casaq';
 import { parseSiteHtml } from '@/lib/site-html';
 import { PropertyContactForm } from '@/components/site/properties/PropertyContactForm';
+import {SiteFloatingActions} from "@/components/site/SiteFloatingActions";
+import React from "react";
+import {ContactFooter} from "@/components/site/footer/ContactFooter";
+import PropertyLocationMap from "@/components/site/contact/SimpleGoogleMap";
 
 type Props = {
     site: CasaqSiteConfig;
@@ -10,6 +14,8 @@ type Props = {
 type Data = {
     titre?: string;
     texte?: string;
+    map_longitude?: number;
+    map_latitude?: number;
 };
 
 type ContactHourItem = {
@@ -34,8 +40,61 @@ export function ContactBlock({ site, bloc }: Props) {
     const hourItems = Array.isArray(hours.items) ? hours.items : [];
 
     const contactAdresse = contact.adresse || site.infos.adresse;
-    const contactTelephone = contact.telephone || site.infos.telephone;
+    const contactTelephone = contact.telephone_mobile || site.infos.telephone_mobile;
+    const contactTelephoneFixe = contact.telephone_fixe || site.infos.telephone_fixe;
     const contactEmail = contact.email || site.infos.email;
+
+    // console.log('lat long', bloc, data, footer);
+
+    // map_latitude
+    // map_longitude
+    // show_create_account
+
+    if (site.template_key === "template_2") {
+        return (
+            <section className="property-detail__content contact_form_infos pd-l-r">
+                <div className="property-detail__main">
+                    <h2>{'Contact'}</h2>
+
+                    <div className="contact-block__form">
+                        <PropertyContactForm
+                            domain={site.domain}
+                            bienId={null}
+                        />
+
+                    </div>
+
+                </div>
+
+
+                    <aside>
+
+                        <div className={'property-detail__contact-card'}>
+
+                            <h2>Adresse</h2>
+
+                            <ContactFooter
+                                contact={contact}
+                                agencyName={site.agence.nom}
+                                contactAdresse={contactAdresse}
+                                contactTelephone={contactTelephone}
+                                contactTelephoneFixe={contactTelephoneFixe}
+                                contactEmail={contactEmail}
+                                splitLines={splitLines}
+                                cleanPhone={cleanPhone}
+                            />
+
+                            <PropertyLocationMap
+                                latitude={Number(data.map_latitude)}
+                                longitude={Number(data.map_longitude)}
+                            />
+
+                        </div>
+
+                    </aside>
+            </section>
+        );
+    }
 
     return (
         <section className="section contact-block pd-l-r">

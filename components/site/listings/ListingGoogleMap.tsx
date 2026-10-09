@@ -253,7 +253,10 @@ const wizardMapStyles: google.maps.MapTypeStyle[] = [
         stylers: [{ color: '#BACBBA' }],
     },
 ];
-function buildMarkerIcon({ fill }: { fill: string }): google.maps.Icon {
+export function buildMarkerIcon({ fill, scale = 1, }: { fill: string; scale?: number; }): google.maps.Icon {
+    const width = 33 * scale;
+    const height = 40 * scale;
+
     const svg = `
         <svg width="33" height="40" viewBox="0 0 33 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 16.8511C1 7.22448 8.25991 1 16.284 1C24.3081 1 31.568 7.22448 31.568 16.8511C31.568 22.7022 27.3281 29.5334 18.8627 37.3593C17.4056 38.7064 15.1625 38.7064 13.7053 37.3593C5.23993 29.5334 1 22.7022 1 16.8511Z" fill="${fill}" stroke="white" stroke-width="2"/>
@@ -263,9 +266,15 @@ function buildMarkerIcon({ fill }: { fill: string }): google.maps.Icon {
 
     return {
         url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-        scaledSize: new google.maps.Size(33, 40),
-        anchor: new google.maps.Point(16.5, 40),
+        scaledSize: new google.maps.Size(width, height),
+        anchor: new google.maps.Point(width / 2, height),
     };
+
+    // return {
+    //     url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+    //     scaledSize: new google.maps.Size(33, 40),
+    //     anchor: new google.maps.Point(16.5, 40),
+    // };
 }
 function getBienImage(bien: CasaqBien): string | null {
     const rawBien = bien as CasaqBien & {

@@ -12,6 +12,22 @@ const NovimmobCss = dynamic(
     },
 );
 
+const ServicesImmobilierCss = dynamic(
+    () =>
+        import('@/components/site/styles/ServicesImmobilierCss').then(
+            (mod) => mod.ServicesImmobilierCss,
+        ),
+    {
+        ssr: false,
+    },
+);
+
+
+const SiteCssByDomain: Record<string, React.ComponentType> = {
+    'novimmob.ch': NovimmobCss,
+    'services.pix-preview.ch': ServicesImmobilierCss,
+};
+
 type Props = {
     currentDomain?: string;
     previewDomain?: string;
@@ -27,11 +43,19 @@ export function SiteDomainCss({
         previewDomain || currentDomain || siteDomain,
     );
 
-    if (activeDomain !== 'novimmob.ch') {
+    const CssComponent = SiteCssByDomain[activeDomain];
+
+    if (!CssComponent) {
         return null;
     }
 
-    return <NovimmobCss />;
+    return <CssComponent />;
+
+    // if (activeDomain !== 'novimmob.ch') {
+    //     return null;
+    // }
+    //
+    // return <NovimmobCss />;
 }
 
 function normalizeDomain(domain?: string | null): string {

@@ -87,6 +87,8 @@ p:last-child{
 .site-header__brand{
   outline: 0;
 }
+
+
   /****
   Header menu
    */
@@ -338,6 +340,92 @@ cta-banner
   max-width: 850px;
 }
 
+.super-pose-btn{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.super-pose-btn .site-btn:nth-child(2){
+  background: transparent;
+  color: var(--site-white);
+  border: 1px solid var(--site-white);
+}
+
+
+/***
+bloc image texte point
+ */
+
+.points{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15.5px;
+  margin-top: 23px;
+}
+
+.points .point{
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.point img{
+  /*flex: auto;*/
+  height: 50px;
+  width: 50px;
+}
+
+.point span{
+  font-weight: 500;
+}
+
+
+/***
+bloc image texte liste
+ */
+
+.liste{
+  display: grid;
+  grid-template-columns:  1fr;
+  gap: 0 30px;
+  margin-top: 46px;
+}
+
+.liste.colonne-2{
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.liste div .num{
+  color: var(--site-agency);
+  font-weight: 700;
+}
+
+.liste>div{
+  display: flex;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: solid 1px color-mix(in srgb, var(--site-grey) 30%, transparent);
+}
+
+.liste>div:first-child,
+.liste.colonne-2>div:nth-child(2){
+  border-top: solid 1px color-mix(in srgb, var(--site-grey) 30%, transparent);
+}
+
+.contain_liste .site-btn{
+  margin-top: 36px;
+}
+
+
+.video-simple video{
+  width: 100%;
+  aspect-ratio: 30 / 9;
+  object-fit: cover;
+}
+
+
 /*****
 ACTUS
  */
@@ -467,7 +555,7 @@ Foooter
   right: 80px;
 }
 .site-footer__socials a{
-  margin: 0 5px;
+  margin: 0 0;
   transition: 0.5s ease-in-out all;
 }
 .site-footer__socials a:hover{
@@ -994,6 +1082,8 @@ button:hover{
 .property-detail__map {
   position: relative;
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .property-detail__google-map {
@@ -1001,6 +1091,7 @@ button:hover{
   height: 340px;
   border-radius: 18px;
   overflow: hidden;
+  grid-area: 1 / 1;
 }
 
 .property-detail__map-tabs {
@@ -1009,8 +1100,10 @@ button:hover{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: -54px;
+  margin: auto 0 0;
   padding: 0 18px 18px;
+  grid-area: 1/1;
+  height: fit-content;
 }
 .property-detail__map-tabs .is-active{
   background: var(--site-grey);
@@ -1031,6 +1124,109 @@ button:hover{
 .property-detail__map-card-inner p {
   margin: 0 0 6px;
 }
+
+
+/* test */
+
+.property-detail__map {
+  position: relative;
+  width: 100%;
+}
+
+.property-detail__google-map {
+  width: 100%;
+  height: 500px;
+}
+
+/* =========================
+   CONTROLES
+   ========================= */
+
+.property-detail__map-controls {
+  position: absolute;
+  z-index: 10;
+  top: 20px;
+  right: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.property-detail__map-zoom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.property-detail__map-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+  border: 0;
+
+  background: #fff;
+  color: var(--site-agency);
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  outline: none;
+
+  transition:
+          background-color 0.2s ease,
+          transform 0.2s ease;
+}
+
+.property-detail__map-control:hover {
+  opacity: 0.7;
+}
+
+.property-detail__map-control svg path{
+  stroke: var(--site-agency);
+}
+
+.property-detail__map-control:active {
+  transform: scale(0.95);
+}
+
+.property-detail__map-control--fullscreen {
+  font-size: 22px;
+}
+
+/* =========================
+   FULLSCREEN
+   ========================= */
+
+.property-detail__map.is-fullscreen {
+  position: fixed;
+  z-index: 99999;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  background: #fff;
+}
+
+.property-detail__map.is-fullscreen
+.property-detail__google-map {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+}
+
+/*******************/
 
 /*****
 hero simple
@@ -2604,6 +2800,7 @@ body .eapps-facebook-feed-load-more{
   padding: 0;
   height: 100%;
   width: 100%;
+  display: flex;
 }
 .site-floating-actions__item .favorite-button svg{
   height: 21px;

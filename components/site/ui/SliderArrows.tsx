@@ -1,6 +1,6 @@
 'use client';
 
-import type { RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 
 type Props = {
     prevRef: RefObject<HTMLButtonElement | null>;
@@ -10,6 +10,7 @@ type Props = {
     nextClassName?: string;
     prevLabel?: string;
     nextLabel?: string;
+    children?: ReactNode;
 };
 
 export function SliderArrows({
@@ -20,6 +21,7 @@ export function SliderArrows({
                                  nextClassName = '',
                                  prevLabel = 'Précédent',
                                  nextLabel = 'Suivant',
+                                 children,
                              }: Props) {
     return (
         <div className={`slider-arrows ${className}`}>
@@ -37,6 +39,8 @@ export function SliderArrows({
                 </svg>
 
             </button>
+
+            {children}
 
             <button
                 ref={nextRef}

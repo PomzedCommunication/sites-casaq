@@ -83,6 +83,8 @@ export default async function HomePage({ searchParams }: PageProps) {
         })
         : emptyBiensResponse;
 
+    // console.log('liste bien test', biensResponse, domain, initialFilters);
+
     const availableFilters = isListingPage
         ? await getSiteBiensAvailableFilters(domain, initialFilters)
         : undefined;

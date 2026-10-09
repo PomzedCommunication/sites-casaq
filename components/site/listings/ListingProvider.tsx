@@ -98,6 +98,31 @@ function normalizeInitialFilters(
         surfaceMin: filters?.surfaceMin,
         surfaceMax: filters?.surfaceMax,
 
+        // Filtres supplémentaires
+        terrainMin: filters?.terrainMin,
+        terrainMax: filters?.terrainMax,
+
+        chambresMin: filters?.chambresMin,
+        chambresMax: filters?.chambresMax,
+
+        sallesDeBainMin: filters?.sallesDeBainMin,
+        sallesDeBainMax: filters?.sallesDeBainMax,
+
+        etat: filters?.etat,
+
+        balcon: filters?.balcon,
+        terrasse: filters?.terrasse,
+        parking: filters?.parking,
+        garage: filters?.garage,
+        piscine: filters?.piscine,
+        vue: filters?.vue,
+        ascenseur: filters?.ascenseur,
+        accesPmr: filters?.accesPmr,
+        animauxAcceptes: filters?.animauxAcceptes,
+        colocation: filters?.colocation,
+
+        disponibleImmediatement: filters?.disponibleImmediatement,
+
         prestige: filters?.prestige,
     };
 }

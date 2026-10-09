@@ -16,6 +16,7 @@ export type CasaqSiteConfig = {
   id: number;
   domain: string;
   template: string;
+  template_key: string;
   active: boolean;
   agence: {
     id: number;
@@ -31,11 +32,29 @@ export type CasaqSiteConfig = {
     logo?: string | null;
     favicon?: string | null;
     api_key_biens?: string;
+
+    icons: {
+        compte?: string;
+      construction?: string;
+
+      disponibilite?: string;
+
+      favoris?: string;
+
+      localisation?: string;
+      nombre_pieces?: string;
+      prix?: string;
+      surface_habitable?: string;
+      surface_terrain?: string;
+
+    }
   };
   infos: {
     slogan?: string | null;
     email?: string | null;
     telephone?: string | null;
+    telephone_fixe?: string | null;
+    telephone_mobile?: string | null;
     adresse?: string | null;
   };
   menu: Array<{
@@ -60,6 +79,7 @@ export type CasaqSiteConfig = {
 
     quick_links?: {
       title?: string;
+      enabled?: boolean;
     };
 
     hours?: {
@@ -85,6 +105,8 @@ export type CasaqSiteConfig = {
       title?: string;
       email?: string | null;
       telephone?: string | null;
+      telephone_fixe?: string | null;
+      telephone_mobile?: string | null;
       adresse?: string | null;
     };
 
@@ -98,6 +120,7 @@ export type CasaqSiteConfig = {
       linkedin?: string;
       twitter?: string;
       instagram?: string;
+      youtube?: string;
     };
   };
   seo: {
@@ -123,6 +146,7 @@ export type CasaqBloc = {
   type: string;
   ordre: number;
   actif: boolean;
+  variant?: string;
   data: Record<string, unknown>;
 };
 
@@ -134,6 +158,9 @@ export type CasaqBien = {
   prestige?: boolean;
   titre: string;
   resume?: string | null;
+  created_at: string | null;
+  surface_habitable: string | null;
+  surface_terrain: string | null;
   categorie?: string | null;
   adresse?: {
     rue?: string | null;
@@ -192,6 +219,17 @@ export type CasaqBien = {
     caption?: string | null;
   }>;
 };
+
+export type CasaqDocs = {
+    id?: number;
+    label?: string | null;
+    url?: string | null;
+    extension?: string | null;
+    mime_type?: string | null;
+    size?: string | null;
+    position?: number | null;
+    length?: number | null;
+  };
 
 const API_URL =
     process.env.NEXT_PUBLIC_CASAQ_API_URL ||
@@ -301,6 +339,8 @@ export async function getSiteBiens(
   }
 
   const json = await res.json();
+
+  // console.log( 'test', json);
 
   return {
     data: json.data || [],
@@ -431,7 +471,7 @@ export async function createSiteDemande(
   });
 
   const json = await res.json().catch(() => null);
-  console.log(json);
+  // console.log(json);
 
   return {
     success: res.ok && json?.success === true,
@@ -1302,12 +1342,12 @@ export async function trackBienEvent(
   if (!API_URL || typeof window === 'undefined') {
     return;
   }
-  console.log('[CasaQ tracking] sending', {
-    apiUrl: API_URL,
-    domain,
-    bienId,
-    type,
-  });
+  // console.log('[CasaQ tracking] sending', {
+  //   apiUrl: API_URL,
+  //   domain,
+  //   bienId,
+  //   type,
+  // });
   const token = getContactToken();
 
   const headers: Record<string, string> = {

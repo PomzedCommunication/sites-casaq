@@ -91,6 +91,8 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
         notFound();
     }
 
+    // console.log('test seo page', params);
+
     const domain = await getCurrentDomain(resolvedSearchParams);
     const isPreview = resolvedSearchParams?.preview === '1';
     const site = await getSiteConfig(domain, isPreview);
@@ -98,6 +100,11 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
         return <SiteNotConfigured domain={domain} />;
     }
     const bien = await getSiteBien(domain, id, isPreview);
+
+    const previewDomain =
+        typeof resolvedSearchParams?.site === 'string'
+            ? resolvedSearchParams.site
+            : undefined;
 
     if (!bien) {
         notFound();
@@ -132,6 +139,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
                     site={site}
                     bien={bien}
                     domain={domain}
+                    previewDomain={previewDomain}
                     similarBiens={similarBiens}
                 />
             </FavoritesProvider>

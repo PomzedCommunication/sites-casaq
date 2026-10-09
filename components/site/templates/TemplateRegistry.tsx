@@ -21,6 +21,8 @@ type Props = {
 };
 
 export function TemplateRegistry(props: Props) {
+
+    // console.log('Source biens', props);
     switch (props.page.template) {
         case 'landing':
             return <LandingTemplate {...props} />;

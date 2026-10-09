@@ -10,10 +10,13 @@ import type { Swiper as SwiperType } from 'swiper';
 import type { CasaqBien } from '@/lib/casaq';
 import { getBienSeoPath } from '@/lib/property-url';
 import { FavoriteButton } from '@/components/site/favorites/FavoriteButton';
+import { useSiteConfig } from '@/components/site/SiteConfigProvider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import {FeaturedBienCard} from "@/components/site/listings/FeaturedBienCard";
+import {SerializedBien} from "@/components/site/blocks/FeaturedBiensBlock";
 
 type Props = {
     bien: CasaqBien;
@@ -28,6 +31,20 @@ export function BienCard({ bien, previewDomain }: Props) {
     const title = getCardTitle(bien);
     const location = getLocation(bien);
     const availability = getAvailability(bien);
+
+    const site = useSiteConfig();
+    // console.log('bien card test', bien, site);
+
+    if (site.template_key === 'template_2'){
+        return (
+            // <>test</>
+            <FeaturedBienCard
+                bien={serializeBien(bien)}
+                site={site}
+                previewDomain={previewDomain}
+            />
+        );
+    }
 
     return (
         <article className="bien-card">
@@ -314,3 +331,75 @@ function buildUrl(url: string, previewDomain?: string): string {
 
     return `${url}${separator}site=${encodeURIComponent(previewDomain)}`;
 }
+
+
+
+
+function serializeBien(bien: CasaqBien): SerializedBien {
+    const image =
+        bien.images?.[0]?.variants?.large ||
+        bien.images?.[0]?.url ||
+        null;
+
+    const locality = bien.adresse?.ville || '';
+    const category = bien.categorie || '';
+
+    // console.log('test', bien);
+
+    return {
+        id:        bien.id,
+        href:      getBienSeoPath(bien),
+        image,
+        imageAlt:  bien.images?.[0]?.alt || bien.titre,
+        category,
+        heading:   [locality, category].filter(Boolean).join(' - '),
+        titre:     bien.titre,
+        bedrooms:  getNumberValue(bien, ['caracteristiques.chambres', 'chambres']),
+        bathrooms: getNumberValue(bien, [
+            'caracteristiques.nb_bathrooms',
+            'caracteristiques.salles_bain',
+            'caracteristiques.salles_de_bains',
+            'caracteristiques.salle_de_bain',
+            'caracteristiques.bathrooms',
+            'details.nb_bathrooms',
+            'nb_bathrooms',
+        ]),
+        created_at: bien.created_at,
+        surface_habitable: bien.caracteristiques?.surface_habitable?.toString() ?? null,
+        surface_terrain: bien.caracteristiques?.surface_terrain?.toString() ?? null,
+        pieces: bien.caracteristiques?.pieces?.toString() ?? null,
+        ville: bien.adresse?.ville?.toString() ?? null,
+        price: formatBienPrice(bien),
+    };
+}
+
+
+function getLimit(value: unknown, fallback: number): number {
+    const nb = Number(value || fallback);
+    if (!Number.isFinite(nb)) return fallback;
+    return Math.max(1, Math.min(12, nb));
+}
+
+function formatBienPrice(bien: CasaqBien): string {
+    if (bien.prix?.sur_demande || !bien.prix?.formatte) return 'Prix sur demande';
+    if (bien.deal === 'RENT') {
+        return bien.prix.formatte.includes('/') ? bien.prix.formatte : `${bien.prix.formatte}/mois`;
+    }
+    return bien.prix.formatte;
+}
+
+function getNumberValue(item: unknown, paths: string[]): string | null {
+    for (const path of paths) {
+        const value = getNestedValue(item, path);
+        if (value !== null && value !== undefined && value !== '') return String(value);
+    }
+    return null;
+}
+
+function getNestedValue(item: unknown, path: string): unknown {
+    return path.split('.').reduce<unknown>((current, key) => {
+        if (!current || typeof current !== 'object') return null;
+        return (current as Record<string, unknown>)[key];
+    }, item);
+}
+

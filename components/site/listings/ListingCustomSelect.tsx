@@ -13,6 +13,7 @@ export type ListingCustomSelectOption = {
 type Props = {
     value?: string;
     placeholder: string;
+    title?: string;
     options: ListingCustomSelectOption[];
     onChange: (value: string) => void;
     disabled?: boolean;
@@ -22,6 +23,7 @@ type Props = {
 export function ListingCustomSelect({
                                         value,
                                         placeholder,
+                                        title,
                                         options,
                                         onChange,
                                         disabled = false,
@@ -69,6 +71,12 @@ export function ListingCustomSelect({
             ref={ref}
             className={`listing-custom-select ${className || ''}`}
         >
+            {title ? (
+                <div className="listing-filter-popover__title">
+                    {title}
+                </div>
+            ) : null}
+
             <button
                 type="button"
                 className="listing-custom-select__trigger"

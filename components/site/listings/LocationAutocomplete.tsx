@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 type Props = {
     value?: string;
+    title?: string;
     onSelect: (location: {
         label: string;
         city?: string;
@@ -29,7 +30,7 @@ function getComponent(
     )?.long_name;
 }
 
-export function LocationAutocomplete({ value, onSelect }: Props) {
+export function LocationAutocomplete({ value, title, onSelect }: Props) {
     const [inputValue, setInputValue] = useState(value || '');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const serviceRef = useRef<google.maps.places.AutocompleteService | null>(null);
@@ -120,6 +121,12 @@ export function LocationAutocomplete({ value, onSelect }: Props) {
 
     return (
         <div className="location-autocomplete">
+            {title ? (
+                <div className="listing-filter-popover__title">
+                    {title}
+                </div>
+            ) : null}
+
             <input
                 value={inputValue}
                 onChange={(event) => handleChange(event.target.value)}
@@ -143,6 +150,7 @@ export function LocationAutocomplete({ value, onSelect }: Props) {
             ) : null}
 
             <div ref={placesDivRef} style={{ display: 'none' }} />
+
         </div>
     );
 }

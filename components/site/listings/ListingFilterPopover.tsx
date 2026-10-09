@@ -3,9 +3,11 @@
 'use client';
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useSiteConfig } from '@/components/site/SiteConfigProvider';
 
 type Props = {
     label: string;
+    title?: string;
     value?: string;
     disabled?: boolean;
     children: ReactNode;
@@ -13,12 +15,16 @@ type Props = {
 
 export function ListingFilterPopover({
                                          label,
+                                         title,
                                          value,
                                          disabled = false,
                                          children,
                                      }: Props) {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
+
+    const site = useSiteConfig();
+    const isTemplate2 = site.template_key === 'template_2';
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -46,16 +52,34 @@ export function ListingFilterPopover({
 
     return (
         <div ref={ref} className="listing-filter-popover">
+            {title ? (
+                <div className="listing-filter-popover__title">
+                    {title}
+                </div>
+            ) : null}
             <button
                 type="button"
                 className="listing-filter-popover__trigger"
                 disabled={disabled}
                 onClick={() => setOpen((current) => !current)}
             >
-                <span>{label}</span>
-                {value ? (
-                    <strong>{value}</strong>
-                ) : null}
+
+                {isTemplate2 ? (
+                    <>
+                        {value ? (
+                            <strong>{value}</strong>
+                        ) : (
+                            <span>{label}</span>
+                        )}
+                    </>
+                ) : (
+                    <>
+                    <span>{label}</span>
+                        {value ? (
+                            <strong>{value}</strong>
+                    ) : null}
+                    </>
+                )}
                 <span className="listing-filter-popover__chevron"><svg width="9" height="8" viewBox="0 0 9 8"
                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M4.1006 7.5L0.00010171 1.38009e-07L8.2011 8.95112e-07L4.1006 7.5Z" fill="#FF5000"/>

@@ -125,6 +125,32 @@ export function parseListingPath(
     surfaceMin: readNumber(searchParams?.surface_min),
     surfaceMax: readNumber(searchParams?.surface_max),
 
+    terrainMin: readNumber(searchParams?.terrain_min),
+    terrainMax: readNumber(searchParams?.terrain_max),
+
+    chambresMin: readNumber(searchParams?.bedroom_min),
+    chambresMax: readNumber(searchParams?.bedroom_max),
+
+    sallesDeBainMin: readNumber(searchParams?.bathroom_min),
+    sallesDeBainMax: readNumber(searchParams?.bathroom_max),
+
+    etat: readString(searchParams?.etat),
+
+    balcon: readBoolean(searchParams?.balcon),
+    terrasse: readBoolean(searchParams?.terrasse),
+    parking: readBoolean(searchParams?.parking),
+    garage: readBoolean(searchParams?.garage),
+    piscine: readBoolean(searchParams?.piscine),
+    vue: readBoolean(searchParams?.vue),
+    ascenseur: readBoolean(searchParams?.ascenseur),
+    accesPmr: readBoolean(searchParams?.acces_pmr),
+    animauxAcceptes: readBoolean(searchParams?.animaux_acceptes),
+    colocation: readBoolean(searchParams?.colocation),
+
+    disponibleImmediatement: readBoolean(
+        searchParams?.disponible_immediatement
+    ),
+
     prestige: readBoolean(searchParams?.prestige),
     sort: (readString(searchParams?.sort) as ListingFilters['sort']) || 'recent',
     view: (readString(searchParams?.view) as ListingFilters['view']) || 'grid',
@@ -191,6 +217,36 @@ export function buildListingPath(filters: ListingFilters): string {
   if (filters.surfaceMin !== undefined) query.set('surface_min', String(filters.surfaceMin));
   if (filters.surfaceMax !== undefined) query.set('surface_max', String(filters.surfaceMax));
 
+  if (filters.terrainMin !== undefined) query.set('terrain_min', String(filters.terrainMin));
+  if (filters.terrainMax !== undefined) query.set('terrain_max', String(filters.terrainMax));
+
+  if (filters.chambresMin !== undefined) query.set('bedroom_min', String(filters.chambresMin));
+  if (filters.chambresMax !== undefined) query.set('bedroom_max', String(filters.chambresMax));
+
+  if (filters.sallesDeBainMin !== undefined) {
+    query.set('bathroom_min', String(filters.sallesDeBainMin));
+  }
+  if (filters.sallesDeBainMax !== undefined) {
+    query.set('bathroom_max', String(filters.sallesDeBainMax));
+  }
+
+  if (filters.etat) query.set('etat', filters.etat);
+
+  if (filters.balcon) query.set('balcon', '1');
+  if (filters.terrasse) query.set('terrasse', '1');
+  if (filters.parking) query.set('parking', '1');
+  if (filters.garage) query.set('garage', '1');
+  if (filters.piscine) query.set('piscine', '1');
+  if (filters.vue) query.set('vue', '1');
+  if (filters.ascenseur) query.set('ascenseur', '1');
+  if (filters.accesPmr) query.set('acces_pmr', '1');
+  if (filters.animauxAcceptes) query.set('animaux_acceptes', '1');
+  if (filters.colocation) query.set('colocation', '1');
+
+  if (filters.disponibleImmediatement) {
+    query.set('disponible_immediatement', '1');
+  }
+
   if (filters.prestige) query.set('prestige', '1');
   if (filters.sort && filters.sort !== 'recent') query.set('sort', filters.sort);
   if (filters.view && filters.view !== 'grid') query.set('view', filters.view);
@@ -227,6 +283,32 @@ export function filtersToApiParams(filters: ListingFilters): URLSearchParams {
   if (filters.piecesMax !== undefined) params.set('pieces_max', String(filters.piecesMax));
   if (filters.surfaceMin !== undefined) params.set('surface_min', String(filters.surfaceMin));
   if (filters.surfaceMax !== undefined) params.set('surface_max', String(filters.surfaceMax));
+
+
+  if (filters.terrainMin !== undefined) params.set('terrain_min', String(filters.terrainMin));
+  if (filters.terrainMax !== undefined) params.set('terrain_max', String(filters.terrainMax));
+
+  if (filters.chambresMin !== undefined) params.set('bedroom_min', String(filters.chambresMin));
+  if (filters.chambresMax !== undefined) params.set('bedroom_max', String(filters.chambresMax));
+
+  if (filters.sallesDeBainMin !== undefined) params.set('bathroom_min', String(filters.sallesDeBainMin));
+  if (filters.sallesDeBainMax !== undefined) params.set('bathroom_max', String(filters.sallesDeBainMax));
+
+  if (filters.etat) params.set('etat', filters.etat);
+
+  if (filters.balcon) params.set('balcon', '1');
+  if (filters.terrasse) params.set('terrasse', '1');
+  if (filters.parking) params.set('parking', '1');
+  if (filters.garage) params.set('garage', '1');
+  if (filters.piscine) params.set('piscine', '1');
+  if (filters.vue) params.set('vue', '1');
+  if (filters.ascenseur) params.set('ascenseur', '1');
+  if (filters.accesPmr) params.set('acces_pmr', '1');
+  if (filters.animauxAcceptes) params.set('animaux_acceptes', '1');
+  if (filters.colocation) params.set('colocation', '1');
+
+  if (filters.disponibleImmediatement) params.set('disponible_immediatement', '1');
+
 
   if (filters.prestige) params.set('prestige', '1');
   if (filters.sort) params.set('sort', filters.sort);

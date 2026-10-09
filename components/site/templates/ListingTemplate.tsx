@@ -26,6 +26,7 @@ type Props = {
 };
 
 export function ListingTemplate({
+                                    site,
                                     page,
                                     biens,
                                     meta,
@@ -52,7 +53,7 @@ export function ListingTemplate({
     const isBiensPage = firstSegment === 'biens';
     const isGeneralListing = firstSegment === 'biens';
 
-
+// console.log('site', page, site);
 
     const safeInitialFilters: ListingFilters = {
         sort: 'recent',
@@ -126,6 +127,47 @@ export function ListingTemplate({
         pageTitle: page.titre,
         forcedDeal,
     });
+
+    if (site.template_key === 'template_2'){
+        return (
+            <ListingProvider
+                key={providerKey}
+                initialBiens={biens}
+                initialMeta={meta}
+                initialFilters={safeInitialFilters}
+                availableFilters={availableFilters}
+                previewDomain={previewDomain}
+                forcedDeal={forcedDeal}
+            >
+                <section className="page-liste-bien pd-l-r">
+
+                    <h1 className={'titre_rechercher_bien'}>{page.titre}</h1>
+
+                    <ListingSearchBar
+                        variant="large"
+                        hideDealSelect={Boolean(forcedDeal)}
+                    />
+                    {/*<div className="listing-heading">*/}
+                    {/*    <h2 className='h3'>{title}</h2>*/}
+                    {/*</div>*/}
+
+                </section>
+
+                <section className={'listing_grey pd-l-r'}>
+                    <ListingSplitMap
+                        currentPath={currentPath}
+                        previewDomain={previewDomain}
+                        site={site}
+                        title={title}
+                    />
+                </section>
+
+
+            </ListingProvider>
+        );
+    }
+
+
     return (
         // <ListingProvider
         //     key={providerKey}
@@ -156,6 +198,7 @@ export function ListingTemplate({
                 <ListingSplitMap
                     currentPath={currentPath}
                     previewDomain={previewDomain}
+                    site={site}
                 />
             </section>
         </ListingProvider>

@@ -182,6 +182,27 @@
 }
 
 
+.favorite-message {
+    top: calc(100% + 6px);
+     left: unset;
+    right: 0px;
+}
+
+.biens-grid .favorite-message {
+    right: unset;
+    top: -13px;
+    left: calc(100% + 6px);
+}
+
+.site-footer__bottom{
+    width: fit-content;
+}
+
+.site-socials{
+    margin-right: 5px;
+
+}
+
 @media (max-width: 980px) {
     .cta-banner::after{
         bottom: 0;

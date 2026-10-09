@@ -48,6 +48,33 @@ export async function GET(request: NextRequest) {
         surfaceMin: readNumber(searchParams.get('surface_min')),
         surfaceMax: readNumber(searchParams.get('surface_max')),
 
+
+        terrainMin: readNumber(searchParams.get('terrain_min')),
+        terrainMax: readNumber(searchParams.get('terrain_max')),
+
+        chambresMin: readNumber(searchParams.get('bedroom_min')),
+        chambresMax: readNumber(searchParams.get('bedroom_max')),
+
+        sallesDeBainMin: readNumber(searchParams.get('bathroom_min')),
+        sallesDeBainMax: readNumber(searchParams.get('bathroom_max')),
+
+        etat: searchParams.get('etat') || undefined,
+
+        balcon: searchParams.get('balcon') === '1',
+        terrasse: searchParams.get('terrasse') === '1',
+        parking: searchParams.get('parking') === '1',
+        garage: searchParams.get('garage') === '1',
+        piscine: searchParams.get('piscine') === '1',
+        vue: searchParams.get('vue') === '1',
+        ascenseur: searchParams.get('ascenseur') === '1',
+        accesPmr: searchParams.get('acces_pmr') === '1',
+        animauxAcceptes: searchParams.get('animaux_acceptes') === '1',
+        colocation: searchParams.get('colocation') === '1',
+
+        disponibleImmediatement:
+            searchParams.get('disponible_immediatement') === '1',
+
+
         prestige: readBoolean(searchParams.get('prestige')),
         sort: searchParams.get('sort') as ListingFilters['sort'] || 'recent',
         page: 1,
