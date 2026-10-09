@@ -1,3 +1,9 @@
+div h1, div .h1{
+    font-size: 56px;
+    line-height: 120%;
+    margin: 0 0 27px 0;
+}
+
 
     .image-text__reviews .image-text__review:nth-child(1) .image-text__review-logo img{
     max-width: 155px;
@@ -26,10 +32,108 @@
     margin-bottom: 16px;
 }
 
+.image-text__reviews>.image-text__review:first-child .image-text__review-logo{
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.img_txt_points h2{
+    max-width: 450px;
+}
+
+
+    .section-heading {
+        margin-bottom: var(--interne-md);
+    }
+
+
+    .titre_rechercher_bien{
+        font-size: 56px;
+        line-height: 120%;
+        margin-bottom: 27px;
+    }
+
+    .page-liste-bien {
+        margin-top: 140px;
+    }
+
+    .listing-search--desktop {
+        gap: 27px 20px;
+    }
+
+    .listing-split--no-map div.biens-grid {
+        grid-gap: 32px 24px;
+    }
+
+    .contact_form_infos h2{
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%;
+        margin-bottom: 26px;
+    }
+
+    .property-title{
+        font-size: 40px;
+        margin-bottom: 18px;
+    }
+
+.accordion-title:after {
+    width: 24px;
+    height: 12px;
+}
+
+.property-detail__accordion {
+    margin-bottom: 18px;
+    padding-bottom: 23px;
+}
+
+.property-detail__accordions {
+    margin-top: 40px;
+    padding-top: 18px;
+}
+
+.property-detail__accordion-content {
+    padding-top: 24px;
+}
+
+.property-detail__accordions .property-detail__accordion:last-child{
+    margin-bottom: 0;
+}
+
+
 @media (max-width: 980px) {
+    div h1, div .h1,
+    .titre_rechercher_bien{
+        margin-bottom: 25px;
+        font-size: 34px;
+    }
+
+    .property-title{
+        font-size: 34px;
+    }
+
     .contain_reviews .image-text__reviews {
         gap: 20px;
         flex-wrap: wrap;
+    }
+
+    .page-liste-bien {
+        margin-top: 110px;
+    }
+
+    .contact_form_infos h2{
+        margin-bottom: 20px;
+    }
+
+    .property-detail__accordion {
+        margin-bottom: 15px;
+        padding-bottom: 20px;
+    }
+
+    .property-detail__accordions {
+        padding-top: 15px;
     }
 }
 
@@ -58,4 +162,23 @@
     :root {
         --mdspace: 70px;
     }
+
+    button.listing-search__more-filters {
+        padding: 5px 0 4px;
+    }
+    
+    section.listing_grey{
+        padding-top: 65px;
+    }
+
+    .property-detail__feature strong {
+        font-size:18px;
+    }
+
+    div.property-detail__accordion>.accordion-title,
+    .property-detail .section>h2,
+    .property-detail .property-detail__lead>h2{
+        font-size: 28px;
+    }
+
 }

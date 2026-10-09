@@ -1413,7 +1413,7 @@ img {
   width: 40px;
   height: 40px;
   padding: 0;
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   background: var(--site-agency);

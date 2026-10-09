@@ -132,6 +132,8 @@ npm ci
 npm run build
 ```
 
+Puis aller redémarrer le serveur sur Infomaniak (sites.casaq.ch)
+
 ```txt
 # 4. Panel Infomaniak
 → manager.infomaniak.com

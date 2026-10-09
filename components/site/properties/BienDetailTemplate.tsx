@@ -239,11 +239,11 @@ export function BienDetailTemplate({
                             <div>
                                 <h2>Biens similaires</h2>
 
-                                <div className="txt">
-                                    <p>
-                                        Retrouvez une sélection de biens pouvant également vous intéresser.
-                                    </p>
-                                </div>
+                                {/*<div className="txt">*/}
+                                {/*    <p>*/}
+                                {/*        Retrouvez une sélection de biens pouvant également vous intéresser.*/}
+                                {/*    </p>*/}
+                                {/*</div>*/}
                             </div>
 
                             <Link
