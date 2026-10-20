@@ -25,6 +25,7 @@ const ServicesImmobilierCss = dynamic(
 
 const SiteCssByDomain: Record<string, React.ComponentType> = {
     'novimmob.ch': NovimmobCss,
+    'novimmobgerance.ch': NovimmobCss,
     'services.pix-preview.ch': ServicesImmobilierCss,
 };
 

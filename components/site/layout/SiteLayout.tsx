@@ -40,6 +40,11 @@ const SITE_ASSETS_BY_DOMAIN: Record<string, SiteAssets> = {
             'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
     },
 
+    'novimmobgerance.ch': {
+        googleFontHref:
+            'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
+    },
+
 
     // 'services.pix-preview.ch': {
     //     googleFontHref:
