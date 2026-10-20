@@ -24,6 +24,17 @@ const nextConfig: NextConfig = {
                 destination: 'https://novimmobgerance.ch/:path*',
                 permanent: true,
             },
+            {
+                source: '/:path*',
+                has: [
+                    {
+                        type: 'host',
+                        value: 'www.novimmob.ch',
+                    },
+                ],
+                destination: 'https://novimmobgerance.ch/:path*',
+                permanent: true,
+            },
         ];
     },
 };
