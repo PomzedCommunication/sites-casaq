@@ -10,6 +10,22 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+
+    async redirects() {
+        return [
+            {
+                source: '/:path*',
+                has: [
+                    {
+                        type: 'host',
+                        value: 'novimmob.ch',
+                    },
+                ],
+                destination: 'https://novimmobgerance.ch/:path*',
+                permanent: true,
+            },
+        ];
+    },
 };
 
 export default nextConfig;
