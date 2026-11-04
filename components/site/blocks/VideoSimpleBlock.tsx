@@ -30,6 +30,7 @@ export function VideoSimpleBlock({ bloc }: Props) {
                         playsInline
                         autoPlay
                         muted
+                        loop
                     />
             </div>
         </section>

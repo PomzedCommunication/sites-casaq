@@ -1119,13 +1119,13 @@
     .property-gallery-lightbox__item {
         position: relative;
         width: 100%;
-        height: 20vw;
+        /*height: 20vw;*/
     }
 
     /* 3e, 6e, 9e... → pleine largeur */
     .property-gallery-lightbox__item:nth-child(3n),
     .property-gallery-lightbox__item {
-        height: 60vw;
+        /*height: 60vw;*/
     }
 
 
