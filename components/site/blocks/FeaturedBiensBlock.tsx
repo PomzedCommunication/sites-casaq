@@ -61,7 +61,7 @@ export async function FeaturedBiensBlock({
     });
 
 
-    if (!selectedBiens.length && !data.titre && !data.texte) return null;
+    if (!selectedBiens.length) return null;
 
     return (
         <section className={`section pd-l-r featured-biens featured-biens--${variant}`}>

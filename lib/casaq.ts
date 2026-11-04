@@ -384,8 +384,21 @@ export async function getSiteBien(
           },
   );
 
+
   if (!res.ok) {
-    return null;
+    // return null;
+
+    const errorBody = await res.text();
+
+    console.error('[getSiteBien] API ERROR', {
+      url,
+      status: res.status,
+      body: errorBody,
+    });
+
+    throw new Error(
+        `getSiteBien: API ${res.status} pour le bien ${id}`
+    );
   }
 
   const json = await res.json();

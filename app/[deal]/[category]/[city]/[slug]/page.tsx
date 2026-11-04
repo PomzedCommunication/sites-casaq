@@ -85,6 +85,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     const resolvedParams = await params;
     const resolvedSearchParams = await searchParams;
 
+
     const id = extractBienIdFromSlug(resolvedParams.slug);
 
     if (!id) {
@@ -109,6 +110,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     if (!bien) {
         notFound();
     }
+
     const similarBiens = await getSiteSimilarBiens(domain, bien.id, 4);
 
     const canonicalPath = getBienSeoPath(bien);
@@ -121,6 +123,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
     //
     //     redirect(`${canonicalPath}${previewQuery}`);
     // }
+
     if (!isPreview && canonicalPath !== currentPath) {
         const previewQuery = resolvedSearchParams?.site
             ? `?site=${encodeURIComponent(resolvedSearchParams.site)}`
@@ -128,6 +131,7 @@ export default async function BienSeoPage({ params, searchParams }: PageProps) {
 
         redirect(`${canonicalPath}${previewQuery}`);
     }
+
     return (
         <SiteLayout
             site={site}
