@@ -153,6 +153,10 @@ div h1, div .h1{
     .property-detail__accordions {
         padding-top: 15px;
     }
+
+    .video-simple video {
+        height: 230px;
+    }
 }
 
 
@@ -172,6 +176,10 @@ div h1, div .h1{
 
     .cta-top-txt{
         margin-bottom: 10px;
+    }
+
+    .video-simple video {
+        height: 170px;
     }
 }
 
