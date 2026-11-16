@@ -2983,6 +2983,20 @@ function ContactCard({ bien, domain, site, documents }: { bien: CasaqBien; domai
                         ))}
                    </>
                 ) : null}
+
+                <Link className="site-btn lien_info_contact" href="/contact">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                        <g clipPath="url(#clip0_144_284)">
+                            <path d="M7.5 0C3.3675 0 0 3.3675 0 7.5C0 11.6325 3.3675 15 7.5 15C11.6325 15 15 11.6325 15 7.5C15 3.3675 11.6325 0 7.5 0ZM8.25 11.1825V12H6.75V11.19C4.995 10.9125 4.5 9.69 4.5 9H6C6.0075 9.105 6.12 9.75 7.5 9.75C8.535 9.75 9 9.315 9 9C9 8.76 9 8.25 7.5 8.25C4.89 8.25 4.5 6.84 4.5 6C4.5 5.0325 5.2725 4.065 6.75 3.8175V3H8.25V3.84C9.5475 4.1475 10.05 5.2275 10.05 6H9.3L8.55 6.015C8.5425 5.73 8.385 5.25 7.5 5.25C6.525 5.25 6 5.64 6 6C6 6.2775 6 6.75 7.5 6.75C10.11 6.75 10.5 8.16 10.5 9C10.5 9.9675 9.7275 10.935 8.25 11.1825Z" fill="#E41745"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_144_284">
+                                <rect width="15" height="15" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    Financement
+                </Link>
             </div>
         );
     }
@@ -3067,6 +3081,8 @@ function getVisitContact(bien: CasaqBien): {
             image?: string | null;
         } | null;
     }).contact_visite;
+
+    // console.log('contact: ', bien);
 
     if (!contact) {
         return null;

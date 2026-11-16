@@ -129,6 +129,8 @@ export type CasaqSiteConfig = {
     facebook_pixel?: string | null;
   };
   pages: CasaqPage[];
+  as_rent: boolean;
+  as_sale: boolean;
 };
 
 export type CasaqPage = {
@@ -268,8 +270,30 @@ export async function getSiteConfig(
   }
 
   const json = await res.json();
+  const site = json.data || null;
 
-  return json.data || null;
+  if (!site) {
+    return null;
+  }
+
+  const [rent, sale] = await Promise.all([
+    getSiteBiens(domain, {
+      page: 1,
+      perPage: 1,
+      deal: 'RENT',
+    }),
+    getSiteBiens(domain, {
+      page: 1,
+      perPage: 1,
+      deal: 'SALE',
+    }),
+  ]);
+
+  return {
+    ...site,
+    as_rent: rent.meta.total > 0,
+    as_sale: sale.meta.total > 0,
+  };
 }
 
 export type CasaqBiensMeta = {
@@ -404,6 +428,39 @@ export async function getSiteBien(
   const json = await res.json();
 
   return json.data || null;
+}
+
+
+
+export async function getAllSiteBiensAvailable(
+    domain: string,
+): Promise<CasaqBien[]> {
+  const firstPage = await getSiteBiens(domain, {
+    page: 1,
+    perPage: 100,
+  });
+
+  const allBiens = [...firstPage.data];
+  const totalPages = firstPage.meta.total_pages || 1;
+
+  if (totalPages <= 1) {
+    return allBiens;
+  }
+
+  const remainingPages = await Promise.all(
+      Array.from({ length: totalPages - 1 }, (_, index) =>
+          getSiteBiens(domain, {
+            page: index + 2,
+            perPage: 100,
+          }),
+      ),
+  );
+
+  remainingPages.forEach((response) => {
+    allBiens.push(...response.data);
+  });
+
+  return allBiens;
 }
 
 
@@ -756,6 +813,8 @@ export async function getSitePropertyCategoriesByIds(
 
   return Array.isArray(json.data) ? json.data : [];
 }
+
+
 
 
 

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { CasaqSiteConfig } from '@/lib/casaq';
 import { ContactAccountNav } from '@/components/site/ContactAccountNav';
+import {useListing} from "@/components/site/listings/ListingProvider";
 
 type Props = {
     site: CasaqSiteConfig;
@@ -21,6 +22,10 @@ export function SiteHeader({ site, previewDomain }: Props) {
     // useEffect(() => {
     //     setMenuOpen(false);
     // }, [pathname]);
+
+    // const { biens, meta } = useListing();
+    //
+    // console.log('test chat ', site);
 
     useEffect(() => {
         document.body.classList.toggle('site-mobile-menu-open', menuOpen);
@@ -70,6 +75,40 @@ export function SiteHeader({ site, previewDomain }: Props) {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [menuOpen]);
+
+
+    const visibleMenu = site.menu
+        .filter((item) => {
+            const url = item.url.replace(/\/+$/, '');
+
+            if (url === '/acheter' && !site.as_sale) {
+                return false;
+            }
+
+            if (url === '/louer' && !site.as_rent) {
+                return false;
+            }
+
+            return true;
+        })
+        .map((item) => ({
+            ...item,
+            children: (item.children || []).filter((child) => {
+                const url = child.url.replace(/\/+$/, '');
+
+                if (url === '/acheter' && !site.as_sale) {
+                    return false;
+                }
+
+                if (url === '/louer' && !site.as_rent) {
+                    return false;
+                }
+
+                return true;
+            }),
+        }));
+
+
     return (
         <>
             {menuOpen ? (
@@ -123,7 +162,7 @@ export function SiteHeader({ site, previewDomain }: Props) {
                     </div>
 
                     <div className="sub-head">
-                        {site.menu.map((item) => {
+                        {visibleMenu.map((item) => {
                             const children = item.children || [];
                             const hasChildren = children.length > 0;
 

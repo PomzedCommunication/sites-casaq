@@ -43,7 +43,7 @@ export function ListingMoreFiltersModal({
 
                 <div className="listing-more-filters__body">
                     <div className="listing-more-filters__field">
-                    <span className="listing-more-filters__label">Surface habitable </span>
+                    <span className="listing-more-filters__label">Surface habitable m²</span>
                         <ListingRangeFields
                             minValue={filters.surfaceMin}
                             maxValue={filters.surfaceMax}
@@ -52,7 +52,7 @@ export function ListingMoreFiltersModal({
                             step={1}
                             min={0}
                             max={1000}
-                            suffix="m²"
+                            suffix=""
                             onChange={({ min, max }) =>
                                 onChange({
                                     surfaceMin: min,
@@ -64,7 +64,7 @@ export function ListingMoreFiltersModal({
 
 
                     <div className="listing-more-filters__field">
-                        <span className="listing-more-filters__label">Surface terrain</span>
+                        <span className="listing-more-filters__label">Surface terrain m²</span>
                         <ListingRangeFields
                             minValue={filters.terrainMin}
                             maxValue={filters.terrainMax}
@@ -73,7 +73,7 @@ export function ListingMoreFiltersModal({
                             step={1}
                             min={0}
                             max={10000}
-                            suffix="m²"
+                            suffix=""
                             onChange={({ min, max }) =>
                                 onChange({
                                     terrainMin: min,
@@ -93,7 +93,7 @@ export function ListingMoreFiltersModal({
                             step={1}
                             min={0}
                             max={20}
-                            suffix="Chambres"
+                            suffix=""
                             onChange={({ min, max }) =>
                                 onChange({
                                     chambresMin: min,
@@ -114,7 +114,7 @@ export function ListingMoreFiltersModal({
                             step={1}
                             min={0}
                             max={20}
-                            suffix="Salles de bain"
+                            suffix=""
                             onChange={({ min, max }) =>
                                 onChange({
                                     sallesDeBainMin: min,

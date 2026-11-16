@@ -30,6 +30,9 @@ div h1, div .h1{
 
 .cta-top-txt{
     margin-bottom: 16px;
+    text-transform: uppercase;
+    line-height: 130%;
+    letter-spacing: 1.5px;
 }
 
 .image-text__reviews>.image-text__review:first-child .image-text__review-logo{

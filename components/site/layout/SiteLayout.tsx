@@ -71,7 +71,7 @@ export function SiteLayout({
     const activeDomain = normalizeDomain(previewDomain || currentDomain || site.domain);
     const assets = SITE_ASSETS_BY_DOMAIN[activeDomain] || null;
 
-    // console.log('test css', site.template_key);
+    // console.log('test css', site, children);
 
     return (
         // <>

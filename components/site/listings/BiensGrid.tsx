@@ -12,6 +12,8 @@ export function BiensGrid({ biens, previewDomain, onBienHover }: Props) {
         return <p>Aucun bien disponible pour le moment.</p>;
     }
 
+    // console.log('test 2 : ', biens);
+
     return (
         <div className="biens-grid">
             {biens.map((bien) => (

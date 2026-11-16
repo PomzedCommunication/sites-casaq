@@ -40,6 +40,7 @@ export function BienCard({ bien, previewDomain }: Props) {
             // <>test</>
             <FeaturedBienCard
                 bien={serializeBien(bien)}
+                photos={photos}
                 site={site}
                 previewDomain={previewDomain}
             />

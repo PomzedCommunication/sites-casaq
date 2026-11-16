@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -8,15 +10,31 @@ import { FavoriteButton } from '@/components/site/favorites/FavoriteButton';
 import {SiteIcon} from "@/components/site/icons/SiteIcon";
 import {getBienSeoPath} from "@/lib/property-url";
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import {useRef} from "react";
+import type {Swiper as SwiperType} from "swiper";
+
+
+
+type BienPhoto = {
+    src: string;
+    alt?: string | null;
+};
 
 type FeaturedBienCardProps = {
     bien: SerializedBien;
+    photos?: BienPhoto[];
     site: CasaqSiteConfig;
     previewDomain?: string;
 };
 
 export function FeaturedBienCard({
                                      bien,
+                                     photos = [],
                                      site,
                                      previewDomain,
                                  }: FeaturedBienCardProps) {
@@ -29,30 +47,106 @@ export function FeaturedBienCard({
 
 
     if (template_key === 'template_2') {
+
+        const swiperRef = useRef<SwiperType | null>(null);
+
+        // console.log('test : ', bien, photos);
         // template 2
-        return (
+        return (<>
             <article className="featured-bien-card">
                 <Link
                     href={lien}
                     className="featured-bien-card__link-full"
                 >
-                    <div className="featured-bien-card__image-wrap">
-                        {bien.image ? (
+                    <div className={`featured-bien-card__image-wrap ${photos.length <= 1 ? 'one_img' : ''}`}>
+
+
+                        {photos.length > 1 ? (<>
+                            <Swiper
+                                modules={[Pagination]}
+                                pagination={{ clickable: true }}
+                                loop
+                                spaceBetween={1}
+                                className="featured-bien-card__swiper"
+                                onSwiper={(swiper) => {
+                                    swiperRef.current = swiper;
+                                }}
+                            >
+                                {photos.map((photo, index) => (
+                                    <SwiperSlide key={`${photo.src}-${index}`}>
+                                        <Image
+                                            src={photo.src}
+                                            alt={photo.alt || `${bien.titre || 'Bien immobilier'} - photo ${index + 1}`}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            quality={85}
+                                            className="featured-bien-card__image"
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+
+                            <button
+                                type="button"
+                                className="bien-card__arrow bien-card__arrow--prev"
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    swiperRef.current?.slidePrev();
+                                }}
+                                aria-label="Photo précédente"
+                            >
+                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="21" cy="21" r="21" transform="matrix(-1 0 0 1 42 0)" fill="currentColor"/>
+                                    <path d="M23 14L16 21L23 28" stroke="white" strokeWidth="2" strokeLinecap="round"
+                                          strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+
+                            <button
+                            type="button"
+                            className="bien-card__arrow bien-card__arrow--next"
+                            onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            swiperRef.current?.slideNext();
+                        }}
+                        aria-label="Photo suivante"
+                    >
+                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="21" cy="21" r="21" fill="currentColor"/>
+                            <path d="M18 14L25 21L18 28" stroke="white" strokeWidth="2" strokeLinecap="round"
+                                  strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                        </>) : photos.length === 1 ? (
+                            <Image
+                                src={photos[0].src}
+                                alt={photos[0].alt || bien.titre || ''}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                                quality={85}
+                                className="featured-bien-card__image"
+                            />
+                        ) : bien.image ? (
                             <Image
                                 src={bien.image}
                                 alt={bien.imageAlt || ''}
                                 fill
                                 sizes="(max-width: 768px) 100vw, 33vw"
+                                quality={85}
                                 className="featured-bien-card__image"
                             />
                         ) : (
                             <div className="featured-bien-card__placeholder"></div>
                         )}
 
+                        {/* Badge nouveau */}
                         {(() => {
-                            if (!bien.created_at) {
-                                return null;
-                            }
+                            if (!bien.created_at) return null;
+
                             const dateCreation = new Date(bien.created_at);
                             const aujourdHui = new Date();
 
@@ -129,11 +223,111 @@ export function FeaturedBienCard({
                         </div>
                     </div>
                 </Link>
-            </article>);
+            </article>
+
+
+        {/*<article className="featured-bien-card">*/}
+        {/*    <Link*/}
+        {/*        href={lien}*/}
+        {/*        className="featured-bien-card__link-full"*/}
+        {/*    >*/}
+        {/*        <div className="featured-bien-card__image-wrap test_2">*/}
+        {/*            {bien.image ? (*/}
+        {/*                <Image*/}
+        {/*                    src={bien.image}*/}
+        {/*                    alt={bien.imageAlt || ''}*/}
+        {/*                    fill*/}
+        {/*                    sizes="(max-width: 768px) 100vw, 33vw"*/}
+        {/*                    className="featured-bien-card__image"*/}
+        {/*                />*/}
+        {/*            ) : (*/}
+        {/*                <div className="featured-bien-card__placeholder"></div>*/}
+        {/*            )}*/}
+        
+        {/*            {(() => {*/}
+        {/*                if (!bien.created_at) {*/}
+        {/*                    return null;*/}
+        {/*                }*/}
+        {/*                const dateCreation = new Date(bien.created_at);*/}
+        {/*                const aujourdHui = new Date();*/}
+        
+        {/*                const difference = aujourdHui.getTime() - dateCreation.getTime();*/}
+        {/*                const unMois = 30 * 24 * 60 * 60 * 1000;*/}
+        
+        {/*                return difference >= 0 && difference < unMois ? (*/}
+        {/*                    <div className="bien-card__badge">Nouveau</div>*/}
+        {/*                ) : null;*/}
+        {/*            })()}*/}
+        
+        {/*        </div>*/}
+        
+        {/*        <div className="featured-bien-card__body">*/}
+        {/*            {bien.category ? (*/}
+        {/*                <h3 className="featured-bien-card__title">*/}
+        {/*                    {bien.category}*/}
+        {/*                </h3>*/}
+        {/*            ) : null}*/}
+        
+        {/*            <div className={'featured-bien-liste__infos'}>*/}
+        
+        {/*                /!* lieu *!/*/}
+        {/*                {bien.ville && (*/}
+        {/*                    <div className="featured-bien-card__info">*/}
+        {/*                        <SiteIcon name="localisation" />*/}
+        
+        {/*                        <p className="featured-bien-card__price">*/}
+        {/*                            {bien.ville}*/}
+        {/*                        </p>*/}
+        {/*                    </div>*/}
+        {/*                )}*/}
+        
+        {/*                /!* prix *!/*/}
+        {/*                {bien.price && (*/}
+        {/*                    <div className="featured-bien-card__info">*/}
+        {/*                        <SiteIcon name="prix" />*/}
+        {/*                        <p>{bien.price}</p>*/}
+        {/*                    </div>*/}
+        {/*                )}*/}
+        
+        {/*                /!* surface maison *!/*/}
+        {/*                {bien.surface_habitable && (*/}
+        {/*                    <div className="featured-bien-card__info">*/}
+        {/*                        <SiteIcon name="surface_habitable" />*/}
+        {/*                        <p>{bien.surface_habitable} m²</p>*/}
+        {/*                    </div>*/}
+        {/*                )}*/}
+        
+        {/*                /!* surface terrain *!/*/}
+        {/*                {bien.surface_terrain && (*/}
+        {/*                    <div className="featured-bien-card__info">*/}
+        {/*                        <SiteIcon name="surface_terrain" />*/}
+        {/*                        <p>{bien.surface_terrain} m²</p>*/}
+        {/*                    </div>*/}
+        {/*                )}*/}
+        
+        {/*                /!* nombre de pièces *!/*/}
+        {/*                {bien.pieces && (*/}
+        {/*                    <div className="featured-bien-card__info">*/}
+        {/*                        <SiteIcon name="nombre_pieces" />*/}
+        {/*                        <p>{bien.pieces}</p>*/}
+        {/*                    </div>*/}
+        {/*                )}*/}
+        
+        {/*            </div>*/}
+        
+        
+        {/*            <div className="featured-bien-card__favorite">*/}
+        {/*                <FavoriteButton*/}
+        {/*                    bienId={Number(bien.id)}*/}
+        {/*                    previewDomain={previewDomain}*/}
+        {/*                />*/}
+        {/*            </div>*/}
+        {/*        </div>*/}
+        {/*    </Link>*/}
+        {/*</article>*/}
+            </>);
     }
         // autre template
-
-
         return (
             <article className="featured-bien-card">
                 <Link

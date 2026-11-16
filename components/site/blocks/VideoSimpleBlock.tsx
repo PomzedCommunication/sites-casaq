@@ -1,6 +1,11 @@
+'use client';
+
+import { useRef, useState } from 'react';
+
 import Image from 'next/image';
 import type { CasaqBloc } from '@/lib/casaq';
 import {blockData, siteAssetUrl} from '@/lib/site-blocks';
+import {SiteIcon} from "@/components/site/icons/SiteIcon";
 
 type Props = {
     bloc: CasaqBloc;
@@ -15,15 +20,26 @@ export function VideoSimpleBlock({ bloc }: Props) {
     const video = siteAssetUrl(data.video);
     // console.log( 'video', bloc);
 
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isMuted, setIsMuted] = useState(true);
+
 
     if (!data.video) {
         return null;
     }
 
+    const toggleSound = () => {
+        if (!videoRef.current) return;
+
+        videoRef.current.muted = !videoRef.current.muted;
+        setIsMuted(videoRef.current.muted);
+    };
+
     return (
         <section className="section video-simple">
             <div className="container">
                     <video
+                        ref={videoRef}
                         src={video}
                         className="video-simple__video"
                         // controls
@@ -32,6 +48,19 @@ export function VideoSimpleBlock({ bloc }: Props) {
                         muted
                         loop
                     />
+
+                <button
+                    type="button"
+                    className="video-simple__sound"
+                    onClick={toggleSound}
+                    aria-label={isMuted ? 'Activer le son' : 'Couper le son'}
+                >
+                    {isMuted ? (
+                        <SiteIcon name="volumemute" />
+                    ) : (
+                        <SiteIcon name="volume" />
+                    )}
+                </button>
             </div>
         </section>
     );
